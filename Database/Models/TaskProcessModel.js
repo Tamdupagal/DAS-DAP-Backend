@@ -32,6 +32,9 @@ const taskFlowSchema = new Schema({
       className: {
         type: String,
       },
+      title: {
+        type: String,
+      },
       taskMessage: {
         type: String,
       },
