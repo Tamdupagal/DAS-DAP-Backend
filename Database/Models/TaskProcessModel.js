@@ -22,6 +22,7 @@ const taskFlowSchema = new Schema({
   applicationTaskFlowUseCase: {
     type: String,
     unique: true,
+    required: true,
   },
   taskList: [
     {

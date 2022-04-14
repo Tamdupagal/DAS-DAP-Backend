@@ -15,16 +15,16 @@ const createTaskFlow = async (req, res) => {
     applicationFLowURL:
       req.body.applicationURL +
       '/' +
-      (await req.body.TaskFlowUseCase.toLowerCase().split('').join('')),
-    applicationTaskFlowUseCase: req.body.TaskFlowUseCase,
+      (await req.body.taskFlowUseCase.toLowerCase().replace(' ', '-')),
+    applicationTaskFlowUseCase: req.body.taskFlowUseCase,
     taskList: req.body.taskList,
   })
 
   try {
     await newTask.save()
-    res.send({ status: 200, Message: 'Task Flow published!' })
+    res.status(200).send({ status: 200, Message: 'Task Flow published!' })
   } catch (err) {
-    res.send({ status: 503, message: "Task Flow can't be saved" })
+    res.status(503).send({ status: 503, message: "Task Flow can't be saved" })
   }
 }
 
@@ -38,10 +38,10 @@ const fetchTaskFlow = async (req, res, next) => {
     if (taskFlow === null) {
       throw new Error('No such Entry found')
     }
-    res.send({ status: 200, taskFlow })
+    res.status(200).send({ status: 200, taskFlow })
   } catch (err) {
     console.log(err.message)
-    res.send({
+    res.status(400).send({
       status: 400,
       message: err.message,
     })
@@ -54,10 +54,10 @@ const fetchTaskFlows = async (req, res, next) => {
     if (taskFlows === null) {
       throw new Error("Can't fetch Flow's contact Devs")
     }
-    res.send({ status: 200, taskFlows })
+    res.status(200).send({ status: 200, taskFlows })
   } catch (err) {
     console.log(err.message)
-    res.send({
+    res.status(400).send({
       status: 400,
       message: err.message,
     })
@@ -74,12 +74,12 @@ const updateTaskFlow = async (req, res, next) => {
       { taskList: req.body.taskList },
       (err, doc) => {
         if (err) throw new Error(err)
-        res.send({ status: 200, message: 'Task Updated' })
+        res.status(200).send({ status: 200, message: 'Task Updated' })
       }
     )
   } catch (err) {
     console.log(error.message)
-    res.send({
+    res.status(400).send({
       status: 400,
       message: error.message,
     })

@@ -7,21 +7,22 @@ const tokenModel = require('../../Database/Models/TokenModel')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
+  let token = await authorization.split('Bearer')[1].trim()
   try {
     if (!authorization) {
       throw new Error('No token provided')
     }
-    let tokenRecord = await tokenModel.findOne({ authorization })
+    let tokenRecord = await tokenModel.findOne({ token })
     if (tokenRecord === null) {
       throw new Error('Session Invalid')
     }
-    JWT.verify(authorization, process.env.secret, (err, response) => {
+    JWT.verify(token, process.env.secret, (err, response) => {
       if (err) throw new Error('Session Expired')
     })
     next()
   } catch (err) {
     console.log(err.message)
-    res.send({
+    res.status(400).send({
       status: 401,
       auth: false,
       message: err.message,
@@ -48,34 +49,40 @@ const Authorization = async (req, res) => {
           email: email,
           token: token,
         }).save()
-        await res.send({ status: 200, auth: true, token })
+        await res.status(200).send({
+          status: 200,
+          auth: true,
+          token,
+          typeOfUser: record.typeOfUser,
+        })
       } else {
         throw new Error('Invalid Email or Password')
       }
     }
   } catch (err) {
     console.log(err.message)
-    res.send({ status: 401, auth: false, data: err.message })
+    res.status(400).send({ status: 401, auth: false, data: err.message })
   }
 }
 
 const Logout = async (req, res) => {
   const { authorization } = req.headers
+  let token = await authorization.split('Bearer')[1].trim()
   try {
     let tokenRecord = await tokenModel.findOne({ authorization })
     if (tokenRecord === null) {
       throw new Error('Session Invalid')
     }
-    JWT.verify(authorization, process.env.secret, (err, response) => {
+    JWT.verify(token, process.env.secret, (err, response) => {
       if (err) throw new Error('Session Expired')
-      res.send({ canLogout: true, data: { token: '' } })
+      res.status(200).send({ status: 200, canLogout: true, token: '' })
     })
   } catch (err) {
     console.log(err.message)
-    res.send({
+    res.status(400).send({
       status: 500,
       canLogout: true,
-      data: err.message,
+      message: err.message,
     })
   }
 }

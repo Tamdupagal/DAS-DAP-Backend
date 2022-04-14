@@ -21,6 +21,7 @@ const UserSchema = new Schema({
   },
   typeOfUser: {
     type: String,
+    required: true,
   },
   createdOn: {
     type: String,
