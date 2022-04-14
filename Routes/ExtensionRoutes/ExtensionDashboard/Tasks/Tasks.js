@@ -9,10 +9,8 @@ const {
 } = require('../../../../Utils/Tasks/Tasks.utils')
 
 Router.route('/createTaskFlow').post(createTaskFlow)
-Router.route('/updateTaskFlow/::applicationTaskFlowUseCase').post(
-  updateTaskFlow
-)
-Router.route('/viewTaskFlow').get(fetchTaskFlows)
+Router.route('/updateTaskFlow/:applicationTaskFlowUseCase').post(updateTaskFlow)
+Router.route('/viewAllTaskFlow').get(fetchTaskFlows)
 
 Router.route('/viewTaskFlow/:applicationTaskFlowUseCase').get(fetchTaskFlow)
 
