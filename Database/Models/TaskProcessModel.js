@@ -30,12 +30,15 @@ const taskFlowSchema = new Schema({
       htmlTag: {
         type: String,
       },
-      // id: {
-      //   type: String,
-      // },
-      // className: {
-      //   type: String,
-      // },
+      targetURL: {
+        type: String,
+      },
+      indexValueOfTag: {
+        type: Number,
+      },
+      lenghtOfCollection: {
+        type: Number,
+      },
       taskMessage: {
         type: String,
       },
