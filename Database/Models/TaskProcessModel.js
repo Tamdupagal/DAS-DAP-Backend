@@ -39,6 +39,9 @@ const taskFlowSchema = new Schema({
       lenghtOfCollection: {
         type: Number,
       },
+      title: {
+        type: String,
+      },
       taskMessage: {
         type: String,
       },
