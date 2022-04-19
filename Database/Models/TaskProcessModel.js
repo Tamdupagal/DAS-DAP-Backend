@@ -27,10 +27,7 @@ const taskFlowSchema = new Schema({
   taskList: [
     {
       stepNumber: Number,
-      id: {
-        type: String,
-      },
-      className: {
+      htmlTag: {
         type: String,
       },
       title: {
