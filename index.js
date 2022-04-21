@@ -1,18 +1,14 @@
 require('dotenv').config()
 
-const https = require('https')
+const http = require('http')
 const app = require('./app')
 const path = require('path')
 const fs = require('fs')
 
 const portNumber = process.env.PORT_NUMBER || 8000
 
-https
+http
   .createServer(
-    {
-      key: fs.readFileSync('ssl/cert/key.pem'),
-      cert: fs.readFileSync('ssl/cert/cert.pem'),
-    },
     app
   )
   .listen(process.env.PORT || portNumber, () => {

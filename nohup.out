@@ -1,0 +1,480 @@
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:internal/fs/utils:344
+    throw err;
+    ^
+
+Error: ENOENT: no such file or directory, open '/ssl/cert/key.pem'
+    at Object.openSync (node:fs:585:3)
+    at Object.readFileSync (node:fs:453:35)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:13:15)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47 {
+  errno: -2,
+  syscall: 'open',
+  code: 'ENOENT',
+  path: '/ssl/cert/key.pem'
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:internal/fs/utils:344
+    throw err;
+    ^
+
+Error: ENOENT: no such file or directory, open '/ssl/cert/key.pem'
+    at Object.openSync (node:fs:585:3)
+    at Object.readFileSync (node:fs:453:35)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:13:15)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47 {
+  errno: -2,
+  syscall: 'open',
+  code: 'ENOENT',
+  path: '/ssl/cert/key.pem'
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:internal/fs/utils:344
+    throw err;
+    ^
+
+Error: ENOENT: no such file or directory, open '/ssl/cert/key.pem'
+    at Object.openSync (node:fs:585:3)
+    at Object.readFileSync (node:fs:453:35)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:13:15)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47 {
+  errno: -2,
+  syscall: 'open',
+  code: 'ENOENT',
+  path: '/ssl/cert/key.pem'
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 8000
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+node:events:504
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::8000
+    at Server.setupListenHandle [as _listen2] (node:net:1330:16)
+    at listenInCluster (node:net:1378:12)
+    at Server.listen (node:net:1465:7)
+    at Object.<anonymous> (/root/DAP-BACKEND/DAS-DAP-Backend/index.js:18:4)
+    at Module._compile (node:internal/modules/cjs/loader:1103:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1157:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:77:12)
+    at node:internal/main/run_main_module:17:47
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1357:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 8000
+}
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 6000
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 6000
+No such Entry found
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 6000
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:10
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:10:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDQzOTc0NywiZXhwIjoxNjUwNTI2MTQ3fQ.4vuUaEMKsQUUXdTSNMBKtZjeL0vo_N9JFby4l9fgTK8
+Session Expired
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NjY2OCwiZXhwIjoxNjUwNjQzMDY4fQ.b_Fm_6RIYSYoMWjV6yonqe9ySA8Ll56wItnccbTLGDI
+undefined
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
