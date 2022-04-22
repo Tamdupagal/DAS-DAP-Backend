@@ -478,3 +478,92 @@ TypeError: Cannot read properties of undefined (reading 'split')
 > node index.js
 
 running on 5000
+undefined
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+undefined
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NDY2MCwiZXhwIjoxNjUwNjQxMDYwfQ.m7GEnU9sY9x-aNxm2hgFOAakYD7pJVnc4p9ywNIrNK0
+undefined
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+undefined
+/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11
+  let token = await authorization.split('Bearer')[1].trim()
+                                  ^
+
+TypeError: Cannot read properties of undefined (reading 'split')
+    at Authentication (/root/DAP-BACKEND/DAS-DAP-Backend/Services/AuthenticationServices/Authentication.js:11:35)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+    at /root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:341:12)
+    at next (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:275:10)
+    at Function.handle (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:174:3)
+    at router (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:47:12)
+    at Layer.handle [as handle_request] (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/root/DAP-BACKEND/DAS-DAP-Backend/node_modules/express/lib/router/index.js:323:13)
+
+> dap-das-backend@1.0.0 start
+> node index.js
+
+running on 5000
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NjY2OCwiZXhwIjoxNjUwNjQzMDY4fQ.b_Fm_6RIYSYoMWjV6yonqe9ySA8Ll56wItnccbTLGDI
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NzgyMSwiZXhwIjoxNjUwNjQ0MjIxfQ.jM3_nD9JG8a0FFobBfcJEWV9ZQ6ivim_JvF_orCX8aI
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NzgyMSwiZXhwIjoxNjUwNjQ0MjIxfQ.jM3_nD9JG8a0FFobBfcJEWV9ZQ6ivim_JvF_orCX8aI
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTdmZmEyMTIzOGZlZWNmZmU3YzZmNSIsImlhdCI6MTY1MDU1NjY2OCwiZXhwIjoxNjUwNjQzMDY4fQ.b_Fm_6RIYSYoMWjV6yonqe9ySA8Ll56wItnccbTLGDI
