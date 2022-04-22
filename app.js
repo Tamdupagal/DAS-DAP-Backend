@@ -7,10 +7,6 @@ const RouteHandling = require('./Routes/RouteHandling')
 const dbConnection = require('./Database/DatabaseConfig/DBConnection')
 const db = dbConnection.connection
 
-app.get("/test",(req,res)=>{
-console.log("hello world")
-})
-
 app.use(RouteHandling)
 
 db.on('error', console.error.bind(console, 'MongoDB connection error'))
