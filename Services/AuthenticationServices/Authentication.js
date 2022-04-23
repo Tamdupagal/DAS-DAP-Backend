@@ -7,9 +7,8 @@ const tokenModel = require('../../Database/Models/TokenModel')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
-	console.log(authorization)
+  try{
   let token = await authorization.split('Bearer')[1].trim()
-  try {
     if (!authorization) {
       throw new Error('No token provided')
     }
