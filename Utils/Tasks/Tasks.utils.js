@@ -15,7 +15,7 @@ const createTaskFlow = async (req, res) => {
     applicationFLowURL:
       req.body.applicationURL +
       '/' +
-      (await req.body.taskFlowUseCase.toLowerCase().replace(' ', '-')),
+      (await req.body.taskFlowUseCase.toLowerCase()),
     applicationTaskFlowUseCase: req.body.taskFlowUseCase,
     taskList: req.body.taskList,
   })
