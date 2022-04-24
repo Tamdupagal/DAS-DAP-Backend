@@ -23,7 +23,7 @@ const createTaskFlow = async (req, res) => {
     await newTask.save()
     res.status(200).send({ status: 200, Message: 'Task Flow published!' })
   } catch (err) {
-    res.status(503).send({ status: 503, message: "Task Flow can't be saved" })
+    res.status(400).send({ status: 400, message: "Task Flow can't be saved" })
   }
 }
 
