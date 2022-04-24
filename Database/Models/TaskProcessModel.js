@@ -36,7 +36,7 @@ const taskFlowSchema = new Schema({
       indexValueOfTag: {
         type: Number,
       },
-      lenghtOfCollection: {
+      lengthOfCollection: {
         type: Number,
       },
       title: {
