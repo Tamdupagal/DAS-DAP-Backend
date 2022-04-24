@@ -5,23 +5,24 @@ const UserLoginModel = require('../../Database/Models/UserModel')
 // Create Task Flow
 
 const createUser = async (req, res) => {
-  let newUser = new UserModel({
-    userID: crypto.randomBytes(20).toString('hex'),
-    userName: req.body.userName,
-    email: req.body.email,
-    password: req.body.password,
-    typeOfUser: req.body.typeOfUser,
-    createdOn: new Date().toLocaleString(),
-  })
-  let newLoginUser = new UserLoginModel({
-    userName: req.body.userName,
-    email: req.body.email,
-    password: await bcrypt.hash(req.body.password, 10),
-    typeOfUser: req.body.typeOfUser,
-    createdOn: new Date().toLocaleString(),
-    updatedOn: new Date().toLocaleString(),
-  })
   try {
+    let newUser = new UserModel({
+      userID: crypto.randomBytes(20).toString('hex'),
+      userName: req.body.userName,
+      email: req.body.email,
+      password: req.body.password,
+      typeOfUser: req.body.typeOfUser,
+      createdOn: new Date().toLocaleString(),
+    })
+    let newLoginUser = new UserLoginModel({
+      userName: req.body.userName,
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.password, 10),
+      typeOfUser: req.body.typeOfUser,
+      createdOn: new Date().toLocaleString(),
+      updatedOn: new Date().toLocaleString(),
+    })
+
     await newUser.save()
     await newLoginUser.save()
     res.status(200).send({ status: 200, message: 'User created!' })

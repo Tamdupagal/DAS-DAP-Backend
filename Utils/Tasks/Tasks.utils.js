@@ -4,23 +4,22 @@ const TaskProcessModel = require('../../Database/Models/TaskProcessModel')
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
-  let newTask = new TaskProcessModel({
-    taskID: await crypto.randomBytes(20).toString('hex'),
-    applicationID:
-      req.body.applicationName +
-      '-' +
-      (await crypto.randomBytes(2).toString('hex')),
-    applicationName: req.body.applicationName,
-    applicationURL: req.body.applicationURL,
-    applicationFLowURL:
-      req.body.applicationURL +
-      '/' +
-      (await req.body.taskFlowUseCase.toLowerCase()),
-    applicationTaskFlowUseCase: req.body.taskFlowUseCase,
-    taskList: req.body.taskList,
-  })
-
   try {
+    let newTask = new TaskProcessModel({
+      taskID: await crypto.randomBytes(20).toString('hex'),
+      applicationID:
+        req.body.applicationName +
+        '-' +
+        (await crypto.randomBytes(2).toString('hex')),
+      applicationName: req.body.applicationName,
+      applicationURL: req.body.applicationURL,
+      applicationFLowURL:
+        req.body.applicationURL +
+        '/' +
+        (await req.body.applicationTaskFlowUseCase.toLowerCase()),
+      applicationTaskFlowUseCase: req.body.applicationTaskFlowUseCase,
+      taskList: req.body.taskList,
+    })
     await newTask.save()
     res.status(200).send({ status: 200, Message: 'Task Flow published!' })
   } catch (err) {
