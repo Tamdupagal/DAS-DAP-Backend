@@ -4,7 +4,6 @@
 This readme file is an introduction to how the application backend works and various requirements that are needed to run it.
 
 ## Table of Content 
-## Table of Content 
 - [Features](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#features)
     1. [NodeJS](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#nodejs)
     2. [Express](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#express)
