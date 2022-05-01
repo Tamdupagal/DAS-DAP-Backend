@@ -4,19 +4,20 @@
 This readme file is an introduction to how the application backend works and various requirements that are needed to run it.
 
 ## Table of Content 
-- [Features](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#features)
-    1. [NodeJS](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#nodejs)
-    2. [Express](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#express)
-    3. [MongoDB](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#mongodb)
-- [How to run our Application](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#how-to-run-our-application)
-    1. [GitHub Repository](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#github-repository)
-    2. [Run Script](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#run-script)
+## Table of Content 
+- [Features](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#features)
+    1. [NodeJS](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#nodejs)
+    2. [Express](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#express)
+    3. [MongoDB](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#mongodb)
+- [How to run our Application](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#how-to-run-our-application)
+    1. [GitHub Repository](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#github-repository)
+    2. [Run Script](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#run-script)
     3. Available API End-Points
-        - [User Authorization ](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#user-authorization)
-        - [ Save/Store TaskFlow ](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#savestore-taskflow)
-        - [ View All TaskFlows ](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#view-all-taskflows)
+        - [User Authorization ](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#user-authorization)
+        - [ Save/Store TaskFlow ](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#savestore-taskflow)
+        - [ View All TaskFlows ](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#view-all-taskflows)
   
-- [Future Updates](https://github.com/iHaroon29/DAS-DAP-Backend/developer/README.md#future-updates)
+- [Future Updates](https://github.com/iHaroon29/DAS-DAP-Backend/blob/Developer/README.md#future-updates)
 
 ## Features
 - Built on [Node.js](https://nodejs.org/en/)/[Express](https://expressjs.com) Framework.
