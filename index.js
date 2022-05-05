@@ -3,6 +3,7 @@ require('dotenv').config()
 const https = require('https')
 const app = require('./app')
 const fs = require('fs')
+// const http = require('http')
 
 const privateKey = fs.readFileSync(
   '/etc/letsencrypt/live/dap.digitalaidedschool.com/privkey.pem',
@@ -30,3 +31,5 @@ https
   .listen(process.env.PORT || portNumber, () => {
     console.log(`running on ${process.env.PORT || portNumber}`)
   })
+
+// http.createServer(app)

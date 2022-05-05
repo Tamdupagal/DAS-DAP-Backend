@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const TaskProcessModel = require('../../Database/Models/TaskProcessModel')
+const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 // Create Task Flow
 
@@ -16,14 +17,21 @@ const createTaskFlow = async (req, res) => {
       applicationFLowURL:
         req.body.applicationURL +
         '/' +
-        (await req.body.applicationTaskFlowUseCase.toLowerCase()),
+        (await req.body.applicationTaskFlowUseCase),
       applicationTaskFlowUseCase: req.body.applicationTaskFlowUseCase,
       taskList: req.body.taskList,
     })
     await newTask.save()
-    res.status(200).send({ status: 200, Message: 'Task Flow published!' })
-  } catch (err) {
-    res.status(400).send({ status: 400, message: "Task Flow can't be saved" })
+    res
+      .status(200)
+      .send({ status: 200, message: 'TaskFlow has been published!' })
+  } catch (error) {
+    let ErrorResponse = DataBaseError(error)
+    console.log(ErrorResponse.errMessage)
+    res.status(ErrorResponse.errStatusCode).send({
+      status: ErrorResponse.errStatusCode,
+      message: ErrorResponse.errMessage,
+    })
   }
 }
 
@@ -35,14 +43,17 @@ const fetchTaskFlow = async (req, res, next) => {
       applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
     })
     if (taskFlow === null) {
-      throw new Error('No such Entry found')
+      throw DataBaseError({
+        name: 'TaskFlowNull',
+        value: req.params.applicationTaskFlowUseCase,
+      })
     }
     res.status(200).send({ status: 200, taskFlow })
   } catch (err) {
-    console.log(err.message)
-    res.status(400).send({
-      status: 400,
-      message: err.message,
+    console.log(err.errMessage)
+    res.status(err.errStatusCode).send({
+      status: err.errStatusCode,
+      message: err.errMessage,
     })
   }
 }
@@ -50,15 +61,15 @@ const fetchTaskFlow = async (req, res, next) => {
 const fetchTaskFlows = async (req, res, next) => {
   try {
     let taskFlows = await TaskProcessModel.find({})
-    if (taskFlows === null) {
-      throw new Error("Can't fetch Flow's contact Devs")
-    }
+    // if (taskFlows === null) {
+    //   throw DataBaseError('TaskFlowNull')
+    // }
     res.status(200).send({ status: 200, taskFlows })
   } catch (err) {
-    console.log(err.message)
-    res.status(400).send({
-      status: 400,
-      message: err.message,
+    console.log(err.errMessage)
+    res.status(err.errStatusCode).send({
+      status: err.errStatusCode,
+      message: err.errMessage,
     })
   }
 }
@@ -66,21 +77,69 @@ const fetchTaskFlows = async (req, res, next) => {
 
 const updateTaskFlow = async (req, res, next) => {
   try {
-    TaskProcessModel.findOneAndUpdate(
+    if (!req.params.applicationTaskFlowUseCase)
+      throw DataBaseError({
+        name: 'TaskFlowNull',
+        value: req.params.applicationTaskFlowUseCase,
+      })
+
+    let response = await TaskProcessModel.findOneAndUpdate(
       {
         applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
       },
-      { taskList: req.body.taskList },
-      (err, doc) => {
-        if (err) throw new Error(err)
-        res.status(200).send({ status: 200, message: 'Task Updated' })
+      {
+        taskList: req.body.taskList,
+      },
+      {
+        new: true,
       }
     )
+    if (response === null) {
+      throw DataBaseError({
+        name: 'TaskFlowNull',
+        value: req.params.applicationTaskFlowUseCase,
+      })
+    }
+    res
+      .status(200)
+      .send({ status: 200, message: 'TaskFlow(s) has been Updated!' })
   } catch (err) {
-    console.log(error.message)
-    res.status(400).send({
-      status: 400,
-      message: error.message,
+    console.log(err.errMessage)
+    res.status(err.errStatusCode).send({
+      status: err.errStatusCode,
+      message: err.errMessage,
+    })
+  }
+}
+
+// Delete Task Flows
+
+const deleteTaskFlow = async (req, res, next) => {
+  try {
+    let TaskFlowUseCaseArray = req.body.TaskFlowUseCaseArray
+    if (!TaskFlowUseCaseArray)
+      throw DataBaseError({
+        name: 'TaskFlowUseCaseArrayNull',
+      })
+    for (const TaskFlowUseCase of TaskFlowUseCaseArray.values()) {
+      let response = await TaskProcessModel.findOneAndDelete({
+        applicationTaskFlowUseCase: TaskFlowUseCase,
+      })
+      if (response === null) {
+        throw DataBaseError({
+          name: 'TaskFlowNull',
+          value: TaskFlowUseCase,
+        })
+      }
+    }
+    res
+      .status(200)
+      .send({ status: 200, message: 'TaskFlow(s) has been Deleted!' })
+  } catch (err) {
+    console.log(err.errMessage)
+    res.status(err.errStatusCode).send({
+      status: err.errStatusCode,
+      message: err.errMessage,
     })
   }
 }
@@ -90,4 +149,5 @@ module.exports = {
   fetchTaskFlow,
   fetchTaskFlows,
   updateTaskFlow,
+  deleteTaskFlow,
 }
