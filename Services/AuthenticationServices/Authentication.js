@@ -3,29 +3,24 @@ require('dotenv').config()
 const UserModel = require('../../Database/Models/UserModel')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
-const tokenModel = require('../../Database/Models/TokenModel')
+const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
-  try{
-  let token = await authorization.split('Bearer')[1].trim()
-    if (!authorization) {
-      throw new Error('No token provided')
+  try {
+    if (authorization === null) {
+      throw AuthError('NoToken')
     }
-    let tokenRecord = await tokenModel.findOne({ token })
-    if (tokenRecord === null) {
-      throw new Error('Session Invalid')
-    }
+    let token = await authorization.split('Bearer')[1].trim()
     JWT.verify(token, process.env.secret, (err, response) => {
-      if (err) throw new Error('Session Expired')
+      if (err) throw AuthError('TokenInvalid')
     })
     next()
-  } catch (err) {
-    console.log(err.message)
-    res.status(400).send({
-      status: 401,
+  } catch (Error) {
+    res.status(Error.errStatusCode).send({
+      status: Error.errStatusCode,
       auth: false,
-      message: err.message,
+      message: Error.errMessage,
     })
   }
 }
@@ -37,18 +32,13 @@ const Authorization = async (req, res) => {
       email: email,
     })
     if (record === null) {
-      throw new Error('Invalid Email or Password')
+      throw AuthError('recordNull')
     } else {
       let verify = await bcrypt.compare(password, record.password)
       if (verify) {
         let token = await JWT.sign({ id: record._id }, process.env.secret, {
           expiresIn: 86400,
         })
-        await new tokenModel({
-          userName: record.userName,
-          email: email,
-          token: token,
-        }).save()
         await res.status(200).send({
           status: 200,
           auth: true,
@@ -56,34 +46,23 @@ const Authorization = async (req, res) => {
           typeOfUser: record.typeOfUser,
         })
       } else {
-        throw new Error('Invalid Email or Password')
+        throw AuthError('InvalidCredentials')
       }
     }
-  } catch (err) {
-    console.log(err.message)
-    res.status(400).send({ status: 401, auth: false, data: err.message })
+  } catch (Error) {
+    res.status(Error.errStatusCode).send({
+      status: Error.errStatusCode,
+      auth: false,
+      message: Error.errMessage,
+    })
   }
 }
 
 const Logout = async (req, res) => {
-  const { authorization } = req.headers
-  let token = await authorization.split('Bearer')[1].trim()
   try {
-    let tokenRecord = await tokenModel.findOne({ authorization })
-    if (tokenRecord === null) {
-      throw new Error('Session Invalid')
-    }
-    JWT.verify(token, process.env.secret, (err, response) => {
-      if (err) throw new Error('Session Expired')
-      res.status(200).send({ status: 200, canLogout: true, token: '' })
-    })
-  } catch (err) {
-    console.log(err.message)
-    res.status(400).send({
-      status: 500,
-      canLogout: true,
-      message: err.message,
-    })
+    res.status(200).send({ status: 200, canLogout: true, token: '' })
+  } catch (Error) {
+    res.status(400).send({ status: 400, canLogout: true, token: '' })
   }
 }
 
