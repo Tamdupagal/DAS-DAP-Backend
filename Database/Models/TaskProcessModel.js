@@ -26,23 +26,22 @@ const taskFlowSchema = new Schema({
   },
   taskList: [
     {
-      stepNumber: Number,
+      stepNumber: {
+        type: Number,
+      },
       htmlTag: {
         type: String,
       },
       targetURL: {
         type: String,
       },
-      indexValueOfTag: {
-        type: Number,
-      },
-      lengthOfCollection: {
-        type: Number,
-      },
       title: {
         type: String,
       },
       taskMessage: {
+        type: String,
+      },
+      xPath: {
         type: String,
       },
     },
