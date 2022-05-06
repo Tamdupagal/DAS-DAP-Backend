@@ -116,25 +116,21 @@ const updateTaskFlow = async (req, res, next) => {
 
 const deleteTaskFlow = async (req, res, next) => {
   try {
-    let TaskFlowUseCaseArray = req.body.TaskFlowUseCaseArray
-    if (!TaskFlowUseCaseArray)
+    if (!req.params.applicationTaskFlowUseCase)
       throw DataBaseError({
-        name: 'TaskFlowUseCaseArrayNull',
+        name: 'TaskFlowNull',
+        value: req.params.applicationTaskFlowUseCase,
       })
-    for (const TaskFlowUseCase of TaskFlowUseCaseArray.values()) {
-      let response = await TaskProcessModel.findOneAndDelete({
-        applicationTaskFlowUseCase: TaskFlowUseCase,
+    let response = await TaskProcessModel.findOneAndDelete({
+      applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
+    })
+    if (response === null) {
+      throw DataBaseError({
+        name: 'TaskFlowNull',
+        value: req.params.applicationTaskFlowUseCase,
       })
-      if (response === null) {
-        throw DataBaseError({
-          name: 'TaskFlowNull',
-          value: TaskFlowUseCase,
-        })
-      }
     }
-    res
-      .status(200)
-      .send({ status: 200, message: 'TaskFlow(s) has been Deleted!' })
+    res.status(200).send({ status: 200, message: 'TaskFlow has been Deleted!' })
   } catch (err) {
     console.log(err.errMessage)
     res.status(err.errStatusCode).send({
