@@ -11,6 +11,9 @@ const Authentication = async (req, res, next) => {
     if (authorization === null) {
       throw AuthError('NoToken')
     }
+    if (!/Bearer/.test(authorization)) {
+      throw AuthError('InvalidTokenFormat')
+    }
     let token = await authorization.split('Bearer')[1].trim()
     JWT.verify(token, process.env.secret, (err, response) => {
       if (err) throw AuthError('TokenInvalid')
