@@ -30,6 +30,13 @@ const AuthenticationError = (typeErr) => {
         'Verification Error',
         401
       )
+    case 'InvalidTokenFormat':
+      return new Error(
+        'InvalidTokenFormat',
+        'Invalid Token Format',
+        'Integrity Error',
+        401
+      )
   }
 }
 

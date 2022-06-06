@@ -11,8 +11,8 @@ app.use(RouteHandling)
 
 db.on('error', console.error.bind(console, 'MongoDB connection error'))
 
-// app.listen(process.env.PORT || portNumber, () => {
-//   console.log(`running on ${process.env.PORT || portNumber}`)
-// })
+app.listen(process.env.PORT || portNumber, () => {
+  console.log(`running on ${process.env.PORT || portNumber}`)
+})
 
 module.exports = app
