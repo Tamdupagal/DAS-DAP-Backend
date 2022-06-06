@@ -44,6 +44,12 @@ const taskFlowSchema = new Schema({
       xPath: {
         type: String,
       },
+      targetClickOffsetX: {
+        type: Number,
+      },
+      targetClickOffsetY: {
+        type: Number,
+      },
     },
   ],
 })
