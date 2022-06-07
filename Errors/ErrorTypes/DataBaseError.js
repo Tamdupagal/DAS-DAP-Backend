@@ -20,10 +20,10 @@ const DataBaseError = (err) => {
           409
         )
       }
-    case `${'TaskFlowNull'}`:
+    case `${'TaskFlowNull' || 'FeedBackNull'}`:
       return new Error(
         'TaskFlowNA',
-        `No ${err.value} in task-flows exists!`,
+        `No ${err.value} exists!`,
         'Availability Error',
         404
       )

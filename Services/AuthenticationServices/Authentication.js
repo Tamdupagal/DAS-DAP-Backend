@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const UserModel = require('../../Database/Models/UserModel')
+const { UserModel } = require('../../Database/DatabaseConfig/DBConnection')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
@@ -53,6 +53,7 @@ const Authorization = async (req, res) => {
       }
     }
   } catch (Error) {
+    // console.log(Error)
     res.status(Error.errStatusCode).send({
       status: Error.errStatusCode,
       auth: false,

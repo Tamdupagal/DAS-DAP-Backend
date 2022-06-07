@@ -1,7 +1,25 @@
 require('dotenv').config()
 const dbURL = process.env.MONGO_CONNECTION_URL
-const mongoose = require('mongoose')
 
-mongoose.connect(dbURL)
+const connection = require('mongoose').createConnection(dbURL)
 
-module.exports = mongoose
+const feedBackModel = connection.model(
+  'FeedBack',
+  require('../Models/FeedBackModel')
+)
+const feedBackResponseModel = connection.model(
+  'FeedBackResponse',
+  require('../Models/FeedBackResponseModel')
+)
+const UserModel = connection.model('User', require('../Models/UserModel'))
+const UserCreatedModel = connection.model(
+  'UserCreated',
+  require('../Models/UserCreatedModel')
+)
+module.exports = {
+  connection,
+  feedBackModel,
+  feedBackResponseModel,
+  UserModel,
+  UserCreatedModel,
+}
