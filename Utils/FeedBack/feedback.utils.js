@@ -86,7 +86,8 @@ const submitFeedBackResponse = async (req, res, next) => {
     const { feedBackQuestionID, UserName, UserType, feedBackResponse } =
       req.body
     const newResponse = await feedBackResponseModel.create({
-      feedBackResponseID: feedBackQuestionID,
+      feedBackResponseID: await crypto.randomBytes(20).toString('hex'),
+      feedBackReferenceID: feedBackQuestionID,
       UserName: UserName,
       UserType: UserType,
       feedBackResponse: feedBackResponse,
