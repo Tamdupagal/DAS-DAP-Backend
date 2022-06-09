@@ -1,12 +1,12 @@
 const crypto = require('crypto')
-const TaskProcessModel = require('../../Database/Models/TaskProcessModel')
+const { TaskFlowModel } = require('../../Database/DatabaseConfig/DBConnection')
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
   try {
-    let newTask = new TaskProcessModel({
+    let newTask = new TaskFlowModel({
       taskID: await crypto.randomBytes(20).toString('hex'),
       applicationID:
         req.body.applicationName +
@@ -39,7 +39,7 @@ const createTaskFlow = async (req, res) => {
 
 const fetchTaskFlow = async (req, res, next) => {
   try {
-    let taskFlow = await TaskProcessModel.findOne({
+    let taskFlow = await TaskFlowModel.findOne({
       applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
     })
     if (taskFlow === null) {
@@ -60,7 +60,7 @@ const fetchTaskFlow = async (req, res, next) => {
 
 const fetchTaskFlows = async (req, res, next) => {
   try {
-    let taskFlows = await TaskProcessModel.find({})
+    let taskFlows = await TaskFlowModel.find({})
     // if (taskFlows === null) {
     //   throw DataBaseError('TaskFlowNull')
     // }
@@ -83,7 +83,7 @@ const updateTaskFlow = async (req, res, next) => {
         value: req.params.applicationTaskFlowUseCase,
       })
 
-    let response = await TaskProcessModel.findOneAndUpdate(
+    let response = await TaskFlowModel.findOneAndUpdate(
       {
         applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
       },
@@ -121,7 +121,7 @@ const deleteTaskFlow = async (req, res, next) => {
         name: 'TaskFlowNull',
         value: req.params.applicationTaskFlowUseCase,
       })
-    let response = await TaskProcessModel.findOneAndDelete({
+    let response = await TaskFlowModel.findOneAndDelete({
       applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
     })
     if (response === null) {

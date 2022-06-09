@@ -7,6 +7,10 @@ const feedBackResponseSchema = new Schema(
       type: String,
       unique: true,
     },
+    feedBackReferenceID: {
+      type: String,
+      required: true,
+    },
     UserName: {
       type: String,
     },

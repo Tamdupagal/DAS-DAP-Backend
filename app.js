@@ -1,5 +1,5 @@
 require('dotenv').config()
-const portNumber = process.env.PORT_NUMBER || 8000
+const portNumber = process.env.PORT_NUMBER || 8001
 
 const Express = require('express')
 const app = Express()
@@ -10,7 +10,7 @@ app.use(RouteHandling)
 // connection.on('error', console.error.bind(console, 'MongoDB connection error'))
 
 app.listen(process.env.PORT || portNumber, () => {
-  console.log(`running on ${process.env.PORT || portNumber}`)
+  console.log(`running on ${portNumber}`)
 })
 
 module.exports = app

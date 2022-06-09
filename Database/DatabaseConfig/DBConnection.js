@@ -16,10 +16,29 @@ const UserCreatedModel = connection.model(
   'UserCreated',
   require('../Models/UserCreatedModel')
 )
+
+const TaskFlowModel = connection.model(
+  'Taskflow',
+  require('../Models/TaskProcessModel')
+)
+
+const AnnouncementModel = connection.model(
+  'Announcement',
+  require('../Models/AnnouncementSchema')
+)
+
+const AnnouncementResponseModel = connection.model(
+  'Announcement Response',
+  require('../Models/AnnouncementResponseSchema')
+)
+
 module.exports = {
   connection,
   feedBackModel,
   feedBackResponseModel,
   UserModel,
   UserCreatedModel,
+  TaskFlowModel,
+  AnnouncementResponseModel,
+  AnnouncementModel,
 }
