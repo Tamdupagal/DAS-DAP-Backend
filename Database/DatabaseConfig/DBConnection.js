@@ -1,7 +1,8 @@
 require('dotenv').config()
-const dbURL = process.env.MONGO_CONNECTION_URL
+const defaultConnection = require('../DatabaseConfig/DefaultConnection')
+// const dbURL = process.env.MONGO_CONNECTION_URL
 
-const connection = require('mongoose').createConnection(dbURL)
+const connection = defaultConnection.useDb('DigitalAidedSchools')
 
 const feedBackModel = connection.model(
   'FeedBack',

@@ -1,7 +1,11 @@
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-const UserModel = require('../../Database/Models/UserCreatedModel')
-const UserLoginModel = require('../../Database/Models/UserModel')
+const {
+  UserModel,
+  UserCreatedModel,
+} = require('../../Database/DatabaseConfig/DBConnection')
+// const UserModel = require('../../Database/Models/UserCreatedModel')
+// const UserLoginModel = require('../../Database/Models/UserModel')
 // Create Task Flow
 
 const createUser = async (req, res) => {
@@ -14,7 +18,7 @@ const createUser = async (req, res) => {
       typeOfUser: req.body.typeOfUser,
       createdOn: new Date().toLocaleString(),
     })
-    let newLoginUser = new UserLoginModel({
+    let newLoginUser = new UserCreatedModel({
       userName: req.body.userName,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
