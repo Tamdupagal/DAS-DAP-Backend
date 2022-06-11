@@ -18,8 +18,18 @@ const feedBackSchema = new Schema(
         feedBackQuestionType: {
           type: String,
         },
-        feedBackQuestionOptions: {
-          type: Array,
+        feedBackQuestionOptions: [
+          {
+            text: {
+              type: String,
+            },
+            image: {
+              type: String,
+            },
+          },
+        ],
+        feedBackQuestionImage: {
+          type: String,
         },
       },
     ],
