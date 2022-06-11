@@ -11,6 +11,7 @@ const createFeedBack = async (req, res, next) => {
       feedBackQuestionID: await crypto.randomBytes(20).toString('hex'),
       feedBackCreatorName: req.body.feedBackCreatorName,
       feedBackQuestions: req.body.feedBackQuestions,
+      feedBackQuestionImage: req.body.feedBackQuestionImage,
     })
     await newFeedBack.save()
     res
