@@ -1,14 +1,10 @@
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-const {
-  UserModel,
-  UserCreatedModel,
-} = require('../../Database/DatabaseConfig/DBConnection')
-// const UserModel = require('../../Database/Models/UserCreatedModel')
-// const UserLoginModel = require('../../Database/Models/UserModel')
-// Create Task Flow
+// const { UserModel, UserCreatedModel } =
+//   require('../../Database/DatabaseConfig/DBConnection')('DigitalAidedSchools')
 
 const createUser = async (req, res) => {
+  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
   try {
     let newUser = new UserModel({
       userID: crypto.randomBytes(20).toString('hex'),
@@ -38,6 +34,7 @@ const createUser = async (req, res) => {
 // Fetch Task Flow
 
 const fetchUser = async (req, res, next) => {
+  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
   try {
     let User = await UserModel.findOne(
       {
@@ -59,6 +56,7 @@ const fetchUser = async (req, res, next) => {
 }
 
 const fetchUsers = async (req, res, next) => {
+  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
   try {
     let Users = await UserModel.find({}, { password: 0, userID: 0 })
     if (Users === null) {
@@ -76,6 +74,7 @@ const fetchUsers = async (req, res, next) => {
 // Update Task Flow
 
 const updateUser = async (req, res, next) => {
+  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
   try {
     UserModel.findOneAndUpdate(
       {

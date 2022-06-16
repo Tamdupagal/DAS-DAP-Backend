@@ -1,12 +1,12 @@
 const crypto = require('crypto')
-const {
-  feedBackModel,
-  feedBackResponseModel,
-} = require('../../Database/DatabaseConfig/DBConnection')
+// const { feedBackModel, feedBackResponseModel } =
+//   require('../../Database/DatabaseConfig/DBConnection')('DigitalAidedSchools')
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 const createFeedBack = async (req, res, next) => {
   try {
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     const newFeedBack = await feedBackModel.create({
       feedBackQuestionID: await crypto.randomBytes(20).toString('hex'),
       feedBackCreatorName: req.body.feedBackCreatorName,
@@ -18,6 +18,7 @@ const createFeedBack = async (req, res, next) => {
       .status(200)
       .send({ status: 200, message: 'FeedBack has been published!' })
   } catch (error) {
+    console.log(error)
     res.status(400).send({
       status: 400,
       message: "FeedBack can't be saved",
@@ -27,7 +28,8 @@ const createFeedBack = async (req, res, next) => {
 
 const viewParticularFeedBackQuestions = async (req, res, next) => {
   try {
-    const { feedBackQuestionID } = req.params
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     let feedBackQuestion = await feedBackModel.find({
       feedBackQuestionID: feedBackQuestionID,
     })
@@ -42,6 +44,8 @@ const viewParticularFeedBackQuestions = async (req, res, next) => {
 
 const viewAllFeedBackQuestions = async (req, res, next) => {
   try {
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     let FeedBackQuestions = await feedBackModel.find(
       {},
       { feedBackCreatorName: 0 }
@@ -57,6 +61,8 @@ const viewAllFeedBackQuestions = async (req, res, next) => {
 
 const viewParticularFeedBackResponses = async (req, res, next) => {
   try {
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     const { feedBackQuestionID } = req.params
     let FeedBackResponses = await feedBackResponseModel.find({
       feedBackResponseID: feedBackQuestionID,
@@ -72,6 +78,8 @@ const viewParticularFeedBackResponses = async (req, res, next) => {
 
 const viewAllFeedBackResponses = async (req, res, next) => {
   try {
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     let FeedBackResponses = await feedBackResponseModel.find({})
     res.status(200).send({ status: 200, FeedBackResponses })
   } catch (e) {
@@ -84,6 +92,8 @@ const viewAllFeedBackResponses = async (req, res, next) => {
 
 const submitFeedBackResponse = async (req, res, next) => {
   try {
+    const { feedBackModel, feedBackResponseModel } =
+      res.locals.connection.databaseObject
     const { feedBackQuestionID, UserName, UserType, feedBackResponse } =
       req.body
     const newResponse = await feedBackResponseModel.create({

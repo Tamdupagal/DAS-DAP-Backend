@@ -1,8 +1,26 @@
 require('dotenv').config()
-const dbURL = process.env.MONGO_CONNECTION_URL_AUTHENTICATIONDB
-const connection = require('mongoose')
-  .createConnection(dbURL)
-  .useDb('AuthenticationDB')
-console.log(connection)
+const authenticationConnection = require('mongoose').createConnection(
+  process.env.MONGO_CONNECTION_URL_AUTHENTICATIONDB
+)
+const EnrolledCompanies = authenticationConnection.model(
+  'Enrolled Companies',
+  require('../Models/EnrolledCompanies')
+)
+const dependencyInjector = (collectionName) => {
+  const companyUserModel = authenticationConnection.model(
+    collectionName,
+    require('../Models/UserModel')
+  )
+  const companyUserCreatedModel = authenticationConnection.model(
+    collectionName,
+    require('../Models/UserModel')
+  )
 
-module.exports = connection
+  return {
+    authenticationConnection,
+    companyUserCreatedModel,
+    companyUserModel,
+  }
+}
+
+module.exports = { dependencyInjector, EnrolledCompanies }
