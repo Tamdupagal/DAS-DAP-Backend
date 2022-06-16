@@ -1,11 +1,15 @@
 const crypto = require('crypto')
-const { TaskFlowModel } = require('../../Database/DatabaseConfig/DBConnection')
+// const { TaskFlowModel } = require('../../Database/DatabaseConfig/DBConnection')(
+//   'DigitalAidedSchools'
+// )
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
+  // console.log(res.locals)
   try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
     let newTask = new TaskFlowModel({
       taskID: await crypto.randomBytes(20).toString('hex'),
       applicationID:
@@ -39,6 +43,8 @@ const createTaskFlow = async (req, res) => {
 
 const fetchTaskFlow = async (req, res, next) => {
   try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
+
     let taskFlow = await TaskFlowModel.findOne({
       applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
     })
@@ -60,6 +66,8 @@ const fetchTaskFlow = async (req, res, next) => {
 
 const fetchTaskFlows = async (req, res, next) => {
   try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
+
     let taskFlows = await TaskFlowModel.find({})
     // if (taskFlows === null) {
     //   throw DataBaseError('TaskFlowNull')
@@ -77,6 +85,7 @@ const fetchTaskFlows = async (req, res, next) => {
 
 const updateTaskFlow = async (req, res, next) => {
   try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
     if (!req.params.applicationTaskFlowUseCase)
       throw DataBaseError({
         name: 'TaskFlowNull',
@@ -116,6 +125,7 @@ const updateTaskFlow = async (req, res, next) => {
 
 const deleteTaskFlow = async (req, res, next) => {
   try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
     if (!req.params.applicationTaskFlowUseCase)
       throw DataBaseError({
         name: 'TaskFlowNull',

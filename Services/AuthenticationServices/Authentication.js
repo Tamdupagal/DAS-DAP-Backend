@@ -1,6 +1,10 @@
 require('dotenv').config()
 
-const { UserModel } = require('../../Database/DatabaseConfig/DBConnection')
+// const { UserModel } = require('../../Database/DatabaseConfig/DBConnection')
+const {
+  dependencyInjector,
+  EnrolledCompanies,
+} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
@@ -31,9 +35,12 @@ const Authentication = async (req, res, next) => {
 const Authorization = async (req, res) => {
   const { email, password } = req.body
   try {
-    let record = await UserModel.findOne({
+    const { companyUserModel } = await dependencyInjector(res.locals.params)
+    let record = await companyUserModel.findOne({
       email: email,
     })
+    let temp = email.split('@')[1]
+    let databaseID = temp.split('.')[0]
     if (record === null) {
       throw AuthError('recordNull')
     } else {
@@ -47,6 +54,7 @@ const Authorization = async (req, res) => {
           auth: true,
           token,
           typeOfUser: record.typeOfUser,
+          databaseID: databaseID,
         })
       } else {
         throw AuthError('InvalidCredentials')
@@ -62,6 +70,20 @@ const Authorization = async (req, res) => {
   }
 }
 
+const DatabaseValidation = async (req, res, next) => {
+  try {
+    let a = req.params.databaseID || req.body.email.split('@')[0]
+    let record = await EnrolledCompanies.findOne({
+      companyName: req.params.databaseID,
+    })
+    if (record == null) throw AuthError('recordNull')
+    res.locals.params = req.params.databaseID
+    next()
+  } catch (e) {
+    res.send('nope')
+  }
+}
+
 const Logout = async (req, res) => {
   try {
     res.status(200).send({ status: 200, canLogout: true, token: '' })
@@ -74,4 +96,5 @@ module.exports = {
   isAuthenticated: Authentication,
   isAuthorized: Authorization,
   hasLoggedOut: Logout,
+  DatabaseValidation,
 }

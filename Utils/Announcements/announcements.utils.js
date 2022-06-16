@@ -1,12 +1,11 @@
 const crypto = require('crypto')
-const {
-  AnnouncementResponseModel,
-  AnnouncementModel,
-} = require('../../Database/DatabaseConfig/DBConnection')
+// const { AnnouncementResponseModel, AnnouncementModel } =
+//   require('../../Database/DatabaseConfig/DBConnection')('DigitalAidedSchools')
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 const createAnnouncement = async (req, res, next) => {
   try {
+    const { AnnouncementModel } = res.locals.connection.databaseObject
     const newAnnouncement = await AnnouncementModel.create({
       AnnouncementID: await crypto.randomBytes(20).toString('hex'),
       AnnouncementCreatorName: req.body.AnnouncementCreatorName,
@@ -28,6 +27,7 @@ const createAnnouncement = async (req, res, next) => {
 }
 
 const viewParticularAnnouncement = async (req, res, next) => {
+  const { AnnouncementModel } = res.locals.connection.databaseObject
   try {
     const { AnnouncementID } = req.params
     let announcement = await AnnouncementModel.find({
@@ -43,6 +43,7 @@ const viewParticularAnnouncement = async (req, res, next) => {
 }
 
 const viewAllAnnouncements = async (req, res, next) => {
+  const { AnnouncementModel } = res.locals.connection.databaseObject
   try {
     let announcements = await AnnouncementModel.find({})
     res.status(200).send({ status: 200, announcements })
@@ -55,6 +56,7 @@ const viewAllAnnouncements = async (req, res, next) => {
 }
 
 const viewParticularAnnouncementResponses = async (req, res, next) => {
+  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
   try {
     const { AnnouncementReferenceID } = req.params
     let AnnouncementResponses = await AnnouncementResponseModel.find({
@@ -70,6 +72,7 @@ const viewParticularAnnouncementResponses = async (req, res, next) => {
 }
 
 const viewAllAnnouncementResponses = async (req, res, next) => {
+  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
   try {
     let AnnouncementResponses = await AnnouncementResponseModel.find({})
     res.status(200).send({ status: 200, AnnouncementResponses })
@@ -82,6 +85,7 @@ const viewAllAnnouncementResponses = async (req, res, next) => {
 }
 
 const submitAnnouncementResponse = async (req, res, next) => {
+  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
   try {
     const { AnnouncementReferenceID, AnnouncementResponse } = req.body
     const newResponse = await AnnouncementResponseModel.create({

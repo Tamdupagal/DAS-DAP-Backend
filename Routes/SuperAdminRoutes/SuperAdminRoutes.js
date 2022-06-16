@@ -1,11 +1,8 @@
 const Express = require('express')
-const {
-  isAuthenticated,
-} = require('../../Services/AuthenticationServices/Authentication')
 
 const Router = Express.Router()
 const Dashboard = require('./SuperAdminDashboard/Dashboard')
 
-Router.use('/Dashboard', [isAuthenticated, Dashboard])
+Router.use('/Dashboard', [Dashboard])
 
 module.exports = Router
