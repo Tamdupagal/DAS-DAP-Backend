@@ -66,11 +66,11 @@ const viewAnnouncementByUser = async (req, res, next) => {
   try {
     const userName = req.params.userName
     const announcements = await AnnouncementModel.find({})
-    let announcement
+    let announcement = []
     announcements.forEach((announcementNode) => {
       announcementNode.AnnouncementReceivers.forEach((node) => {
         if (userName === node.userName) {
-          announcement = announcementNode
+          announcement.push(announcementNode)
         }
       })
     })
