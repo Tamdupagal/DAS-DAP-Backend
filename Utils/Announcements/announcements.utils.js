@@ -1,6 +1,4 @@
 const crypto = require('crypto')
-// const { AnnouncementResponseModel, AnnouncementModel } =
-//   require('../../Database/DatabaseConfig/DBConnection')('DigitalAidedSchools')
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 const createAnnouncement = async (req, res, next) => {
@@ -13,6 +11,7 @@ const createAnnouncement = async (req, res, next) => {
       AnnouncementTitle: req.body.AnnouncementTitle,
       AnnouncementBody: req.body.AnnouncementBody,
       AnnouncementAttachment: req.body.AnnouncementAttachment,
+      AnnouncementReceivers: req.body.AnnouncementReceivers,
     })
     await newAnnouncement.save()
     res
@@ -30,9 +29,16 @@ const viewParticularAnnouncement = async (req, res, next) => {
   const { AnnouncementModel } = res.locals.connection.databaseObject
   try {
     const { AnnouncementID } = req.params
-    let announcement = await AnnouncementModel.find({
+    let announcement = await AnnouncementModel.findOne({
       AnnouncementID: AnnouncementID,
     })
+    // let announcement = await AnnouncementModel.aggregate([
+    //   {
+    //     $match: {
+    //       AnnouncementID: { $gte: AnnouncementID },
+    //     },
+    //   },
+    // ])
     res.status(200).send({ status: 200, announcement })
   } catch (e) {
     res.status(400).send({
@@ -48,6 +54,29 @@ const viewAllAnnouncements = async (req, res, next) => {
     let announcements = await AnnouncementModel.find({})
     res.status(200).send({ status: 200, announcements })
   } catch (e) {
+    res.status(400).send({
+      status: 400,
+      message: "Announcement can't be fetched",
+    })
+  }
+}
+
+const viewAnnouncementByUser = async (req, res, next) => {
+  const { AnnouncementModel } = res.locals.connection.databaseObject
+  try {
+    const userName = req.params.userName
+    const announcements = await AnnouncementModel.find({})
+    let announcement
+    announcements.forEach((announcementNode) => {
+      announcementNode.AnnouncementReceivers.forEach((node) => {
+        if (userName === node.userName) {
+          announcement = announcementNode
+        }
+      })
+    })
+    res.status(200).send({ status: 200, announcement })
+  } catch (e) {
+    console.log(e)
     res.status(400).send({
       status: 400,
       message: "Announcement can't be fetched",
@@ -113,4 +142,5 @@ module.exports = {
   viewParticularAnnouncementResponses,
   viewAllAnnouncementResponses,
   submitAnnouncementResponse,
+  viewAnnouncementByUser,
 }

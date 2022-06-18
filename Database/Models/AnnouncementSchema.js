@@ -1,5 +1,5 @@
 const Schema = require('mongoose').Schema
-
+const validator = require('validator')
 const AnnouncementSchema = new Schema(
   {
     AnnouncementID: {
@@ -23,6 +23,19 @@ const AnnouncementSchema = new Schema(
     AnnouncementAttachment: {
       type: String,
     },
+    AnnouncementReceivers: [
+      {
+        userEmail: {
+          type: String,
+          validate: (value) => {
+            return validator.isEmail(value)
+          },
+        },
+        userName: {
+          type: String,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

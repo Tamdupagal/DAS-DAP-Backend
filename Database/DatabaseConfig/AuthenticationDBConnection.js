@@ -11,14 +11,9 @@ const dependencyInjector = (collectionName) => {
     collectionName,
     require('../Models/UserModel')
   )
-  const companyUserCreatedModel = authenticationConnection.model(
-    collectionName,
-    require('../Models/UserModel')
-  )
 
   return {
     authenticationConnection,
-    companyUserCreatedModel,
     companyUserModel,
   }
 }

@@ -8,6 +8,7 @@ const {
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
+const { redirect } = require('express/lib/response')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
@@ -80,7 +81,10 @@ const DatabaseValidation = async (req, res, next) => {
     res.locals.params = req.params.databaseID
     next()
   } catch (e) {
-    res.send('nope')
+    res.status(400).send({
+      message: `${req.params.databaseID} doesn't exists!`,
+      redirect: '/Home/ContactUs',
+    })
   }
 }
 

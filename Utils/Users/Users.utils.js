@@ -1,11 +1,20 @@
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
-// const { UserModel, UserCreatedModel } =
-//   require('../../Database/DatabaseConfig/DBConnection')('DigitalAidedSchools')
+const {
+  dependencyInjector,
+} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
 
 const createUser = async (req, res) => {
-  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
+  const { UserModel } = res.locals.connection.databaseObject
+  const { companyUserModel } = await dependencyInjector(res.locals.params)
+
   try {
+    let testCase = req.body.email.split('@')[1]
+    if (res.locals.params !== testCase.split('.')[0]) {
+      throw new Error(
+        'User cannot be saved due to conflict in email! please use company email'
+      )
+    }
     let newUser = new UserModel({
       userID: crypto.randomBytes(20).toString('hex'),
       userName: req.body.userName,
@@ -14,7 +23,7 @@ const createUser = async (req, res) => {
       typeOfUser: req.body.typeOfUser,
       createdOn: new Date().toLocaleString(),
     })
-    let newLoginUser = new UserCreatedModel({
+    let newLoginUser = new companyUserModel({
       userName: req.body.userName,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
@@ -22,7 +31,7 @@ const createUser = async (req, res) => {
       createdOn: new Date().toLocaleString(),
       updatedOn: new Date().toLocaleString(),
     })
-
+    // console.log(newLoginUser)
     await newUser.save()
     await newLoginUser.save()
     res.status(200).send({ status: 200, message: 'User created!' })
@@ -34,7 +43,7 @@ const createUser = async (req, res) => {
 // Fetch Task Flow
 
 const fetchUser = async (req, res, next) => {
-  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
+  const { UserModel } = res.locals.connection.databaseObject
   try {
     let User = await UserModel.findOne(
       {
@@ -56,7 +65,7 @@ const fetchUser = async (req, res, next) => {
 }
 
 const fetchUsers = async (req, res, next) => {
-  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
+  const { UserModel } = res.locals.connection.databaseObject
   try {
     let Users = await UserModel.find({}, { password: 0, userID: 0 })
     if (Users === null) {
@@ -74,7 +83,7 @@ const fetchUsers = async (req, res, next) => {
 // Update Task Flow
 
 const updateUser = async (req, res, next) => {
-  const { UserModel, UserCreatedModel } = res.locals.connection.databaseObject
+  const { UserModel } = res.locals.connection.databaseObject
   try {
     UserModel.findOneAndUpdate(
       {
