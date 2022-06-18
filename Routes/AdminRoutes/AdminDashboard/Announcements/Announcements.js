@@ -24,6 +24,7 @@ Router.route('/viewAllAnnouncement').get(viewAllAnnouncements)
 Router.route('/viewAnnouncement/:AnnouncementID').get(
   viewParticularAnnouncement
 )
+Router.route('/viewAnnouncementByUser/:userName').get(viewAnnouncementByUser)
 Router.route('/viewAllAnnouncementResponses').get(viewAllAnnouncementResponses)
 Router.route('/viewAnnouncementResponse/:AnnouncementID').get(
   viewParticularAnnouncementResponses
