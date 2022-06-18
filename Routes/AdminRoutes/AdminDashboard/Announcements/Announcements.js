@@ -7,6 +7,7 @@ const {
   viewParticularAnnouncement,
   viewAllAnnouncementResponses,
   viewParticularAnnouncementResponses,
+  viewAnnouncementByUser,
   // updateAnnouncements,
   // deleteAnnouncement,
   // deleteAllAnnouncements,
@@ -27,6 +28,7 @@ Router.route('/viewAllAnnouncementResponses').get(viewAllAnnouncementResponses)
 Router.route('/viewAnnouncementResponse/:AnnouncementID').get(
   viewParticularAnnouncementResponses
 )
+
 // Router.route('/updateAnnouncement').put(updateAnnouncements)
 // Router.route('/deleteAnnouncement/:announcementID').delete(deleteAnnouncement)
 // Router.route('/deleteAllAnnouncements').delete(deleteAllAnnouncements)

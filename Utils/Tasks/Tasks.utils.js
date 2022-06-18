@@ -1,13 +1,9 @@
 const crypto = require('crypto')
-// const { TaskFlowModel } = require('../../Database/DatabaseConfig/DBConnection')(
-//   'DigitalAidedSchools'
-// )
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
-  // console.log(res.locals)
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
     let newTask = new TaskFlowModel({

@@ -1,5 +1,13 @@
 const ajv = new (require('ajv'))()
 
+const innerAnnouncementSchema = {
+  type: 'object',
+  properties: {
+    userEmail: { type: 'string' },
+    userName: { type: 'string' },
+  },
+}
+
 const schema = {
   type: 'object',
   properties: {
@@ -8,6 +16,10 @@ const schema = {
     AnnouncementTitle: { type: 'string' },
     AnnouncementBody: { type: 'string' },
     AnnouncementAttachment: { type: 'string' },
+    AnnouncementReceivers: {
+      type: 'array',
+      items: innerAnnouncementSchema,
+    },
   },
   // required: [
   //   'AnnouncementCreatorName,AnnouncementDate,AnnouncementTitle',
@@ -34,6 +46,7 @@ module.exports = {
         next()
       }
     } catch (error) {
+      console.log(error)
       res.status(400).send({
         status: 500,
         message: 'Internal Server Error',
