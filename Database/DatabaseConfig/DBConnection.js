@@ -1,7 +1,46 @@
 require('dotenv').config()
-const dbURL = process.env.MONGO_CONNECTION_URL
-const mongoose = require('mongoose')
+const { defaultConnection } = require('../DatabaseConfig/DefaultConnection')
 
-mongoose.connect(dbURL)
+const dependencyInjector = (dataBaseName) => {
+  const connection = defaultConnection.useDb(dataBaseName)
+  const feedBackModel = connection.model(
+    'FeedBack',
+    require('../Models/FeedBackModel')
+  )
+  const feedBackResponseModel = connection.model(
+    'FeedBackResponse',
+    require('../Models/FeedBackResponseModel')
+  )
+  const UserModel = connection.model('User', require('../Models/UserModel'))
+  const UserCreatedModel = connection.model(
+    'UserCreated',
+    require('../Models/UserCreatedModel')
+  )
 
-module.exports = mongoose
+  const TaskFlowModel = connection.model(
+    'Taskflow',
+    require('../Models/TaskProcessModel')
+  )
+
+  const AnnouncementModel = connection.model(
+    'Announcement',
+    require('../Models/AnnouncementSchema')
+  )
+
+  const AnnouncementResponseModel = connection.model(
+    'Announcement Response',
+    require('../Models/AnnouncementResponseSchema')
+  )
+  return {
+    connection,
+    feedBackModel,
+    feedBackResponseModel,
+    UserModel,
+    UserCreatedModel,
+    TaskFlowModel,
+    AnnouncementResponseModel,
+    AnnouncementModel,
+  }
+}
+
+module.exports = dependencyInjector

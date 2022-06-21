@@ -54,4 +54,4 @@ const taskFlowSchema = new Schema({
   ],
 })
 
-module.exports = mongoose.model('TaskFlow', taskFlowSchema)
+module.exports = taskFlowSchema

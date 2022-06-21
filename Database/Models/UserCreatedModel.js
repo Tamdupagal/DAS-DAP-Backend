@@ -32,4 +32,4 @@ const UserCreatedSchema = new Schema({
   },
 })
 
-module.exports = mongoose.model('UserCreated', UserCreatedSchema)
+module.exports = UserCreatedSchema

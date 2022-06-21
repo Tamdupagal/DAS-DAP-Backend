@@ -1,9 +1,14 @@
 require('dotenv').config()
 
-const UserModel = require('../../Database/Models/UserModel')
+// const { UserModel } = require('../../Database/DatabaseConfig/DBConnection')
+const {
+  dependencyInjector,
+  EnrolledCompanies,
+} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
+const { redirect } = require('express/lib/response')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
@@ -31,9 +36,12 @@ const Authentication = async (req, res, next) => {
 const Authorization = async (req, res) => {
   const { email, password } = req.body
   try {
-    let record = await UserModel.findOne({
+    const { companyUserModel } = await dependencyInjector(res.locals.params)
+    let record = await companyUserModel.findOne({
       email: email,
     })
+    let temp = email.split('@')[1]
+    let databaseID = temp.split('.')[0]
     if (record === null) {
       throw AuthError('recordNull')
     } else {
@@ -47,16 +55,37 @@ const Authorization = async (req, res) => {
           auth: true,
           token,
           typeOfUser: record.typeOfUser,
+          databaseID: databaseID,
+          userName: record.userName,
+          userEmail: record.email,
         })
       } else {
         throw AuthError('InvalidCredentials')
       }
     }
   } catch (Error) {
+    // console.log(Error)
     res.status(Error.errStatusCode).send({
       status: Error.errStatusCode,
       auth: false,
       message: Error.errMessage,
+    })
+  }
+}
+
+const DatabaseValidation = async (req, res, next) => {
+  try {
+    let a = req.params.databaseID || req.body.email.split('@')[0]
+    let record = await EnrolledCompanies.findOne({
+      companyName: req.params.databaseID,
+    })
+    if (record == null) throw AuthError('recordNull')
+    res.locals.params = req.params.databaseID
+    next()
+  } catch (e) {
+    res.status(400).send({
+      message: `${req.params.databaseID} doesn't exists!`,
+      redirect: '/Home/ContactUs',
     })
   }
 }
@@ -73,4 +102,5 @@ module.exports = {
   isAuthenticated: Authentication,
   isAuthorized: Authorization,
   hasLoggedOut: Logout,
+  DatabaseValidation,
 }

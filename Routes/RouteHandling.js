@@ -5,14 +5,11 @@ const AdminRoutes = require('./AdminRoutes/AdminRoutes')
 const SuperAdminRoutes = require('./SuperAdminRoutes/SuperAdminRoutes')
 // const AIRoutes = require('./AIRoutes/AIRoutes')
 const ExtensionRoutes = require('./ExtensionRoutes/ExtensionRoutes')
-const {
-  isAuthorized,
-} = require('../Services/AuthenticationServices/Authentication')
-
+const AuthorizationRoutes = require('./AuthorizationRoutes/AuthorizationRoutes')
 Router.use(cors())
 Router.use(Express.json())
 
-Router.post('/Login', isAuthorized)
+Router.use('/Auth', AuthorizationRoutes)
 Router.use('/Admin', AdminRoutes)
 Router.use('/Extension', ExtensionRoutes)
 Router.use('/SuperAdmin', SuperAdminRoutes)
