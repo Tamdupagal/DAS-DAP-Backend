@@ -20,14 +20,14 @@ const createUser = async (req, res) => {
       userName: req.body.userName,
       email: req.body.email,
       password: req.body.password,
-      typeOfUser: req.body.typeOfUser,
+      typeOfUser: 'User',
       createdOn: new Date().toLocaleString(),
     })
     let newLoginUser = new companyUserModel({
       userName: req.body.userName,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
-      typeOfUser: req.body.typeOfUser,
+      typeOfUser: 'User',
       createdOn: new Date().toLocaleString(),
       updatedOn: new Date().toLocaleString(),
     })

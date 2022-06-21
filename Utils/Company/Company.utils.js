@@ -33,6 +33,7 @@ const createCompany = async (req, res, next) => {
     const EnrolledCompany = await EnrolledCompanies.create({
       companyID: newCompany.companyID,
       companyName: newCompany.companyName,
+      companyUserName: newCompany.companyUserName,
     })
     await EnrolledCompany.save()
     await newCompany.save()
