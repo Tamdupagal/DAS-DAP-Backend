@@ -56,6 +56,8 @@ const Authorization = async (req, res) => {
           token,
           typeOfUser: record.typeOfUser,
           databaseID: databaseID,
+          userName: record.userName,
+          userEmail: record.email,
         })
       } else {
         throw AuthError('InvalidCredentials')
