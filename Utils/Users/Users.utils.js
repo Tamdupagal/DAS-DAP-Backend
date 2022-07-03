@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const {
   dependencyInjector,
 } = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
-
+const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
 const createUser = async (req, res) => {
   const { UserModel } = res.locals.connection.databaseObject
   const { companyUserModel } = await dependencyInjector(res.locals.params)
@@ -34,9 +34,14 @@ const createUser = async (req, res) => {
     // console.log(newLoginUser)
     await newUser.save()
     await newLoginUser.save()
-    res.status(200).send({ status: 200, message: 'User created!' })
-  } catch (err) {
-    res.status(503).send({ status: 503, message: err.message })
+    res.status(200).send({ status: 200, message: `${userName} has joined ` })
+  } catch (error) {
+    let ErrorResponse = DatabaseError(error)
+    console.log(ErrorResponse.errMessage)
+    res.status(ErrorResponse.errStatusCode).send({
+      status: ErrorResponse.errStatusCode,
+      message: ErrorResponse.errMessage,
+    })
   }
 }
 
@@ -92,7 +97,7 @@ const updateUser = async (req, res, next) => {
       { taskList: req.body.taskList },
       (err, doc) => {
         if (err) throw new Error(err)
-        res.send({ status: 200, message: 'Task Updated' })
+        res.status(200).send({ status: 200, message: 'Task Updated' })
       }
     )
   } catch (err) {
