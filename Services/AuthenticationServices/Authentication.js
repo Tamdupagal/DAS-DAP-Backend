@@ -8,7 +8,6 @@ const {
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
-const { redirect } = require('express/lib/response')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
@@ -64,7 +63,9 @@ const Authorization = async (req, res) => {
       }
     }
   } catch (Error) {
-    // console.log(Error)
+    console.log(Error)
+
+    // res.status(400).send('test')
     res.status(Error.errStatusCode).send({
       status: Error.errStatusCode,
       auth: false,

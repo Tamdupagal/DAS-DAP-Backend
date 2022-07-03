@@ -7,7 +7,9 @@ const databaseInitialize = async (req, res, next) => {
     next()
   } catch (e) {
     console.log(e)
-    res.status(400).send(e)
+    res
+      .status(500)
+      .send({ status: 500, message: 'Internal Server Error! Contact Support.' })
   }
 }
 

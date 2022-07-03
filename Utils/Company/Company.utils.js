@@ -35,14 +35,16 @@ const createCompany = async (req, res, next) => {
       companyName: newCompany.companyName,
       companyUserName: newCompany.companyUserName,
     })
-    await EnrolledCompany.save()
-    await newCompany.save()
-    await newUser.save()
+    // await EnrolledCompany.save()
+    // await newCompany.save()
+    // await newUser.save()
 
-    res.status(200).send('Company Registered')
+    res.status(200).send({
+      status: 200,
+      message: `${req.body.companyName} has joined DAS-DAP succesfully!!`,
+    })
   } catch (error) {
-    // console.log(error)
-    let ErrorResponse = DatabaseError(error)
+    let ErrorResponse = await DatabaseError(error)
     console.log(ErrorResponse.errMessage)
     res.status(ErrorResponse.errStatusCode).send({
       status: ErrorResponse.errStatusCode,

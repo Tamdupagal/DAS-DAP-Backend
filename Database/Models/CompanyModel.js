@@ -1,5 +1,5 @@
 const Schema = require('mongoose').Schema
-
+const validator = require('validator')
 const CompanyModel = new Schema({
   companyID: {
     type: String,
@@ -11,6 +11,10 @@ const CompanyModel = new Schema({
   },
   companyEmail: {
     type: String,
+    unique: true,
+    validate: (value) => {
+      return validator.isEmail(value)
+    },
   },
   companyPassword: {
     type: String,

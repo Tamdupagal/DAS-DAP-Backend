@@ -65,16 +65,15 @@ const viewAnnouncementByUser = async (req, res, next) => {
   const { AnnouncementModel } = res.locals.connection.databaseObject
   try {
     const userName = req.params.userName
-    const announcements = await AnnouncementModel.find({})
-    let announcement = []
-    announcements.forEach((announcementNode) => {
-      announcementNode.AnnouncementReceivers.forEach((node) => {
-        if (userName === node.userName) {
-          announcement.push(announcementNode)
-        }
-      })
-    })
-    res.status(200).send({ status: 200, announcement })
+    const announcement = await AnnouncementModel.aggregate([
+      { $unwind: '$AnnouncementReceivers' },
+      {
+        $match: {
+          'AnnouncementReceivers.userName': userName,
+        },
+      },
+    ])
+    await res.status(200).send({ status: 200, announcement })
   } catch (e) {
     console.log(e)
     res.status(400).send({
