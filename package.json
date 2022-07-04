@@ -6,8 +6,7 @@
   "scripts": {
     "start": "npm install && npm run dev",
     "dev": "nodemon index.js",
-    "test": "echo index.js",
-    "preinstall": "npx npm-force-resolutions"
+    "test": "echo index.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +16,6 @@
     "DAP",
     "Node"
   ],
-  "resolutions": {
-    "glob-parent": "^6.0.1"
-  },
   "author": "iHaroon29",
   "license": "ISC",
   "bugs": {
