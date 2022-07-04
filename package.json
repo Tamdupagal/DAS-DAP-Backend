@@ -4,7 +4,7 @@
   "description": "Back-End for DAP-DAS",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npm run dev",
+    "start": "npm install && node index.js",
     "dev": "nodemon index.js",
     "test": "echo index.js"
   },
