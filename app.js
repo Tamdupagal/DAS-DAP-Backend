@@ -8,7 +8,8 @@ const RouteHandling = require('./Routes/RouteHandling')
 app.use(RouteHandling)
 
 app.listen(process.env.PORT || portNumber, () => {
-  console.log(`running on ${portNumber}`)
+  // console.log(process.env.PORT)
+  console.log(`running on ${process.env.PORT || portNumber}`)
 })
 
 module.exports = app
