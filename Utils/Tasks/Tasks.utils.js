@@ -14,6 +14,7 @@ const createTaskFlow = async (req, res) => {
         (await crypto.randomBytes(2).toString('hex')),
       applicationName: req.body.applicationName,
       applicationURL: req.body.applicationURL,
+      applicationDomain: req.body.applicationDomain,
       applicationFLowURL:
         req.body.applicationURL +
         '/' +
@@ -70,13 +71,32 @@ const fetchTaskFlows = async (req, res, next) => {
     // }
     res.status(200).send({ status: 200, taskFlows })
   } catch (err) {
-    console.log(err.errMessage)
-    res.status(err.errStatusCode).send({
-      status: err.errStatusCode,
-      message: err.errMessage,
+    console.log(err.message)
+    res.status(500).send({
+      status: 500,
+      message: err.message,
     })
   }
 }
+
+const fetchTaskFlowsByApplication = async (req, res, next) => {
+  try {
+    const { TaskFlowModel } = res.locals.connection.databaseObject
+    const { applicationDomain } = req.query
+    const taskFlowsByApplication = await TaskFlowModel.aggregate([
+      { $match: { applicationDomain: applicationDomain } },
+    ])
+    console.log(taskFlowsByApplication)
+    res.status(200).send({ status: 200, taskFlowsByApplication })
+  } catch (e) {
+    console.log(e.message)
+    res.status(500).send({
+      status: 500,
+      message: e.message,
+    })
+  }
+}
+
 // Update Task Flow
 
 const updateTaskFlow = async (req, res, next) => {
@@ -152,4 +172,5 @@ module.exports = {
   fetchTaskFlows,
   updateTaskFlow,
   deleteTaskFlow,
+  fetchTaskFlowsByApplication,
 }

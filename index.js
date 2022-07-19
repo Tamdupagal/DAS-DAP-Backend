@@ -1,4 +1,7 @@
 require('dotenv').config()
+const portNumber = process.env.PORT_NUMBER || 8001
+const cluster = require('cluster')
+const totalCPUs = require('os').cpus()
 
 // const https = require('https')
 const app = require('./app')
@@ -32,4 +35,21 @@ const http = require('http')
 //     console.log(`running on ${process.env.PORT || portNumber}`)
 //   })
 
-http.createServer(app)
+if (cluster.isMaster) {
+  totalCPUs.forEach(async (node) => {
+    let worker = await cluster.fork()
+    worker.on('online', () => {
+      console.log(`Worker ${worker.process.pid} is online`)
+    })
+  })
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} has died!`)
+    console.log('Starting new Worker')
+    cluster.fork()
+  })
+} else {
+  http.createServer(app).listen(portNumber, () => {
+    console.log(`Process ${process.pid} is online on port number ${portNumber}`)
+  })
+}
