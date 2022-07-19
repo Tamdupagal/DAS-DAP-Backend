@@ -2,6 +2,7 @@
 nohup.out
 IPtablesbackup.txt
 ssl
+package-lock.json
 # Logs
 logs
 *.log

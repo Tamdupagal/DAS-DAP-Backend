@@ -7,12 +7,18 @@ const {
   fetchTaskFlow,
   fetchTaskFlows,
   deleteTaskFlow,
+  fetchTaskFlowsByApplication,
 } = require('../../../../Utils/Tasks/Tasks.utils')
 
-Router.route('/createTaskFlow').post(createTaskFlow)
+const {
+  taskFlowValidation,
+} = require('../../../../Validators/TaskflowValidation')
+
+Router.route('/createTaskFlow').post(taskFlowValidation, createTaskFlow)
 Router.route('/updateTaskFlow/:applicationTaskFlowUseCase').post(updateTaskFlow)
 Router.route('/viewAllTaskFlow').get(fetchTaskFlows)
 Router.route('/viewTaskFlow/:applicationTaskFlowUseCase').get(fetchTaskFlow)
+Router.route('/viewTaskFlows/search?').get(fetchTaskFlowsByApplication)
 Router.route('/deleteTaskFlow/:applicationTaskFlowUseCase').delete(
   deleteTaskFlow
 )
