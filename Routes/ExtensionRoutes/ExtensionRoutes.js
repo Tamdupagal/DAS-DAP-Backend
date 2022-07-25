@@ -1,7 +1,7 @@
 const Express = require('express')
 const Router = Express.Router()
 const Dashboard = require('./ExtensionDashboard/Dashboard')
-const databaseInitialize = require('../../testing/databaseInitialize')
+const databaseInitialize = require('../../Database/DatabaseConfig/databaseInitialize')
 const {
   isAuthenticated,
   DatabaseValidation,

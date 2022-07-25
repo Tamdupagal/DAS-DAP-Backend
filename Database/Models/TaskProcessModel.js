@@ -44,7 +44,10 @@ const taskFlowSchema = new Schema({
       taskMessage: {
         type: String,
       },
-      xPath: {
+      cssSelector: {
+        type: String,
+      },
+      customURL: {
         type: String,
       },
       targetClickOffsetX: {

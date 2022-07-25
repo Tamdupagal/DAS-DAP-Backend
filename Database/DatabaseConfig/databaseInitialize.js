@@ -1,11 +1,14 @@
-const dependencyInjector = require('../Database/DatabaseConfig/DBConnection')
-
+const dependencyInjector = require('../Schemas/DBConnection')
+const logger = require('../../Services/Logger/Logger')
 const databaseInitialize = async (req, res, next) => {
   try {
     let databaseObject = await dependencyInjector(req.params.databaseID)
     res.locals.connection = { databaseObject }
     next()
   } catch (e) {
+    logger.error(
+      `Failed to initialze the database due ${e.message} for host ${req.host} via the URL ${req.url}`
+    )
     console.log(e)
     res
       .status(500)

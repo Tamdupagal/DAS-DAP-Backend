@@ -4,7 +4,7 @@ require('dotenv').config()
 const {
   dependencyInjector,
   EnrolledCompanies,
-} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
+} = require('../../Database/Schemas/AuthenticationDBConnection')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const AuthError = require('../../Errors/ErrorTypes/AuthenticationError')
