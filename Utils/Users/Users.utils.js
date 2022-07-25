@@ -2,7 +2,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 const {
   dependencyInjector,
-} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
+} = require('../../Database/Schemas/AuthenticationDBConnection')
 const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
 const createUser = async (req, res) => {
   const { UserModel } = res.locals.connection.databaseObject

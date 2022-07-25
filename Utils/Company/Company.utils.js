@@ -1,10 +1,8 @@
-const {
-  companyModel,
-} = require('../../Database/DatabaseConfig/SuperAdminConnection')
+const { companyModel } = require('../../Database/Schemas/SuperAdminConnection')
 const {
   dependencyInjector,
   EnrolledCompanies,
-} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
+} = require('../../Database/Schemas/AuthenticationDBConnection')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
