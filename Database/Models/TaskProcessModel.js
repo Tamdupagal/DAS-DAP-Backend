@@ -16,9 +16,6 @@ const taskFlowSchema = new Schema({
   applicationURL: {
     type: String,
   },
-  applicationDomain: {
-    type: String,
-  },
   applicationFLowURL: {
     type: String,
   },
