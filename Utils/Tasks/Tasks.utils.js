@@ -7,18 +7,13 @@ const createTaskFlow = async (req, res) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
     let newTask = new TaskFlowModel({
-      taskID: await crypto.randomBytes(20).toString('hex'),
+      taskID: crypto.randomBytes(20).toString('hex'),
       applicationID:
-        req.body.applicationName +
-        '-' +
-        (await crypto.randomBytes(2).toString('hex')),
+        req.body.applicationName + '-' + crypto.randomBytes(2).toString('hex'),
       applicationName: req.body.applicationName,
       applicationURL: req.body.applicationURL,
-      applicationDomain: req.body.applicationDomain,
       applicationFLowURL:
-        req.body.applicationURL +
-        '/' +
-        (await req.body.applicationTaskFlowUseCase),
+        req.body.applicationURL + '/' + req.body.applicationTaskFlowUseCase,
       applicationTaskFlowUseCase: req.body.applicationTaskFlowUseCase,
       taskList: req.body.taskList,
     })

@@ -20,7 +20,6 @@ const schema = {
   properties: {
     applicationName: { type: 'string' },
     applicationURL: { type: 'string' },
-    applicationDomain: { type: 'string' },
     applicationTaskFlowUseCase: { type: 'string' },
     taskList: { type: 'array', items: innerProperties },
   },
