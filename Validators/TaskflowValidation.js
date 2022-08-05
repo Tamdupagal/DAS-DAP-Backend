@@ -9,6 +9,7 @@ let innerProperties = {
     htmlTag: { type: 'string' },
     cssSelector: { type: 'string' },
     customURL: { type: 'string' },
+    actionType: { type: 'string' },
     taskMessage: { type: 'string' },
     targetClickOffsetX: { type: 'integer' },
     targetClickOffsetY: { type: 'integer' },
