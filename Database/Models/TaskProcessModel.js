@@ -38,6 +38,9 @@ const taskFlowSchema = new Schema({
       title: {
         type: String,
       },
+      actionType: {
+        type: String,
+      },
       taskMessage: {
         type: String,
       },
