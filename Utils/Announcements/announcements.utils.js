@@ -1,23 +1,30 @@
-const crypto = require('crypto')
-const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
+const ObjectId = require('mongoose').Types.ObjectId
 
+// Create New Announcement MiddleWare
 const createAnnouncement = async (req, res, next) => {
   try {
     const { AnnouncementModel } = res.locals.connection.databaseObject
+    const {
+      announcementCreatorName,
+      announcementDate,
+      announcementTitle,
+      announcementBody,
+      announcementAttachment,
+      announcementReceivers,
+    } = req.body
     const newAnnouncement = await AnnouncementModel.create({
-      AnnouncementID: await crypto.randomBytes(20).toString('hex'),
-      AnnouncementCreatorName: req.body.AnnouncementCreatorName,
-      AnnouncementDate: req.body.AnnouncementDate,
-      AnnouncementTitle: req.body.AnnouncementTitle,
-      AnnouncementBody: req.body.AnnouncementBody,
-      AnnouncementAttachment: req.body.AnnouncementAttachment,
-      AnnouncementReceivers: req.body.AnnouncementReceivers,
+      announcementCreatorName,
+      announcementDate,
+      announcementTitle,
+      announcementBody,
+      announcementAttachment,
+      announcementReceivers,
     })
-    await newAnnouncement.save()
     res
       .status(200)
       .send({ status: 200, message: 'Announcement has been published!' })
   } catch (error) {
+    console.log(error.message)
     res.status(400).send({
       status: 400,
       message: "Announcement can't be saved",
@@ -25,21 +32,39 @@ const createAnnouncement = async (req, res, next) => {
   }
 }
 
-const viewParticularAnnouncement = async (req, res, next) => {
-  const { AnnouncementModel } = res.locals.connection.databaseObject
+// view announcements
+
+const viewAnnouncements = async (req, res, next) => {
   try {
-    const { AnnouncementID } = req.params
-    let announcement = await AnnouncementModel.findOne({
-      AnnouncementID: AnnouncementID,
-    })
-    // let announcement = await AnnouncementModel.aggregate([
-    //   {
-    //     $match: {
-    //       AnnouncementID: { $gte: AnnouncementID },
-    //     },
-    //   },
-    // ])
-    res.status(200).send({ status: 200, announcement })
+    const { AnnouncementModel, UserModel } =
+      res.locals.connection.databaseObject
+    const { announcementID, userId } = req.query
+    let page = parseInt(req.query.page)
+    let result,
+      totalAnnouncementCount,
+      query = []
+    if (announcementID) {
+      query.push({ $match: { _id: ObjectId(announcementID) } })
+    } else if (userId) {
+      const user = await UserModel.findById(
+        { _id: userId },
+        { password: 0, userName: 0 }
+      )
+      query.push(
+        { $unwind: '$AnnouncementReceivers' },
+        {
+          $match: {
+            'AnnouncementReceivers.email': user.email,
+          },
+        }
+      )
+    } else {
+      if (!page || page <= 1) page = 1
+      totalAnnouncementCount = await AnnouncementModel.count()
+      query.push({ $limit: 10 }, { $skip: page * 10 - 10 })
+    }
+    result = await AnnouncementModel.aggregate(query)
+    res.status(200).send({ status: 200, result, totalAnnouncementCount })
   } catch (e) {
     res.status(400).send({
       status: 400,
@@ -48,49 +73,32 @@ const viewParticularAnnouncement = async (req, res, next) => {
   }
 }
 
-const viewAllAnnouncements = async (req, res, next) => {
-  const { AnnouncementModel } = res.locals.connection.databaseObject
-  try {
-    let announcements = await AnnouncementModel.find({})
-    res.status(200).send({ status: 200, announcements })
-  } catch (e) {
-    res.status(400).send({
-      status: 400,
-      message: "Announcement can't be fetched",
-    })
-  }
-}
+// View announcements responses MiddleWare
 
-const viewAnnouncementByUser = async (req, res, next) => {
-  const { AnnouncementModel } = res.locals.connection.databaseObject
+const viewAnnouncementResponse = async (req, res, next) => {
   try {
-    const userName = req.params.userName
-    const announcement = await AnnouncementModel.aggregate([
-      { $unwind: '$AnnouncementReceivers' },
-      {
-        $match: {
-          'AnnouncementReceivers.userName': userName,
-        },
-      },
-    ])
-    await res.status(200).send({ status: 200, announcement })
-  } catch (e) {
-    console.log(e)
-    res.status(400).send({
-      status: 400,
-      message: "Announcement can't be fetched",
-    })
-  }
-}
-
-const viewParticularAnnouncementResponses = async (req, res, next) => {
-  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
-  try {
-    const { AnnouncementReferenceID } = req.params
-    let AnnouncementResponses = await AnnouncementResponseModel.find({
-      AnnouncementReferenceID: AnnouncementReferenceID,
-    })
-    res.status(200).send({ status: 200, AnnouncementResponses })
+    const { AnnouncementResponseModel, UserModel } =
+      res.locals.connection.databaseObject
+    const { page, announcementResponseID, userId } = req.query
+    let result, totalAnnouncementResponseCount
+    let pageNumber = parseInt(page)
+    let query = {},
+      limit,
+      skip
+    if (announcementResponseID) query._id = announcementResponseID
+    if (userId) {
+      let user = await UserModel.find({ _id: ObjectId(userId) })
+      query.AnnouncementResponse.email = user.email
+    }
+    if (!pageNumber || pageNumber <= 1) {
+      limit = 10
+      skip = pageNumber * 10 - 10
+    }
+    totalAnnouncementResponseCount = await AnnouncementResponseModel.count()
+    result = await AnnouncementResponseModel.find(query).limit(limit).skip(skip)
+    res
+      .status(200)
+      .send({ status: 200, result, totalAnnouncementResponseCount })
   } catch (e) {
     res.status(400).send({
       status: 400,
@@ -99,27 +107,16 @@ const viewParticularAnnouncementResponses = async (req, res, next) => {
   }
 }
 
-const viewAllAnnouncementResponses = async (req, res, next) => {
-  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
-  try {
-    let AnnouncementResponses = await AnnouncementResponseModel.find({})
-    res.status(200).send({ status: 200, AnnouncementResponses })
-  } catch (e) {
-    res.status(400).send({
-      status: 400,
-      message: "Announcement Responses can't be fetched",
-    })
-  }
-}
+// Submit response to particular announcement
 
 const submitAnnouncementResponse = async (req, res, next) => {
-  const { AnnouncementResponseModel } = res.locals.connection.databaseObject
   try {
-    const { AnnouncementReferenceID, AnnouncementResponse } = req.body
+    const { AnnouncementResponseModel } = res.locals.connection.databaseObject
+    const { announcementID } = req.query
+    const { announcementResponse } = req.body
     const newResponse = await AnnouncementResponseModel.create({
-      AnnouncementResponseID: await crypto.randomBytes(20).toString('hex'),
-      AnnouncementReferenceID: AnnouncementReferenceID,
-      AnnouncementResponse: AnnouncementResponse,
+      announcementReferenceID: announcementID,
+      announcementResponse,
     })
     await newResponse.save()
     res.status(200).send({
@@ -127,6 +124,7 @@ const submitAnnouncementResponse = async (req, res, next) => {
       message: 'Announcement Response has been submitted!',
     })
   } catch (e) {
+    console.log(e.message)
     res.status(400).send({
       status: 400,
       message: "Announcement Response can't be saved",
@@ -136,10 +134,7 @@ const submitAnnouncementResponse = async (req, res, next) => {
 
 module.exports = {
   createAnnouncement,
-  viewParticularAnnouncement,
-  viewAllAnnouncements,
-  viewParticularAnnouncementResponses,
-  viewAllAnnouncementResponses,
+  viewAnnouncements,
+  viewAnnouncementResponse,
   submitAnnouncementResponse,
-  viewAnnouncementByUser,
 }

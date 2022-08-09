@@ -6,28 +6,37 @@ const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 const createTaskFlow = async (req, res) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
-    let newTask = new TaskFlowModel({
-      taskID: crypto.randomBytes(20).toString('hex'),
+    const {
+      applicationName,
+      applicationUrl,
+      applicationDomain,
+      applicationTaskFlowUseCase,
+      taskList,
+    } = req.body
+    const taskFlow = await TaskFlowModel.findTaskFlow({
+      applicationDomain,
+      applicationTaskFlowUseCase,
+    })
+
+    if (taskFlow.isExisting)
+      throw new Error(
+        `${applicationTaskFlowUseCase} in ${applicationDomain} already exists.`
+      )
+    let newTask = await TaskFlowModel.create({
       applicationID:
-        req.body.applicationName + '-' + crypto.randomBytes(2).toString('hex'),
-      applicationName: req.body.applicationName,
-      applicationURL: req.body.applicationURL,
-      applicationFLowURL:
-        req.body.applicationURL + '/' + req.body.applicationTaskFlowUseCase,
-      applicationTaskFlowUseCase: req.body.applicationTaskFlowUseCase,
-      taskList: req.body.taskList,
+        applicationName + '-' + crypto.randomBytes(2).toString('hex'),
+      applicationName,
+      applicationUrl,
+      applicationDomain,
+      applicationFLowURL: applicationUrl + '/' + applicationTaskFlowUseCase,
+      applicationTaskFlowUseCase,
+      taskList,
     })
-    await newTask.save()
     res
-      .status(200)
-      .send({ status: 200, message: 'TaskFlow has been published!' })
+      .status(201)
+      .send({ status: 201, message: 'TaskFlow has been published!' })
   } catch (error) {
-    let ErrorResponse = DataBaseError(error)
-    console.log(ErrorResponse.errMessage)
-    res.status(ErrorResponse.errStatusCode).send({
-      status: ErrorResponse.errStatusCode,
-      message: ErrorResponse.errMessage,
-    })
+    res.status(400).send({ satus: 400, message: error.message })
   }
 }
 
@@ -36,57 +45,33 @@ const createTaskFlow = async (req, res) => {
 const fetchTaskFlow = async (req, res, next) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
+    const { applicationTaskFlowUseCase, applicationDomain, page } = req.query
+    let query = {},
+      skip,
+      limit = 10,
+      pageNumber = parseInt(page)
 
-    let taskFlow = await TaskFlowModel.findOne({
-      applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
-    })
-    if (taskFlow === null) {
-      throw DataBaseError({
-        name: 'TaskFlowNull',
-        value: req.params.applicationTaskFlowUseCase,
-      })
+    if (applicationTaskFlowUseCase && applicationDomain) {
+      query = {
+        $and: [{ applicationTaskFlowUseCase }, { applicationDomain }],
+      }
     }
-    res.status(200).send({ status: 200, taskFlow })
-  } catch (err) {
-    console.log(err.errMessage)
-    res.status(err.errStatusCode).send({
-      status: err.errStatusCode,
-      message: err.errMessage,
-    })
-  }
-}
-
-const fetchTaskFlows = async (req, res, next) => {
-  try {
-    const { TaskFlowModel } = res.locals.connection.databaseObject
-
-    let taskFlows = await TaskFlowModel.find({})
-    // if (taskFlows === null) {
-    //   throw DataBaseError('TaskFlowNull')
-    // }
-    res.status(200).send({ status: 200, taskFlows })
-  } catch (err) {
-    console.log(err.message)
-    res.status(500).send({
-      status: 500,
-      message: err.message,
-    })
-  }
-}
-
-const fetchTaskFlowsByApplication = async (req, res, next) => {
-  try {
-    const { TaskFlowModel } = res.locals.connection.databaseObject
-    const { applicationDomain } = req.query
-    const taskFlowsByApplication = await TaskFlowModel.aggregate([
-      { $match: { applicationDomain: applicationDomain } },
-    ])
-    console.log(taskFlowsByApplication)
-    res.status(200).send({ status: 200, taskFlowsByApplication })
+    if (applicationDomain) {
+      query.applicationDomain = applicationDomain
+    }
+    if (!pageNumber || pageNumber <= 1) pageNumber = 1
+    skip = pageNumber * 10 - 10
+    let result = await TaskFlowModel.find(query).skip(skip).limit(limit)
+    if (
+      result.length === 0 &&
+      (applicationTaskFlowUseCase || applicationDomain)
+    ) {
+      throw new Error('No such Entry found')
+    }
+    res.status(200).send({ status: 200, result })
   } catch (e) {
-    console.log(e.message)
-    res.status(500).send({
-      status: 500,
+    res.status(400).send({
+      status: 400,
       message: e.message,
     })
   }
@@ -97,15 +82,15 @@ const fetchTaskFlowsByApplication = async (req, res, next) => {
 const updateTaskFlow = async (req, res, next) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
-    if (!req.params.applicationTaskFlowUseCase)
+    if (!req.query.applicationTaskFlowUseCase)
       throw DataBaseError({
         name: 'TaskFlowNull',
-        value: req.params.applicationTaskFlowUseCase,
+        value: req.query.applicationTaskFlowUseCase,
       })
 
     let response = await TaskFlowModel.findOneAndUpdate(
       {
-        applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
+        applicationTaskFlowUseCase: req.query.applicationTaskFlowUseCase,
       },
       {
         taskList: req.body.taskList,
@@ -117,7 +102,7 @@ const updateTaskFlow = async (req, res, next) => {
     if (response === null) {
       throw DataBaseError({
         name: 'TaskFlowNull',
-        value: req.params.applicationTaskFlowUseCase,
+        value: req.query.applicationTaskFlowUseCase,
       })
     }
     res
@@ -137,35 +122,26 @@ const updateTaskFlow = async (req, res, next) => {
 const deleteTaskFlow = async (req, res, next) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
-    if (!req.params.applicationTaskFlowUseCase)
-      throw DataBaseError({
-        name: 'TaskFlowNull',
-        value: req.params.applicationTaskFlowUseCase,
-      })
-    let response = await TaskFlowModel.findOneAndDelete({
-      applicationTaskFlowUseCase: req.params.applicationTaskFlowUseCase,
+    const { applicationTaskFlowUseCase, applicationDomain } = req.query
+    let result = await TaskFlowModel.findOneAndDelete({
+      $and: [{ applicationTaskFlowUseCase, applicationDomain }],
     })
-    if (response === null) {
-      throw DataBaseError({
-        name: 'TaskFlowNull',
-        value: req.params.applicationTaskFlowUseCase,
-      })
-    }
-    res.status(200).send({ status: 200, message: 'TaskFlow has been Deleted!' })
-  } catch (err) {
-    console.log(err.errMessage)
-    res.status(err.errStatusCode).send({
-      status: err.errStatusCode,
-      message: err.errMessage,
+    if (!result)
+      throw new Error(
+        `${applicationTaskFlowUseCase} in ${applicationDomain} doesn't exist.`
+      )
+    res.status(200).send({
+      status: 200,
+      message: `${applicationTaskFlowUseCase} from ${applicationDomain} has been deleted.`,
     })
+  } catch (e) {
+    res.status(400).send({ status: 400, message: e.message })
   }
 }
 
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
-  fetchTaskFlows,
   updateTaskFlow,
   deleteTaskFlow,
-  fetchTaskFlowsByApplication,
 }

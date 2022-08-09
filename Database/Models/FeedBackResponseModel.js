@@ -3,18 +3,14 @@ const { Schema } = mongoose
 
 const feedBackResponseSchema = new Schema(
   {
-    feedBackResponseID: {
-      type: String,
-      unique: true,
-    },
     feedBackReferenceID: {
       type: String,
       required: true,
     },
-    UserName: {
+    email: {
       type: String,
     },
-    UserType: {
+    userType: {
       type: String,
     },
     feedBackResponse: [

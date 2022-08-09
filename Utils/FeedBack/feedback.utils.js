@@ -1,16 +1,17 @@
 const crypto = require('crypto')
+const ObjectID = require('mongoose').Types.ObjectId
 const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 const createFeedBack = async (req, res, next) => {
   try {
     const { feedBackModel } = res.locals.connection.databaseObject
+    const { feedBackCreatorName, feedBackQuestions, feedBackQuestionImage } =
+      req.body
     const newFeedBack = await feedBackModel.create({
-      feedBackQuestionID: await crypto.randomBytes(20).toString('hex'),
-      feedBackCreatorName: req.body.feedBackCreatorName,
-      feedBackQuestions: req.body.feedBackQuestions,
-      feedBackQuestionImage: req.body.feedBackQuestionImage,
+      feedBackCreatorName,
+      feedBackQuestions,
+      feedBackQuestionImage,
     })
-    await newFeedBack.save()
     res
       .status(200)
       .send({ status: 200, message: 'FeedBack has been published!' })
@@ -23,14 +24,24 @@ const createFeedBack = async (req, res, next) => {
   }
 }
 
-const viewParticularFeedBackQuestions = async (req, res, next) => {
+const viewFeedBackQuestions = async (req, res, next) => {
   try {
     const { feedBackModel } = res.locals.connection.databaseObject
-    let feedBackQuestion = await feedBackModel.find({
-      feedBackQuestionID: feedBackQuestionID,
-    })
-    res.status(200).send({ status: 200, feedBackQuestion })
+    const { feedBackID, page } = req.query
+    let query = {},
+      limit,
+      skip,
+      pageNumber = parseInt(page),
+      totalCount
+    if (feedBackID) query._id = ObjectID(feedBackID)
+    if (!pageNumber || pageNumber <= 1) pageNumber = 1
+    limit = 10
+    skip = pageNumber * 10 - 10
+    totalCount = await feedBackModel.count()
+    let result = await feedBackModel.find(query).limit(limit).skip(skip)
+    res.status(200).send({ status: 200, result, totalCount })
   } catch (e) {
+    console.log(e.message)
     res.status(400).send({
       status: 400,
       message: "FeedBack questions can't be fetched",
@@ -38,44 +49,30 @@ const viewParticularFeedBackQuestions = async (req, res, next) => {
   }
 }
 
-const viewAllFeedBackQuestions = async (req, res, next) => {
+const viewFeedBackResponses = async (req, res, next) => {
   try {
-    const { feedBackModel } = res.locals.connection.databaseObject
-    let FeedBackQuestions = await feedBackModel.find(
-      {},
-      { feedBackCreatorName: 0 }
-    )
-    res.status(200).send({ status: 200, FeedBackQuestions })
+    const { feedBackResponseModel, UserModel } =
+      res.locals.connection.databaseObject
+    const { feedBackID, page, userId } = req.query
+    let query = {},
+      pageNumber,
+      limit,
+      skip
+    if (feedBackID) query.feedBackReferenceID = feedBackID
+    if (userId && feedBackID) {
+      let user = await UserModel.find({
+        _id: ObjectID(userId),
+      })
+      query.email = user.email
+    }
+    if (!page || page <= 1) pageNumber = 1
+    limit = 10
+    skip = pageNumber * 10 - 10
+    let totalCount = await feedBackResponseModel.count()
+    let result = await feedBackResponseModel.find(query).limit(limit).skip(skip)
+    res.status(200).send({ status: 200, result, totalCount })
   } catch (e) {
-    res.status(400).send({
-      status: 400,
-      message: "FeedBack questions can't be fetched",
-    })
-  }
-}
-
-const viewParticularFeedBackResponses = async (req, res, next) => {
-  try {
-    const { feedBackResponseModel } = res.locals.connection.databaseObject
-    const { feedBackQuestionID } = req.params
-    let FeedBackResponses = await feedBackResponseModel.find({
-      feedBackResponseID: feedBackQuestionID,
-    })
-    res.status(200).send({ status: 200, FeedBackResponses })
-  } catch (e) {
-    res.status(400).send({
-      status: 400,
-      message: "FeedBack Responses can't be fetched",
-    })
-  }
-}
-
-const viewAllFeedBackResponses = async (req, res, next) => {
-  try {
-    const { feedBackResponseModel } = res.locals.connection.databaseObject
-    let FeedBackResponses = await feedBackResponseModel.find({})
-    res.status(200).send({ status: 200, FeedBackResponses })
-  } catch (e) {
+    console.log(e.message)
     res.status(400).send({
       status: 400,
       message: "FeedBack Responses can't be fetched",
@@ -86,13 +83,11 @@ const viewAllFeedBackResponses = async (req, res, next) => {
 const submitFeedBackResponse = async (req, res, next) => {
   try {
     const { feedBackResponseModel } = res.locals.connection.databaseObject
-    const { feedBackQuestionID, UserName, UserType, feedBackResponse } =
-      req.body
+    const { feedBackID, email, userType, feedBackResponse } = req.body
     const newResponse = await feedBackResponseModel.create({
-      feedBackResponseID: await crypto.randomBytes(20).toString('hex'),
-      feedBackReferenceID: feedBackQuestionID,
-      UserName: UserName,
-      UserType: UserType,
+      feedBackReferenceID: feedBackID,
+      email: email,
+      userType: userType,
       feedBackResponse: feedBackResponse,
     })
     await newResponse.save()
@@ -109,9 +104,7 @@ const submitFeedBackResponse = async (req, res, next) => {
 
 module.exports = {
   createFeedBack,
-  viewAllFeedBackQuestions,
-  viewAllFeedBackResponses,
-  viewParticularFeedBackQuestions,
-  viewParticularFeedBackResponses,
+  viewFeedBackQuestions,
+  viewFeedBackResponses,
   submitFeedBackResponse,
 }

@@ -9,8 +9,8 @@ let innerProperties = {
     htmlTag: { type: 'string' },
     cssSelector: { type: 'string' },
     customURL: { type: 'string' },
-    actionType: { type: 'string' },
     taskMessage: { type: 'string' },
+    actionType: { type: 'string' },
     targetClickOffsetX: { type: 'integer' },
     targetClickOffsetY: { type: 'integer' },
   },
@@ -21,10 +21,20 @@ const schema = {
   properties: {
     applicationName: { type: 'string' },
     applicationURL: { type: 'string' },
+    applicationDomain: { type: 'string' },
     applicationTaskFlowUseCase: { type: 'string' },
-    taskList: { type: 'array', items: innerProperties },
+    taskList: {
+      type: 'array',
+      items: innerProperties,
+      required: ['title', 'taskMessage'],
+    },
   },
-  required: ['applicationTaskFlowUseCase'],
+  required: [
+    'applicationTaskFlowUseCase',
+    'applicationName',
+    'applicationURL',
+    'applicationDomain',
+  ],
   additionalProperties: false,
 }
 
@@ -37,7 +47,7 @@ module.exports = {
         res.status(400).send({
           status: 400,
           message:
-            validate.errors[0].instancePath.split('/')[1] +
+            validate.errors[0].instancePath.split('/').slice(-1) +
             ' ' +
             validate.errors[0].message,
           data: validate.errors,
@@ -49,7 +59,7 @@ module.exports = {
       console.log(error)
       res.status(400).send({
         status: 500,
-        message: 'Internal Server Error',
+        message: 'Internal Server Error from TaskFlow Validation',
       })
     }
   },

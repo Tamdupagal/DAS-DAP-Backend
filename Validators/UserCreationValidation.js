@@ -1,37 +1,21 @@
 const ajv = new (require('ajv'))()
 
-const innerAnnouncementSchema = {
-  type: 'object',
-  properties: {
-    email: { type: 'string' },
-    userName: { type: 'string' },
-  },
-}
-
 const schema = {
   type: 'object',
   properties: {
-    AnnouncementCreatorName: { type: 'string' },
-    AnnouncementDate: { type: 'string' },
-    AnnouncementTitle: { type: 'string' },
-    AnnouncementBody: { type: 'string' },
-    AnnouncementAttachment: { type: 'string' },
-    AnnouncementReceivers: {
-      type: 'array',
-      items: innerAnnouncementSchema,
+    userName: { type: 'string' },
+    email: {
+      type: 'string',
+      pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$',
     },
+    password: { type: 'string' },
   },
-  required: [
-    'AnnouncementCreatorName',
-    'AnnouncementDate',
-    'AnnouncementTitle',
-    'AnnouncementBody',
-  ],
+  required: ['userName', 'email', 'password'],
   additionalProperties: false,
 }
 
 module.exports = {
-  async announcementSchemaValidation(req, res, next) {
+  async userCreationValidation(req, res, next) {
     try {
       const validate = ajv.compile(schema)
       let validity = await validate(req.body)
@@ -51,7 +35,7 @@ module.exports = {
       console.log(error)
       res.status(400).send({
         status: 500,
-        message: 'Internal Server Error',
+        message: 'Internal Server Error- from User-Creation Validation',
       })
     }
   },

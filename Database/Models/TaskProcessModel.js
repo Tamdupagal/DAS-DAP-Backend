@@ -2,27 +2,23 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const taskFlowSchema = new Schema({
-  taskID: {
-    type: String,
-    unique: true,
-  },
   applicationID: {
     type: String,
-    unique: true,
   },
   applicationName: {
     type: String,
   },
-  applicationURL: {
+  applicationUrl: {
     type: String,
   },
-  applicationFLowURL: {
+  applicationDomain: {
+    type: String,
+  },
+  applicationFLowUrl: {
     type: String,
   },
   applicationTaskFlowUseCase: {
     type: String,
-    unique: true,
-    required: [true, 'Application TaskFlowUseCase is required'],
   },
   taskList: [
     {
@@ -32,7 +28,10 @@ const taskFlowSchema = new Schema({
       htmlTag: {
         type: String,
       },
-      targetURL: {
+      targetUrl: {
+        type: String,
+      },
+      actionType: {
         type: String,
       },
       title: {
@@ -47,7 +46,7 @@ const taskFlowSchema = new Schema({
       cssSelector: {
         type: String,
       },
-      customURL: {
+      customUrl: {
         type: String,
       },
       targetClickOffsetX: {
@@ -59,5 +58,22 @@ const taskFlowSchema = new Schema({
     },
   ],
 })
+
+taskFlowSchema.statics.findTaskFlow = async function (value) {
+  try {
+    if (value == null) throw new Error(`Invalid ${value}`)
+    const { applicationTaskFlowUseCase, applicationDomain } = value
+    let query = {}
+    if (applicationTaskFlowUseCase)
+      query.applicationTaskFlowUseCase = applicationTaskFlowUseCase
+    if (applicationDomain) query.applicationDomain = applicationDomain
+    // if (userID) query._id = ObjectId(userID)
+    let taskFlow = await this.findOne(query)
+    if (taskFlow) return { taskFlow, isExisting: true }
+    return { isExisting: false }
+  } catch (e) {
+    console.log(e.message)
+  }
+}
 
 module.exports = taskFlowSchema

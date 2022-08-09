@@ -9,7 +9,6 @@ const databaseInitialize = async (req, res, next) => {
     logger.error(
       `Failed to initialze the database due ${e.message} for host ${req.host} via the URL ${req.url}`
     )
-    console.log(e)
     res
       .status(500)
       .send({ status: 500, message: 'Internal Server Error! Contact Support.' })

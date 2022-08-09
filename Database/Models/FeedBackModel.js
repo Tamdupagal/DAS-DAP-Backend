@@ -3,10 +3,6 @@ const { Schema } = mongoose
 
 const feedBackSchema = new Schema(
   {
-    feedBackQuestionID: {
-      type: String,
-      unique: true,
-    },
     feedBackCreaterName: {
       type: String,
     },

@@ -1,6 +1,5 @@
 require('dotenv').config()
 
-// const { UserModel } = require('../../Database/DatabaseConfig/DBConnection')
 const {
   dependencyInjector,
   EnrolledCompanies,
@@ -46,7 +45,7 @@ const Authorization = async (req, res) => {
     } else {
       let verify = await bcrypt.compare(password, record.password)
       if (verify) {
-        let token = await JWT.sign({ id: record._id }, process.env.secret, {
+        let token = JWT.sign({ id: record._id }, process.env.secret, {
           expiresIn: 86400,
         })
         await res.status(200).send({
@@ -55,7 +54,6 @@ const Authorization = async (req, res) => {
           token,
           typeOfUser: record.typeOfUser,
           databaseID: databaseID,
-          userName: record.userName,
           userEmail: record.email,
         })
       } else {
@@ -64,8 +62,6 @@ const Authorization = async (req, res) => {
     }
   } catch (Error) {
     console.log(Error)
-
-    // res.status(400).send('test')
     res.status(Error.errStatusCode).send({
       status: Error.errStatusCode,
       auth: false,
@@ -76,7 +72,7 @@ const Authorization = async (req, res) => {
 
 const DatabaseValidation = async (req, res, next) => {
   try {
-    let a = req.params.databaseID || req.body.email.split('@')[0]
+    // let a = req.params.databaseID || req.body.email.split('@')[0]
     let record = await EnrolledCompanies.findOne({
       companyName: req.params.databaseID,
     })

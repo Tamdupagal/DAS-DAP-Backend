@@ -12,10 +12,6 @@ const dependencyInjector = (dataBaseName) => {
     require('../Models/FeedBackResponseModel')
   )
   const UserModel = connection.model('User', require('../Models/UserModel'))
-  const UserCreatedModel = connection.model(
-    'UserCreated',
-    require('../Models/UserCreatedModel')
-  )
 
   const TaskFlowModel = connection.model(
     'Taskflow',
@@ -36,7 +32,6 @@ const dependencyInjector = (dataBaseName) => {
     feedBackModel,
     feedBackResponseModel,
     UserModel,
-    UserCreatedModel,
     TaskFlowModel,
     AnnouncementResponseModel,
     AnnouncementModel,

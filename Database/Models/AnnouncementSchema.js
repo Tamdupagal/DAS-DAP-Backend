@@ -2,30 +2,26 @@ const Schema = require('mongoose').Schema
 const validator = require('validator')
 const AnnouncementSchema = new Schema(
   {
-    AnnouncementID: {
-      type: String,
-      unique: true,
-    },
-    AnnouncementCreatorName: {
+    announcementCreatorName: {
       type: String,
     },
-    AnnouncementDate: {
+    announcementDate: {
       type: String,
       required: true,
     },
-    AnnouncementTitle: {
+    announcementTitle: {
       type: String,
       required: true,
     },
-    AnnouncementBody: {
+    announcementBody: {
       type: String,
     },
-    AnnouncementAttachment: {
+    announcementAttachment: {
       type: String,
     },
-    AnnouncementReceivers: [
+    announcementReceivers: [
       {
-        userEmail: {
+        email: {
           type: String,
           validate: (value) => {
             return validator.isEmail(value)
