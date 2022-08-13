@@ -14,6 +14,7 @@ let innerProperties = {
     targetClickOffsetX: { type: 'integer' },
     targetClickOffsetY: { type: 'integer' },
   },
+  required: ['title', 'taskMessage', 'actionType'],
 }
 
 const schema = {
@@ -26,7 +27,6 @@ const schema = {
     taskList: {
       type: 'array',
       items: innerProperties,
-      required: ['title', 'taskMessage'],
     },
   },
   required: [

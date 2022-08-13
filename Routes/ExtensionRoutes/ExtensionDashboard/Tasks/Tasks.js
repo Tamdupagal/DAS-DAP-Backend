@@ -13,7 +13,7 @@ const {
   taskFlowValidation,
 } = require('../../../../Validators/TaskflowValidation')
 
-Router.route('/new').post(taskFlowValidation, createTaskFlow)
+Router.route('/').post(taskFlowValidation, createTaskFlow)
 Router.route('/search?').put(updateTaskFlow)
 Router.route('/search?').get(fetchTaskFlow)
 Router.route('/search?').delete(deleteTaskFlow)

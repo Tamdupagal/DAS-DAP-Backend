@@ -6,14 +6,12 @@ const {
   viewFeedBackQuestions,
   viewFeedBackResponses,
   submitFeedBackResponse,
-  // updateFeedBackQuestions,
-  // deleteFeedBackQuestions,
 } = require('../../../../Utils/FeedBack/feedback.utils')
 const {
   feedBackSchemaValidation,
 } = require('../../../../Validators/FeedBackValidation')
 
-Router.post('/new', [feedBackSchemaValidation, createFeedBack])
+Router.post('/', [feedBackSchemaValidation, createFeedBack])
 Router.route('/search?').get(viewFeedBackQuestions)
 Router.route('/searchResponses?').get(viewFeedBackResponses)
 Router.route('/submit').post(submitFeedBackResponse)

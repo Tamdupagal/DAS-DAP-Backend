@@ -6,7 +6,7 @@ const {
   hasLoggedOut,
 } = require('../../../Services/AuthenticationServices/Authentication')
 
-Router.use('/Companies', Companies)
-Router.get('/Logout', hasLoggedOut)
+Router.use('/companies', Companies)
+Router.get('/logout', hasLoggedOut)
 
 module.exports = Router

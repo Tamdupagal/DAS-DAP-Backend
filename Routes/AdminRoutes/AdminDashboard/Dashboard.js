@@ -10,10 +10,10 @@ const User = require('./Users/Users')
 const FeedBack = require('./FeedBack/FeedBack')
 const Announcement = require('./Announcements/Announcements')
 
-Router.use('/Tasks', Tasks)
-Router.use('/User', User)
-Router.use('/Announcement', Announcement)
-Router.use('/FeedBack', FeedBack)
-Router.use('/Logout', hasLoggedOut)
+Router.use('/tasks', Tasks)
+Router.use('/user', User)
+Router.use('/announcement', Announcement)
+Router.use('/feedBack', FeedBack)
+Router.use('/logout', hasLoggedOut)
 
 module.exports = Router

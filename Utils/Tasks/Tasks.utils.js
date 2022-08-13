@@ -22,21 +22,21 @@ const createTaskFlow = async (req, res) => {
       throw new Error(
         `${applicationTaskFlowUseCase} in ${applicationDomain} already exists.`
       )
-    let newTask = await TaskFlowModel.create({
-      applicationID:
-        applicationName + '-' + crypto.randomBytes(2).toString('hex'),
-      applicationName,
-      applicationUrl,
-      applicationDomain,
-      applicationFLowURL: applicationUrl + '/' + applicationTaskFlowUseCase,
-      applicationTaskFlowUseCase,
-      taskList,
-    })
+    // let newTask = await TaskFlowModel.create({
+    //   applicationID:
+    //     applicationName + '-' + crypto.randomBytes(2).toString('hex'),
+    //   applicationName,
+    //   applicationUrl,
+    //   applicationDomain,
+    //   applicationFLowURL: applicationUrl + '/' + applicationTaskFlowUseCase,
+    //   applicationTaskFlowUseCase,
+    //   taskList,
+    // })
     res
       .status(201)
       .send({ status: 201, message: 'TaskFlow has been published!' })
-  } catch (error) {
-    res.status(400).send({ satus: 400, message: error.message })
+  } catch (e) {
+    res.status(400).send({ satus: 400, message: e.message })
   }
 }
 

@@ -9,7 +9,7 @@ const {
 } = require('../../../../Validators/UserCreationValidation')
 const Router = Express.Router()
 
-Router.route('/new').post([userCreationValidation, createUser])
+Router.route('/').post([userCreationValidation, createUser])
 
 Router.route('/search?').get(fetchUser)
 // Router.route('/search?').put(updateUser)
