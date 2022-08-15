@@ -45,6 +45,6 @@ const http = require('http')
 //   //     console.log(`running on ${process.env.PORT || portNumber}`)
 //   //   })
 // }
-http.createServer(app).listen(portNumber, () => {
+http.createServer(app).listen(process.env.PORT || portNumber, () => {
   logger.info(`Process ${process.pid} is online on port number ${portNumber}`)
 })
