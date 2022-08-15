@@ -3,9 +3,9 @@ const ajv = new (require('ajv'))()
 const innerQuestionSchema = {
   type: 'object',
   properties: {
-    feedBackQuestion: { type: 'string' },
-    feedBackQuestionType: { type: 'string' },
-    feedBackQuestionOptions: {
+    feedbackQuestion: { type: 'string' },
+    feedbackQuestionType: { type: 'string' },
+    feedbackQuestionOptions: {
       type: 'array',
     },
   },
@@ -14,13 +14,13 @@ const innerQuestionSchema = {
 const schema = {
   type: 'object',
   properties: {
-    feedBackCreatorName: { type: 'string' },
-    feedBackQuestions: {
+    feedbackCreatorName: { type: 'string' },
+    feedbackQuestions: {
       type: 'array',
       items: innerQuestionSchema,
     },
   },
-  required: ['feedBackCreatorName', 'feedBackQuestions'],
+  required: ['feedbackCreatorName', 'feedbackQuestions'],
   additionalProperties: false,
 }
 

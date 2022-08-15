@@ -14,8 +14,6 @@ const {
 Router.post('/', [feedBackSchemaValidation, createFeedBack])
 Router.route('/search?').get(viewFeedBackQuestions)
 Router.route('/searchResponses?').get(viewFeedBackResponses)
-Router.route('/submit').post(submitFeedBackResponse)
-// Router.route('/updateFeedBack').put(updateFeedBackQuestions)
-// Router.route('/deleteFeedBack').delete(deleteFeedBackQuestions)
+// Router.route('/submit').post(submitFeedBackResponse)
 
 module.exports = Router

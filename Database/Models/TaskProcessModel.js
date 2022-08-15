@@ -1,63 +1,57 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
-const taskFlowSchema = new Schema({
-  applicationID: {
-    type: String,
-  },
-  applicationName: {
-    type: String,
-  },
-  applicationUrl: {
-    type: String,
-  },
-  applicationDomain: {
-    type: String,
-  },
-  applicationFLowUrl: {
-    type: String,
-  },
-  applicationTaskFlowUseCase: {
-    type: String,
-  },
-  taskList: [
-    {
-      stepNumber: {
-        type: Number,
-      },
-      htmlTag: {
-        type: String,
-      },
-      targetUrl: {
-        type: String,
-      },
-      actionType: {
-        type: String,
-      },
-      title: {
-        type: String,
-      },
-      actionType: {
-        type: String,
-      },
-      taskMessage: {
-        type: String,
-      },
-      cssSelector: {
-        type: String,
-      },
-      customUrl: {
-        type: String,
-      },
-      targetClickOffsetX: {
-        type: Number,
-      },
-      targetClickOffsetY: {
-        type: Number,
-      },
+const taskFlowSchema = new Schema(
+  {
+    applicationName: {
+      type: String,
     },
-  ],
-})
+    applicationDomain: {
+      type: String,
+    },
+    applicationTaskFlowUseCase: {
+      type: String,
+    },
+    taskList: [
+      {
+        stepNumber: {
+          type: Number,
+        },
+        htmlTag: {
+          type: String,
+        },
+        targetUrl: {
+          type: String,
+        },
+        actionType: {
+          type: String,
+        },
+        title: {
+          type: String,
+        },
+        actionType: {
+          type: String,
+        },
+        taskMessage: {
+          type: String,
+        },
+        cssSelector: {
+          type: String,
+        },
+        customUrl: {
+          type: String,
+        },
+        targetClickOffsetX: {
+          type: Number,
+        },
+        targetClickOffsetY: {
+          type: Number,
+        },
+      },
+    ],
+  },
+  { timestamps: true }
+)
 
 taskFlowSchema.statics.findTaskFlow = async function (value) {
   try {

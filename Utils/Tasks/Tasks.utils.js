@@ -1,6 +1,3 @@
-const crypto = require('crypto')
-const DataBaseError = require('../../Errors/ErrorTypes/DataBaseError')
-
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
@@ -8,11 +5,11 @@ const createTaskFlow = async (req, res) => {
     const { TaskFlowModel } = res.locals.connection.databaseObject
     const {
       applicationName,
-      applicationUrl,
       applicationDomain,
       applicationTaskFlowUseCase,
       taskList,
     } = req.body
+
     const taskFlow = await TaskFlowModel.findTaskFlow({
       applicationDomain,
       applicationTaskFlowUseCase,
@@ -22,19 +19,16 @@ const createTaskFlow = async (req, res) => {
       throw new Error(
         `${applicationTaskFlowUseCase} in ${applicationDomain} already exists.`
       )
-    // let newTask = await TaskFlowModel.create({
-    //   applicationID:
-    //     applicationName + '-' + crypto.randomBytes(2).toString('hex'),
-    //   applicationName,
-    //   applicationUrl,
-    //   applicationDomain,
-    //   applicationFLowURL: applicationUrl + '/' + applicationTaskFlowUseCase,
-    //   applicationTaskFlowUseCase,
-    //   taskList,
-    // })
-    res
-      .status(201)
-      .send({ status: 201, message: 'TaskFlow has been published!' })
+    const newTask = await TaskFlowModel.create({
+      applicationName,
+      applicationDomain,
+      applicationTaskFlowUseCase,
+      taskList,
+    })
+    res.status(201).send({
+      status: 201,
+      message: `Taskflow named ${applicationTaskFlowUseCase} has been published!`,
+    })
   } catch (e) {
     res.status(400).send({ satus: 400, message: e.message })
   }
@@ -47,6 +41,7 @@ const fetchTaskFlow = async (req, res, next) => {
     const { TaskFlowModel } = res.locals.connection.databaseObject
     const { applicationTaskFlowUseCase, applicationDomain, page } = req.query
     let query = {},
+      projection = { taskList: 0 },
       skip,
       limit = 10,
       pageNumber = parseInt(page)
@@ -55,20 +50,31 @@ const fetchTaskFlow = async (req, res, next) => {
       query = {
         $and: [{ applicationTaskFlowUseCase }, { applicationDomain }],
       }
+      projection = {}
+    } else if (applicationDomain) {
+      query = { applicationDomain }
     }
-    if (applicationDomain) {
-      query.applicationDomain = applicationDomain
-    }
+
     if (!pageNumber || pageNumber <= 1) pageNumber = 1
+
     skip = pageNumber * 10 - 10
-    let result = await TaskFlowModel.find(query).skip(skip).limit(limit)
+
+    const result = await TaskFlowModel.find(query, projection)
+      .skip(skip)
+      .limit(limit)
+
     if (
       result.length === 0 &&
       (applicationTaskFlowUseCase || applicationDomain)
     ) {
       throw new Error('No such Entry found')
     }
-    res.status(200).send({ status: 200, result })
+
+    if (result.length === 1) {
+      res.status(200).send({ status: 200, result: result[0] })
+    } else {
+      res.status(200).send({ status: 200, result, totalCount: result.length })
+    }
   } catch (e) {
     res.status(400).send({
       status: 400,
@@ -82,12 +88,9 @@ const fetchTaskFlow = async (req, res, next) => {
 const updateTaskFlow = async (req, res, next) => {
   try {
     const { TaskFlowModel } = res.locals.connection.databaseObject
-    if (!req.query.applicationTaskFlowUseCase)
-      throw DataBaseError({
-        name: 'TaskFlowNull',
-        value: req.query.applicationTaskFlowUseCase,
-      })
-
+    const { applicationTaskFlowUseCase, applicationDomain } = req.query
+    if (!applicationTaskFlowUseCase && !applicationDomain)
+      throw new Error(`Testing`)
     let response = await TaskFlowModel.findOneAndUpdate(
       {
         applicationTaskFlowUseCase: req.query.applicationTaskFlowUseCase,
@@ -100,19 +103,16 @@ const updateTaskFlow = async (req, res, next) => {
       }
     )
     if (response === null) {
-      throw DataBaseError({
-        name: 'TaskFlowNull',
-        value: req.query.applicationTaskFlowUseCase,
-      })
+      throw new Error(`Testing`)
     }
     res
       .status(200)
       .send({ status: 200, message: 'TaskFlow(s) has been Updated!' })
-  } catch (err) {
-    console.log(err.errMessage)
-    res.status(err.errStatusCode).send({
-      status: err.errStatusCode,
-      message: err.errMessage,
+  } catch (e) {
+    console.log(e.message)
+    res.status(400).send({
+      status: 400,
+      message: e.message,
     })
   }
 }

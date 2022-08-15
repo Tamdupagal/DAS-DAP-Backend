@@ -3,9 +3,8 @@ const { Schema } = mongoose
 
 const feedBackResponseSchema = new Schema(
   {
-    feedBackReferenceID: {
+    feedbackReferenceId: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -13,12 +12,12 @@ const feedBackResponseSchema = new Schema(
     userType: {
       type: String,
     },
-    feedBackResponse: [
+    feedbackResponse: [
       {
-        feedBackQuestion: {
+        feedbackQuestion: {
           type: String,
         },
-        feedBackAnswer: {
+        feedbackAnswer: {
           type: String,
         },
         responseTimeStamp: {

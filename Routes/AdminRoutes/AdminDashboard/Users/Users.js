@@ -10,7 +10,6 @@ const {
 const Router = Express.Router()
 
 Router.route('/').post([userCreationValidation, createUser])
-
 Router.route('/search?').get(fetchUser)
 // Router.route('/search?').put(updateUser)
 

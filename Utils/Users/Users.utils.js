@@ -4,7 +4,6 @@ const ObjectId = require('mongoose').Types.ObjectId
 const {
   dependencyInjector,
 } = require('../../Database/Schemas/AuthenticationDBConnection')
-// const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
 const createUser = async (req, res) => {
   try {
@@ -13,7 +12,7 @@ const createUser = async (req, res) => {
     let testCase = new RegExp(res.locals.params, 'g')
     if (!testCase.test(email)) {
       throw new Error(
-        'User cannot be saved due to conflict in email! please use company email'
+        'User cannot be saved due to conflict in email! please use company email.'
       )
     }
 
@@ -65,7 +64,12 @@ const fetchUser = async (req, res, next) => {
       .limit(limit)
     if (result.length === 0 && (email || userId))
       throw new Error('No such Entry found')
-    res.status(200).send({ status: 200, result, totalCount })
+
+    if (result.length !== 1) {
+      res.status(200).send({ status: 200, result, totalCount })
+    } else {
+      res.status(200).send({ status: 200, result: result[0], totalCount })
+    }
   } catch (err) {
     console.log(err.message)
     res.status(400).send({

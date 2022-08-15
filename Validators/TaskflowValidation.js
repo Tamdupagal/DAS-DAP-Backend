@@ -21,7 +21,6 @@ const schema = {
   type: 'object',
   properties: {
     applicationName: { type: 'string' },
-    applicationURL: { type: 'string' },
     applicationDomain: { type: 'string' },
     applicationTaskFlowUseCase: { type: 'string' },
     taskList: {
@@ -32,7 +31,6 @@ const schema = {
   required: [
     'applicationTaskFlowUseCase',
     'applicationName',
-    'applicationURL',
     'applicationDomain',
   ],
   additionalProperties: false,

@@ -10,8 +10,8 @@ const {
 const queryValidator = require('../../../Validators/QueryValidator')
 
 Router.use('/tasks', [queryValidator, Tasks])
-Router.use('/feedBack', FeedBack)
-Router.use('/announcement', Announcement)
+Router.use('/feedBacks', FeedBack)
+Router.use('/announcements', Announcement)
 Router.use('/users', Users)
 Router.get('/logout', hasLoggedOut)
 

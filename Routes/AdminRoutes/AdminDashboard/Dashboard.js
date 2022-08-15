@@ -9,11 +9,12 @@ const Tasks = require('./Tasks/Tasks')
 const User = require('./Users/Users')
 const FeedBack = require('./FeedBack/FeedBack')
 const Announcement = require('./Announcements/Announcements')
+const queryValidator = require('../../../Validators/QueryValidator')
 
-Router.use('/tasks', Tasks)
-Router.use('/user', User)
-Router.use('/announcement', Announcement)
-Router.use('/feedBack', FeedBack)
+Router.use('/tasks', [queryValidator, Tasks])
+Router.use('/users', [queryValidator, User])
+Router.use('/announcements', Announcement)
+Router.use('/feedBacks', FeedBack)
 Router.use('/logout', hasLoggedOut)
 
 module.exports = Router

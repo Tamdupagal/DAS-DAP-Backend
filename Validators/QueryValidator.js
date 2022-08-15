@@ -1,10 +1,12 @@
 const queryFields = {
-  users: { GET: ['email', 'page', 'userID', 'userName', 'seach'] },
+  users: { GET: ['email', 'page', 'userID', 'userName', 'seach'], POST: [] },
   tasks: {
-    POST: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
+    POST: [],
+    GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
+    DELETE: ['applicationTaskFlowUseCase', 'applicationDomain'],
   },
   announcement: ['limit', 'page', 'search', 'announcementId', 'userId'],
-  feedback: ['limit', 'page', 'search', 'id'],
+  feedback: { POST: [], GET: ['limit', 'page', 'search', 'feedbackId'] },
 }
 
 const queryValidator = async (req, res, next) => {
