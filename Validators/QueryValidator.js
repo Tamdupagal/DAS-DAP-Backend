@@ -1,5 +1,5 @@
 const queryFields = {
-  users: { GET: ['email', 'page', 'userID', 'userName', 'seach'], POST: [] },
+  users: { GET: ['email', 'page', 'userId', 'userName', 'seach'], POST: [] },
   tasks: {
     POST: [],
     GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
