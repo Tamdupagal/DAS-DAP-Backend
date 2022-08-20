@@ -3,25 +3,26 @@ const ajv = new (require('ajv'))()
 const schema = {
   type: 'object',
   properties: {
-    companyName: { type: 'string' },
-    companyEmail: { type: 'string' },
-    companyUserEmail: {
+    userName: { type: 'string' },
+    email: {
       type: 'string',
       pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$',
     },
-    companyPassword: { type: 'string' },
+    bugReport: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+      },
+    },
+    // required: ['title', 'description'],
   },
-  required: [
-    'companyName',
-    'companyEmail',
-    'companyUserEmail',
-    'companyPassword',
-  ],
+  required: ['userName', 'email', 'bugReport'],
   additionalProperties: false,
 }
 
 module.exports = {
-  async taskFlowValidation(req, res, next) {
+  async issueValidation(req, res, next) {
     try {
       const validate = ajv.compile(schema)
       let validity = await validate(req.body)
@@ -38,7 +39,7 @@ module.exports = {
         next()
       }
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
       res.status(400).send({
         status: 500,
         message: 'Internal Server Error',

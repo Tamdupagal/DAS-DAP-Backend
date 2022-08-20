@@ -6,6 +6,7 @@ const {
   isAuthenticated,
   DatabaseValidation,
 } = require('../../Services/AuthenticationServices/Authentication')
+
 Router.use('/dashboard/:databaseID', [
   isAuthenticated,
   DatabaseValidation,

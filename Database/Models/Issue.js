@@ -18,9 +18,11 @@ const issue = new Schema(
     },
     isFixed: {
       type: Boolean,
+      default: false,
     },
     fixedOn: {
       type: String,
+      default: 'N/A',
     },
   },
   {

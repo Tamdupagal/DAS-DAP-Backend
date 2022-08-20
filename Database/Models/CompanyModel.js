@@ -1,5 +1,4 @@
 const Schema = require('mongoose').Schema
-const validator = require('validator')
 const CompanyModel = new Schema(
   {
     companyName: {

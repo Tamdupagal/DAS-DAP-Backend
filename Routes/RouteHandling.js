@@ -32,10 +32,10 @@ Router.use((err, req, res, next) => {
 
 // Routes Middleware
 // Router.use('/Ping', Misc)
-Router.use('/Auth', AuthorizationRoutes)
-Router.use('/Admin', AdminRoutes)
-Router.use('/Extension', ExtensionRoutes)
-Router.use('/SuperAdmin', SuperAdminRoutes)
+Router.use('/auth', AuthorizationRoutes)
+Router.use('/admin', AdminRoutes)
+Router.use('/extension', ExtensionRoutes)
+Router.use('/superAdmin', SuperAdminRoutes)
 
 // Invalid request Middleware
 

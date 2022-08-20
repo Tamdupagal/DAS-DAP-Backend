@@ -5,7 +5,6 @@ const createFeedBack = async (req, res, next) => {
     const { feedBackModel } = res.locals.connection.databaseObject
     const { feedbackCreatorName, feedbackQuestions, feedbackQuestionImage } =
       req.body
-    console.log(feedbackCreatorName)
     const newFeedBack = await feedBackModel.create({
       feedbackCreatorName,
       feedbackQuestions,
