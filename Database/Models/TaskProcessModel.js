@@ -29,11 +29,11 @@ const taskFlowSchema = new Schema({
       stepNumber: {
         type: Number,
       },
-      htmlTag: {
-        type: String,
-      },
       targetURL: {
         type: String,
+      },
+      skippable: {
+        type: Boolean,
       },
       title: {
         type: String,
