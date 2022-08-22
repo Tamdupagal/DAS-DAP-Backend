@@ -6,22 +6,25 @@ const {
 const bcrypt = require('bcrypt')
 const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
 
+const dependencyInjectorTest = require('../../Database/Schemas/DBConnection')
+
 const createCompany = async (req, res, next) => {
   try {
-    const { companyUserModel } = dependencyInjector(
-      req.body.companyEmail.split('.')[0]
-    )
-    const { companyEmail, companyUserEmail } = req.body
+    const { companyEmail, companyUserEmail, companyPassword, companyUserName } =
+      req.body
+    const { companyUserModel } = dependencyInjector(companyEmail.split('.')[0])
+
     let companyName = req.body.companyName.split(' ').join('').toLowerCase()
+
     const newCompany = new companyModel({
-      companyName: companyName,
+      companyUserName,
+      companyName,
       companyEmail,
       companyUserEmail,
-      companyPassword: await bcrypt.hash(req.body.companyPassword, 10),
     })
 
-    const newUser = new companyUserModel({
-      userName: companyName,
+    const newLoginUser = new companyUserModel({
+      userName: companyUserName,
       email: companyUserEmail,
       password: await bcrypt.hash(req.body.companyPassword, 10),
       typeOfUser: 'Admin',
@@ -32,21 +35,31 @@ const createCompany = async (req, res, next) => {
     })
 
     await newCompany.save()
-    await newUser.save()
+    await newLoginUser.save()
     await enrolledCompany.save()
+
+    const { UserModel } = dependencyInjectorTest(
+      req.body.companyEmail.split('.')[0]
+    )
+    const newUser = await UserModel.create({
+      userName: companyUserName,
+      email: companyUserEmail,
+      password: companyPassword,
+      typeOfUser: 'Admin',
+    })
 
     res.status(200).send({
       status: 200,
-      message: `${req.body.companyName} has joined DAS-DAP succesfully!!`,
+      message: `${companyName} has joined DAS-DAP succesfully!!`,
     })
   } catch (error) {
     console.log(error.message)
-    let ErrorResponse = DatabaseError(error)
-    console.log(ErrorResponse.errMessage)
-    res.status(ErrorResponse.errStatusCode).send({
-      status: ErrorResponse.errStatusCode,
-      message: ErrorResponse.errMessage,
-    })
+    // let ErrorResponse = DatabaseError(error)
+    // console.log(ErrorResponse.errMessage)
+    // res.status(ErrorResponse.errStatusCode).send({
+    //   status: ErrorResponse.errStatusCode,
+    //   message: ErrorResponse.errMessage,
+    // })
   }
 }
 

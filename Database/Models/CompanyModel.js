@@ -7,7 +7,10 @@ const CompanyModel = new Schema(
     companyEmail: {
       type: String,
     },
-    companyPassword: {
+    companyUserName: {
+      type: String,
+    },
+    companyeUserEmail: {
       type: String,
     },
   },

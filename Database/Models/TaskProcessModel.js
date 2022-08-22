@@ -20,9 +20,6 @@ const taskFlowSchema = new Schema(
         skippable: {
           type: Boolean,
         },
-        htmlTag: {
-          type: String,
-        },
         targetUrl: {
           type: String,
         },

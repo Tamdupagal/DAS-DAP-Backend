@@ -63,12 +63,12 @@ const fetchTaskFlow = async (req, res, next) => {
       .skip(skip)
       .limit(limit)
 
-    if (
-      result.length === 0 &&
-      (applicationTaskFlowUseCase || applicationDomain)
-    ) {
-      throw new Error('No such Entry found')
-    }
+    // if (
+    //   result.length === 0 &&
+    //   (applicationTaskFlowUseCase || applicationDomain)
+    // ) {
+    //   throw new Error('No such Entry found')
+    // }
 
     if (result.length === 1) {
       res.status(200).send({ status: 200, result: result[0] })

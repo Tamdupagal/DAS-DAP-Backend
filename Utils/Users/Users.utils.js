@@ -62,8 +62,8 @@ const fetchUser = async (req, res, next) => {
     let result = await UserModel.find(query, { password: 0 })
       .skip(skip)
       .limit(limit)
-    if (result.length === 0 && (email || userId))
-      throw new Error('No such Entry found')
+    // if (result.length === 0 && (email || userId))
+    //   throw new Error('No such Entry found')
 
     if (result.length !== 1) {
       res.status(200).send({ status: 200, result, totalCount })
