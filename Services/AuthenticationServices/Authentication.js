@@ -57,15 +57,15 @@ const Authorization = async (req, res) => {
           userEmail: record.email,
         })
       } else {
-        throw AuthError('InvalidCredentials')
+        throw new Error('Not Valid')
       }
     }
   } catch (Error) {
     console.log(Error)
-    res.status(Error.errStatusCode).send({
-      status: Error.errStatusCode,
+    res.status(400).send({
+      status: 400,
       auth: false,
-      message: Error.errMessage,
+      message: Error.message,
     })
   }
 }
