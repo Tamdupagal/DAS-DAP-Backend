@@ -1,3 +1,5 @@
+const Error = require('../../Errors/Error')
+
 // Create Task Flow
 
 const createTaskFlow = async (req, res) => {
@@ -17,7 +19,10 @@ const createTaskFlow = async (req, res) => {
 
     if (taskFlow.isExisting)
       throw new Error(
-        `${applicationTaskFlowUseCase} in ${applicationDomain} already exists.`
+        'test',
+        `${applicationTaskFlowUseCase} in ${applicationDomain} already exists.`,
+        'test',
+        422
       )
     const newTask = await TaskFlowModel.create({
       applicationName,
@@ -30,7 +35,7 @@ const createTaskFlow = async (req, res) => {
       message: `Taskflow named ${applicationTaskFlowUseCase} has been published!`,
     })
   } catch (e) {
-    res.status(400).send({ satus: 400, message: e.message })
+    res.status(e.status || 400).send({ message: e.message })
   }
 }
 
@@ -69,12 +74,7 @@ const fetchTaskFlow = async (req, res, next) => {
     // ) {
     //   throw new Error('No such Entry found')
     // }
-
-    if (result.length === 1) {
-      res.status(200).send({ status: 200, result: result[0] })
-    } else {
-      res.status(200).send({ status: 200, result, totalCount: result.length })
-    }
+    res.status(200).send({ status: 200, result, totalCount: result.length })
   } catch (e) {
     res.status(400).send({
       status: 400,
