@@ -1,37 +1,27 @@
 const ajv = new (require('ajv'))()
 
-const innerAnnouncementSchema = {
-  type: 'object',
-  properties: {
-    email: { type: 'string' },
-    userName: { type: 'string' },
-  },
-}
-
 const schema = {
   type: 'object',
   properties: {
-    AnnouncementCreatorName: { type: 'string' },
-    AnnouncementDate: { type: 'string' },
-    AnnouncementTitle: { type: 'string' },
-    AnnouncementBody: { type: 'string' },
-    AnnouncementAttachment: { type: 'string' },
-    AnnouncementReceivers: {
-      type: 'array',
-      items: innerAnnouncementSchema,
+    companyName: { type: 'string' },
+    companyEmail: { type: 'string' },
+    companyUserEmail: {
+      type: 'string',
+      pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$',
     },
+    companyPassword: { type: 'string' },
   },
   required: [
-    'AnnouncementCreatorName',
-    'AnnouncementDate',
-    'AnnouncementTitle',
-    'AnnouncementBody',
+    'companyName',
+    'companyEmail',
+    'companyUserEmail',
+    'companyPassword',
   ],
   additionalProperties: false,
 }
 
 module.exports = {
-  async announcementSchemaValidation(req, res, next) {
+  async taskFlowValidation(req, res, next) {
     try {
       const validate = ajv.compile(schema)
       let validity = await validate(req.body)

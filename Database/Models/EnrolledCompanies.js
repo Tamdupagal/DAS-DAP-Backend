@@ -1,10 +1,10 @@
 const Schema = require('mongoose').Schema
 
 const EnrolledCompanies = new Schema({
-  companyID: {
+  companyName: {
     type: String,
   },
-  companyName: {
+  companyUserEmail: {
     type: String,
   },
 })

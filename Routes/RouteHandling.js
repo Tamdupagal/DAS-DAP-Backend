@@ -4,14 +4,14 @@ const cors = require('cors')
 const logger = require('../Services/Logger/Logger')
 const AdminRoutes = require('./AdminRoutes/AdminRoutes')
 const SuperAdminRoutes = require('./SuperAdminRoutes/SuperAdminRoutes')
-// const AIRoutes = require('./AIRoutes/AIRoutes')
+// const Misc = require('./Misc/Misc')
 const ExtensionRoutes = require('./ExtensionRoutes/ExtensionRoutes')
 const AuthorizationRoutes = require('./AuthorizationRoutes/AuthorizationRoutes')
 
 Router.use(cors())
 Router.use(Express.urlencoded({ extended: true }))
 Router.use(Express.json())
-Router.use(require('morgan')('combined'))
+Router.use(require('morgan')('tiny'))
 
 // Error Handling for invalid JSON
 
@@ -31,11 +31,11 @@ Router.use((err, req, res, next) => {
 })
 
 // Routes Middleware
-
-Router.use('/Auth', AuthorizationRoutes)
-Router.use('/Admin', AdminRoutes)
-Router.use('/Extension', ExtensionRoutes)
-Router.use('/SuperAdmin', SuperAdminRoutes)
+// Router.use('/Ping', Misc)
+Router.use('/auth', AuthorizationRoutes)
+Router.use('/admin', AdminRoutes)
+Router.use('/extension', ExtensionRoutes)
+Router.use('/superAdmin', SuperAdminRoutes)
 
 // Invalid request Middleware
 
@@ -46,7 +46,6 @@ Router.use((req, res, next) => {
       req.hostname || req.baseUrl
     }`
   )
-
   res.status(404).json({
     name: 'Error',
     status: 404,

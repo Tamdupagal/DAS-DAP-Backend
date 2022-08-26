@@ -1,37 +1,28 @@
 const ajv = new (require('ajv'))()
 
-const innerAnnouncementSchema = {
-  type: 'object',
-  properties: {
-    email: { type: 'string' },
-    userName: { type: 'string' },
-  },
-}
-
 const schema = {
   type: 'object',
   properties: {
-    AnnouncementCreatorName: { type: 'string' },
-    AnnouncementDate: { type: 'string' },
-    AnnouncementTitle: { type: 'string' },
-    AnnouncementBody: { type: 'string' },
-    AnnouncementAttachment: { type: 'string' },
-    AnnouncementReceivers: {
-      type: 'array',
-      items: innerAnnouncementSchema,
+    userName: { type: 'string' },
+    email: {
+      type: 'string',
+      pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$',
     },
+    bugReport: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+      },
+    },
+    // required: ['title', 'description'],
   },
-  required: [
-    'AnnouncementCreatorName',
-    'AnnouncementDate',
-    'AnnouncementTitle',
-    'AnnouncementBody',
-  ],
+  required: ['userName', 'email', 'bugReport'],
   additionalProperties: false,
 }
 
 module.exports = {
-  async announcementSchemaValidation(req, res, next) {
+  async issueValidation(req, res, next) {
     try {
       const validate = ajv.compile(schema)
       let validity = await validate(req.body)
@@ -48,7 +39,7 @@ module.exports = {
         next()
       }
     } catch (error) {
-      console.log(error)
+      console.log(error.message)
       res.status(400).send({
         status: 500,
         message: 'Internal Server Error',

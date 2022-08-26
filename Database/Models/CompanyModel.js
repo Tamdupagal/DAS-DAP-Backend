@@ -1,24 +1,22 @@
 const Schema = require('mongoose').Schema
-const validator = require('validator')
-const CompanyModel = new Schema({
-  companyID: {
-    type: String,
-    unique: true,
-  },
-  companyName: {
-    type: String,
-    unique: true,
-  },
-  companyEmail: {
-    type: String,
-    unique: true,
-    validate: (value) => {
-      return validator.isEmail(value)
+const CompanyModel = new Schema(
+  {
+    companyName: {
+      type: String,
+    },
+    companyEmail: {
+      type: String,
+    },
+    companyUserName: {
+      type: String,
+    },
+    companyeUserEmail: {
+      type: String,
     },
   },
-  companyPassword: {
-    type: String,
-  },
-})
+  {
+    timestamps: true,
+  }
+)
 
 module.exports = CompanyModel

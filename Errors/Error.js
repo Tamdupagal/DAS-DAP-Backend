@@ -1,9 +1,10 @@
 class Error {
-  constructor(errName, errMessage, errType, errStatusCode) {
-    ;(this.errName = errName),
-      (this.errMessage = errMessage),
-      (this.errType = errType),
-      (this.errStatusCode = errStatusCode)
+  constructor(name, message, type, status, reference) {
+    ;(this.name = name),
+      (this.message = message),
+      (this.type = type),
+      (this.status = status),
+      (this.reference = reference)
   }
 }
 

@@ -2,14 +2,15 @@ const Express = require('express')
 const {
   createUser,
   fetchUser,
-  fetchUsers,
+  updateUser,
 } = require('../../../../Utils/Users/Users.utils')
+const {
+  userCreationValidation,
+} = require('../../../../Validators/UserCreationValidation')
 const Router = Express.Router()
 
-Router.route('/createUser').post(createUser)
-
-Router.route('/viewAllUser').get(fetchUsers)
-
-Router.route('/viewUser/:email').get(fetchUser)
+Router.route('/').post([userCreationValidation, createUser])
+Router.route('/search?').get(fetchUser)
+// Router.route('/search?').put(updateUser)
 
 module.exports = Router
