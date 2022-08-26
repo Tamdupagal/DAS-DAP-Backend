@@ -53,10 +53,30 @@ const taskFlowSchema = new Schema(
   { timestamps: true }
 )
 
-taskFlowSchema.statics.findTaskFlow = async function (value) {
+taskFlowSchema.statics.createNewTask = async function (data) {
   try {
-    if (value == null) throw new Error(`Invalid ${value}`)
-    const { applicationTaskFlowUseCase, applicationDomain } = value
+    const {
+      applicationName,
+      applicationDomain,
+      applicationTaskFlowUseCase,
+      taskList,
+    } = data
+    const newTask = await this.create({
+      applicationName,
+      applicationDomain,
+      applicationTaskFlowUseCase,
+      taskList,
+    })
+    return newTask
+  } catch (e) {
+    return { isError: true, message: e.message }
+  }
+}
+
+taskFlowSchema.statics.findTaskFlow = async function (data) {
+  try {
+    if (data == null) throw new Error(`Invalid ${data}`)
+    const { applicationTaskFlowUseCase, applicationDomain } = data
     let query = {}
     if (applicationTaskFlowUseCase)
       query.applicationTaskFlowUseCase = applicationTaskFlowUseCase

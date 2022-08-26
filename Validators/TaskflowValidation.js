@@ -5,8 +5,8 @@ let innerProperties = {
   properties: {
     stepNumber: { type: 'integer' },
     title: { type: 'string' },
+    skippable: { type: 'boolean' },
     targetURL: { type: 'string' },
-    htmlTag: { type: 'string' },
     cssSelector: { type: 'string' },
     customURL: { type: 'string' },
     taskMessage: { type: 'string' },

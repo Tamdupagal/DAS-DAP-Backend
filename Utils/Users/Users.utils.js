@@ -35,9 +35,9 @@ const createUser = async (req, res) => {
     })
 
     res.status(200).send({ status: 200, message: `${userName} has joined ` })
-  } catch (error) {
-    console.log(error.message)
-    res.status(400).send({ satus: 400, message: error.message })
+  } catch (e) {
+    console.log(e.message)
+    res.status(400).send({ satus: 400, message: e.message })
   }
 }
 
@@ -45,7 +45,7 @@ const createUser = async (req, res) => {
 
 const fetchUser = async (req, res, next) => {
   try {
-    const { UserModel } = res.locals.connection.databaseObject
+    const { userModel } = res.locals.connection.databaseObject
     const { email, page, userId } = req.query
     let query = {},
       pageNumber = parseInt(page),
@@ -58,18 +58,12 @@ const fetchUser = async (req, res, next) => {
     }
     skip = pageNumber * 10 - 10
     limit = 10
-    let totalCount = await UserModel.count()
-    let result = await UserModel.find(query, { password: 0 })
+    let totalCount = await userModel.count()
+    let result = await userModel
+      .find(query, { password: 0 })
       .skip(skip)
       .limit(limit)
-    // if (result.length === 0 && (email || userId))
-    //   throw new Error('No such Entry found')
-
-    if (result.length !== 1) {
-      res.status(200).send({ status: 200, result, totalCount })
-    } else {
-      res.status(200).send({ status: 200, result: result[0], totalCount })
-    }
+    res.status(200).send({ status: 200, result, totalCount })
   } catch (err) {
     console.log(err.message)
     res.status(400).send({
