@@ -42,10 +42,10 @@ const taskFlowSchema = new Schema(
           type: String,
         },
         highlightBorderWeight: {
-          type: Number,
+          type: String,
         },
         backgroundOpacity: {
-          type: Number,
+          type: String,
         },
         targetClickOffsetX: {
           type: Number,
