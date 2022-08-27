@@ -11,6 +11,8 @@ let innerProperties = {
     customURL: { type: 'string' },
     taskMessage: { type: 'string' },
     actionType: { type: 'string' },
+    highlightBorderWeight: { type: 'integer' },
+    backgroundOpacity: { type: 'integer' },
     targetClickOffsetX: { type: 'integer' },
     targetClickOffsetY: { type: 'integer' },
   },

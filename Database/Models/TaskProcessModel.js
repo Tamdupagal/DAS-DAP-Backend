@@ -41,6 +41,12 @@ const taskFlowSchema = new Schema(
         customUrl: {
           type: String,
         },
+        highlightBorderWeight: {
+          type: Number,
+        },
+        backgroundOpacity: {
+          type: Number,
+        },
         targetClickOffsetX: {
           type: Number,
         },
