@@ -17,8 +17,13 @@ const dependencyInjector = (dataBaseName) => {
     'Taskflow',
     require('../Models/TaskProcessModel')
   )
+  const analyticsModel = connection.model(
+    'Analytics',
+    require('../Models/TaskFlowAnalytics')
+  )
   return {
     connection,
+    analyticsModel,
     feedBackModel,
     feedBackResponseModel,
     userModel,

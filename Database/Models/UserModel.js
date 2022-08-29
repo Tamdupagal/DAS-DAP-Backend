@@ -16,7 +16,15 @@ const UserSchema = new Schema(
     },
     typeOfUser: {
       type: String,
-      required: true,
+    },
+    userCreatedOn: {
+      type: String,
+    },
+    userLastUpdateOn: {
+      type: String,
+    },
+    userLastLoggedIn: {
+      type: String,
     },
   },
   {

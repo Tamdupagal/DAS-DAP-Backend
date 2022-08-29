@@ -16,12 +16,12 @@ const createUser = async (req, res) => {
       )
     }
 
-    const { UserModel } = res.locals.connection.databaseObject
+    const { userModel } = res.locals.connection.databaseObject
     const { companyUserModel } = await dependencyInjector(res.locals.params)
 
-    let user = await UserModel.findUser({ email })
+    let user = await userModel.findUser({ email })
     if (user.isExisting) throw new Error(`${email} already exists.`)
-    let newUser = await UserModel.create({
+    let newUser = await userModel.create({
       userName: userName,
       email: email,
       password: password,
