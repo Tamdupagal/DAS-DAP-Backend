@@ -1,6 +1,9 @@
 const Schema = require('mongoose').Schema
 
 const taskFlowAnalytics = new Schema({
+  applicationDomain: {
+    type: String,
+  },
   applicationTaskFlowUseCase: {
     type: String,
   },
@@ -16,7 +19,12 @@ const taskFlowAnalytics = new Schema({
 
 taskFlowAnalytics.statics.updateAnalytics = async function (data) {
   try {
-    const { applicationTaskFlowUseCase, isCompleted, isAborted } = data
+    const {
+      applicationTaskFlowUseCase,
+      applicationDomain,
+      isCompleted,
+      isAborted,
+    } = data
     let query
 
     if (isCompleted) query = { $inc: { timesCompletedByUsers: 1 } }
@@ -24,11 +32,11 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
     const existingAnalytics = await this.findOneAndUpdate(
       {
         applicationTaskFlowUseCase,
+        applicationDomain,
       },
       { query },
       { new: true }
     )
-    console.log(existingAnalytics)
     return { isUpdated: true }
   } catch (e) {
     console.log(e.message)

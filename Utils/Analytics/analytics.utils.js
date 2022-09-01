@@ -2,7 +2,12 @@ const Error = require('../../Errors/Error')
 
 const pushAnalytics = async (req, res, next) => {
   try {
-    const { applicationTaskFlowUseCase, isCompleted, isAborted } = req.body
+    const {
+      applicationTaskFlowUseCase,
+      applicationDomain,
+      isCompleted,
+      isAborted,
+    } = req.body
     const { email } = req.query
     const { analyticsModel, userModel } = res.locals.connection.databaseObject
     let user = await userModel.findUser({ email })
@@ -14,7 +19,10 @@ const pushAnalytics = async (req, res, next) => {
         404
       )
     }
-    let query = { applicationTaskFlowUseCase }
+    let query = {
+      applicationTaskFlowUseCase,
+      applicationDomain,
+    }
     if (isCompleted) query.isCompleted = isCompleted
     if (isAborted) query.isAborted = isAborted
     let result = await analyticsModel.updateAnalytics(query)
