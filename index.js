@@ -34,8 +34,12 @@ if (cluster.isMaster) {
   //   .createServer(credentials, app)
   //   .listen(process.env.PORT || portNumber, () => {
   //     console.log(`running on ${process.env.PORT || portNumber}`)
-  //   })
-  http.createServer(app).listen(process.env.PORT || portNumber, () => {
+
+  const server = app.listen(process.env.PORT || portNumber, () => {
     logger.info(`Process ${process.pid} is online on port number ${portNumber}`)
-  }) 
+  });
+  //   })
+  // http.createServer(app).listen(process.env.PORT || portNumber, () => {
+  //   logger.info(`Process ${process.pid} is online on port number ${portNumber}`)
+  // }) 
 }
