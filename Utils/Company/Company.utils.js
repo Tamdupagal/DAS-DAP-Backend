@@ -1,53 +1,69 @@
-const {
-  companyModel,
-} = require('../../Database/DatabaseConfig/SuperAdminConnection')
+const { companyModel } = require('../../Database/Schemas/SuperAdminConnection')
 const {
   dependencyInjector,
   EnrolledCompanies,
-} = require('../../Database/DatabaseConfig/AuthenticationDBConnection')
+} = require('../../Database/Schemas/AuthenticationDBConnection')
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
 const DatabaseError = require('../../Errors/ErrorTypes/DataBaseError')
+
+const dependencyInjectorTest = require('../../Database/Schemas/DBConnection')
 
 const createCompany = async (req, res, next) => {
   try {
-    const { companyUserModel } = dependencyInjector(
-      req.body.companyEmail.split('.')[0]
-    )
-    const newCompany = await companyModel.create({
-      companyID: await crypto.randomBytes(20).toString('hex'),
-      companyName: req.body.companyName,
-      companyEmail: req.body.companyEmail,
-      companyUserEmail: req.body.companyUserEmail,
-      companyPassword: await bcrypt.hash(req.body.companyPassword, 10),
+    const { companyEmail, companyUserEmail, companyPassword, companyUserName } =
+      req.body
+    const { companyUserModel } = dependencyInjector(companyEmail.split('.')[0])
+
+    let companyName = req.body.companyName.split(' ').join('').toLowerCase()
+
+    const newCompany = new companyModel({
+      companyUserName,
+      companyName,
+      companyEmail,
+      companyUserEmail,
     })
 
-    const newUser = await companyUserModel.create({
-      userID: await crypto.randomBytes(20).toString('hex'),
-      userName: req.body.companyName,
-      email: req.body.companyUserEmail,
+    const newLoginUser = new companyUserModel({
+      userName: companyUserName,
+      email: companyUserEmail,
       password: await bcrypt.hash(req.body.companyPassword, 10),
       typeOfUser: 'Admin',
-      createdOn: new Date().toLocaleString(),
     })
-    const EnrolledCompany = await EnrolledCompanies.create({
-      companyID: newCompany.companyID,
-      companyName: newCompany.companyName,
-      companyUserName: newCompany.companyUserName,
+    const enrolledCompany = new EnrolledCompanies({
+      companyName: companyName,
+      companyUserEmail,
     })
-    await EnrolledCompany.save()
-    await newCompany.save()
-    await newUser.save()
 
-    res.status(200).send('Company Registered')
-  } catch (error) {
-    // console.log(error)
-    let ErrorResponse = DatabaseError(error)
-    console.log(ErrorResponse.errMessage)
-    res.status(ErrorResponse.errStatusCode).send({
-      status: ErrorResponse.errStatusCode,
-      message: ErrorResponse.errMessage,
+    await newCompany.save()
+    await newLoginUser.save()
+    await enrolledCompany.save()
+
+    const  {userModel}  = dependencyInjectorTest(
+      req.body.companyEmail.split('.')[0]
+    )
+    console.log(userModel)
+    
+    //  console.log("model",UserModel,"name",req.body.companyEmail.split('.')[0])
+    // console.log("models",models)
+    const newUser = await userModel.create({
+      userName: companyUserName,
+      email: companyUserEmail,
+      password: companyPassword,
+      typeOfUser: 'Admin',
     })
+
+    res.status(200).send({
+      status: 200,
+      message: `${companyName} has joined DAS-DAP succesfully!!`,
+    })
+  } catch (error) {
+    console.log(error.message)
+    // let ErrorResponse = DatabaseError(error)
+    // console.log(ErrorResponse.errMessage)
+    // res.status(ErrorResponse.errStatusCode).send({
+    //   status: ErrorResponse.errStatusCode,
+    //   message: ErrorResponse.errMessage,
+    // })
   }
 }
 

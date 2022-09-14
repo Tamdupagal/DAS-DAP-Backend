@@ -1,14 +1,11 @@
 const Express = require('express')
 const Router = Express.Router()
 
+const {taskFlowValidation} = require('../../../../Validators/CompanyValidator')
 const createCompany = require('../../../../Utils/Company/Company.utils')
 
-Router.route('/createCompany').post(createCompany)
-// Router.route('/updateCompany/:applicationTaskFlowUseCase').post(updateTaskFlow)
-// Router.route('/viewAllCompany').get(fetchTaskFlows)
-// Router.route('/viewCompany/:applicationTaskFlowUseCase').get(fetchTaskFlow)
-// Router.route('/deleteCompany/:applicationTaskFlowUseCase').delete(
-//   deleteTaskFlow
-// )
+
+
+Router.route('/new').post([taskFlowValidation,createCompany])
 
 module.exports = Router

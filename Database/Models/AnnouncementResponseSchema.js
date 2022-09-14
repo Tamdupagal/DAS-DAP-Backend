@@ -2,19 +2,14 @@ const Schema = require('mongoose').Schema
 
 const announcementResponseSchema = new Schema(
   {
-    AnnouncementResponseID: {
+    announcementReferenceId: {
       type: String,
-      // required:true
     },
-    AnnouncementReferenceID: {
-      type: String,
-      required: true,
-    },
-    AnnouncementResponse: {
-      UserName: {
+    announcementResponse: {
+      email: {
         type: String,
       },
-      Response: {
+      response: {
         type: String,
       },
     },

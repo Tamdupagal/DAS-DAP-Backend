@@ -6,7 +6,8 @@ const DataBaseError = (err) => {
       for (field in err.errors) {
         return new Error(
           field,
-          err.errors[field].message,
+          `Invalid ${err.errors[field].value}`,
+          // err.errors[field].message,
           'Validation Error',
           404
         )

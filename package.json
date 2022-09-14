@@ -4,7 +4,7 @@
   "description": "Back-End for DAP-DAS",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm install && NODE_ENV=production node index.js",
     "dev": "nodemon index.js",
     "test": "echo index.js"
   },
@@ -21,20 +21,23 @@
   "bugs": {
     "url": "https://github.com/iHaroon29/DAS-DAP-Backend/issues"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "homepage": "https://github.com/iHaroon29/DAS-DAP-Backend#readme",
   "dependencies": {
+    "ajv": "^8.11.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "helmet": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.10",
-    "validator": "^13.7.0"
+    "morgan": "^1.10.0",
+    "winston": "^3.8.1"
   },
   "devDependencies": {
-    "ajv": "^8.11.0",
-    "axios": "^0.26.1",
-    "nodemon": "^2.0.15",
-    "socket.io": "^4.5.1"
+    "nodemon": "^1.3.3"
   }
 }
