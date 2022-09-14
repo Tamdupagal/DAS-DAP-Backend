@@ -37,5 +37,5 @@ if (cluster.isMaster) {
   //   })
   http.createServer(app).listen(process.env.PORT || portNumber, () => {
     logger.info(`Process ${process.pid} is online on port number ${portNumber}`)
-  })
+  }) 
 }
