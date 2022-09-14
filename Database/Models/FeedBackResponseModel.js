@@ -3,26 +3,21 @@ const { Schema } = mongoose
 
 const feedBackResponseSchema = new Schema(
   {
-    feedBackResponseID: {
-      type: String,
-      unique: true,
-    },
-    feedBackReferenceID: {
-      type: String,
-      required: true,
-    },
-    UserName: {
+    feedbackReferenceId: {
       type: String,
     },
-    UserType: {
+    email: {
       type: String,
     },
-    feedBackResponse: [
+    userType: {
+      type: String,
+    },
+    feedbackResponse: [
       {
-        feedBackQuestion: {
+        feedbackQuestion: {
           type: String,
         },
-        feedBackAnswer: {
+        feedbackAnswer: {
           type: String,
         },
         responseTimeStamp: {

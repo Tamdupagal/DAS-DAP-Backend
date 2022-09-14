@@ -3,7 +3,7 @@ const ajv = new (require('ajv'))()
 const innerAnnouncementSchema = {
   type: 'object',
   properties: {
-    userEmail: { type: 'string' },
+    email: { type: 'string' },
     userName: { type: 'string' },
   },
 }
@@ -21,10 +21,12 @@ const schema = {
       items: innerAnnouncementSchema,
     },
   },
-  // required: [
-  //   'AnnouncementCreatorName,AnnouncementDate,AnnouncementTitle',
-  //   'AnnouncementBody',
-  // ],
+  required: [
+    'AnnouncementCreatorName',
+    'AnnouncementDate',
+    'AnnouncementTitle',
+    'AnnouncementBody',
+  ],
   additionalProperties: false,
 }
 
@@ -37,7 +39,7 @@ module.exports = {
         res.status(400).send({
           status: 400,
           message:
-            validate.errors[0].instancePath.split('/')[1] +
+            validate.errors[0].instancePath.split('/').slice(-1) +
             ' ' +
             validate.errors[0].message,
           data: validate.errors,

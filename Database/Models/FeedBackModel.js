@@ -3,22 +3,18 @@ const { Schema } = mongoose
 
 const feedBackSchema = new Schema(
   {
-    feedBackQuestionID: {
-      type: String,
-      unique: true,
-    },
-    feedBackCreaterName: {
+    feedbackCreatorName: {
       type: String,
     },
-    feedBackQuestions: [
+    feedbackQuestions: [
       {
-        feedBackQuestion: {
+        feedbackQuestion: {
           type: String,
         },
-        feedBackQuestionType: {
+        feedbackQuestionType: {
           type: String,
         },
-        feedBackQuestionOptions: [
+        feedbackQuestionOptions: [
           {
             text: {
               type: String,
@@ -28,7 +24,7 @@ const feedBackSchema = new Schema(
             },
           },
         ],
-        feedBackQuestionImage: {
+        feedbackQuestionImage: {
           type: String,
         },
       },

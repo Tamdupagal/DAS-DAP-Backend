@@ -11,35 +11,23 @@ const dependencyInjector = (dataBaseName) => {
     'FeedBackResponse',
     require('../Models/FeedBackResponseModel')
   )
-  const UserModel = connection.model('User', require('../Models/UserModel'))
-  const UserCreatedModel = connection.model(
-    'UserCreated',
-    require('../Models/UserCreatedModel')
-  )
+  const userModel = connection.model('User', require('../Models/UserModel'))
 
-  const TaskFlowModel = connection.model(
+  const taskFlowModel = connection.model(
     'Taskflow',
     require('../Models/TaskProcessModel')
   )
-
-  const AnnouncementModel = connection.model(
-    'Announcement',
-    require('../Models/AnnouncementSchema')
-  )
-
-  const AnnouncementResponseModel = connection.model(
-    'Announcement Response',
-    require('../Models/AnnouncementResponseSchema')
+  const analyticsModel = connection.model(
+    'Analytics',
+    require('../Models/TaskFlowAnalytics')
   )
   return {
     connection,
+    analyticsModel,
     feedBackModel,
     feedBackResponseModel,
-    UserModel,
-    UserCreatedModel,
-    TaskFlowModel,
-    AnnouncementResponseModel,
-    AnnouncementModel,
+    userModel,
+    taskFlowModel,
   }
 }
 
