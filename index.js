@@ -3,7 +3,7 @@ const portNumber = process.env.PORT_NUMBER || 8001
 const cluster = require('cluster')
 const totalCPUs = require('os').cpus()
 const logger = require('./Services/Logger/Logger')
-// const https = require('https')
+//const https = require('https')
 const app = require('./app')
 const fs = require('fs')
 const http = require('http')
@@ -37,5 +37,5 @@ if (cluster.isMaster) {
   //   })
   http.createServer(app).listen(process.env.PORT || portNumber, () => {
     logger.info(`Process ${process.pid} is online on port number ${portNumber}`)
-  })
+  }) 
 }
