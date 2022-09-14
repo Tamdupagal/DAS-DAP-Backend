@@ -1,1 +1,1 @@
-web: npm install && npm run dev
+web: node index.js
