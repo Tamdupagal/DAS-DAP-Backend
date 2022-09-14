@@ -10,10 +10,12 @@ const {
 } = require('../../../Services/AuthenticationServices/Authentication')
 const queryValidator = require('../../../Validators/QueryValidator')
 
+const Analytics = require('../ExtensionDashboard/Analytics/Analytics')
+
 Router.use('/tasks', [queryValidator, Tasks])
 Router.use('/issues', Issue)
 Router.use('/feedBacks', FeedBack)
-// Router.use("/analytics",Analytic)
+Router.use("/analytics",Analytics)
 // Router.use('/announcements', Announcement)
 Router.use('/users', [queryValidator, Users])
 Router.get('/logout', hasLoggedOut)

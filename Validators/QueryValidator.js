@@ -4,6 +4,7 @@ const queryFields = {
   tasks: {
     POST: [],
     GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
+    PUT: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
     DELETE: ['applicationTaskFlowUseCase', 'applicationDomain'],
   },
   announcement: ['limit', 'page', 'search', 'announcementId', 'userId'],

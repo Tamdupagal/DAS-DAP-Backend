@@ -38,10 +38,14 @@ const createCompany = async (req, res, next) => {
     await newLoginUser.save()
     await enrolledCompany.save()
 
-    const { UserModel } = dependencyInjectorTest(
+    const  {userModel}  = dependencyInjectorTest(
       req.body.companyEmail.split('.')[0]
     )
-    const newUser = await UserModel.create({
+    console.log(userModel)
+    
+    //  console.log("model",UserModel,"name",req.body.companyEmail.split('.')[0])
+    // console.log("models",models)
+    const newUser = await userModel.create({
       userName: companyUserName,
       email: companyUserEmail,
       password: companyPassword,
