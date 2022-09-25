@@ -11,7 +11,7 @@ const {
   feedBackSchemaValidation,
 } = require('../../../../Validators/FeedBackValidation')
 
-Router.post('/', [feedBackSchemaValidation, createFeedBack])
+Router.post('/', createFeedBack)
 Router.route('/search?').get(viewFeedBackQuestions)
 Router.route('/searchResponses?').get(viewFeedBackResponses)
 // Router.route('/submit').post(submitFeedBackResponse)

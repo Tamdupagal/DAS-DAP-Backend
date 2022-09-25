@@ -3,18 +3,24 @@ const ObjectID = require('mongoose').Types.ObjectId
 const createFeedBack = async (req, res, next) => {
   try {
     const { feedBackModel } = res.locals.connection.databaseObject
-    const { feedbackCreatorName, feedbackQuestions, feedbackQuestionImage } =
+    const { email, rating, feedbackQuery } =
       req.body
-    const newFeedBack = await feedBackModel.create({
-      feedbackCreatorName,
-      feedbackQuestions,
-      feedbackQuestionImage,
-    })
+    // const newFeedBack = await feedBackModel.create({
+    //   email, rating, feedbackQuery
+    // })
+
+    const newFeedBack = await feedBackModel.findOneAndUpdate(
+      {
+        email,
+      },
+     { email, rating, feedbackQuery },
+      { new: true,upsert:true }
+    )
     res
       .status(200)
       .send({ status: 200, message: 'FeedBack has been published!' })
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
     res.status(400).send({
       status: 400,
       message: "FeedBack can't be saved",
