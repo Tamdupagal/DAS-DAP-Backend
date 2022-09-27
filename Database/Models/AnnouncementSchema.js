@@ -6,11 +6,15 @@ const AnnouncementSchema = new Schema(
     },
     announcementDate: {
       type: String,
-      required: true,
+      // required: true,
+    },
+    announcerEmail: {
+      type: String,
+      // required: true,
     },
     announcementTitle: {
       type: String,
-      required: true,
+      // required: true,
     },
     announcementBody: {
       type: String,
