@@ -16,7 +16,6 @@ Router.post("/", [announcementSchemaValidation, createAnnouncement]);
 Router.route("/search?").get(viewAnnouncements);
 Router.route("/view?").get(viewSelectedAnnouncement);
 
-
 Router.route("/viewAll?").get(viewAllAnnouncement)
 Router.route("/searchResponses?").get(viewAnnouncementResponse);
 module.exports = Router;
