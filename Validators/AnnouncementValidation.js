@@ -22,6 +22,7 @@ const schema = {
       items: innerAnnouncementSchema,
     },
   },
+  
   required: [
     'announcementCreatorName',
     'announcementDate',
