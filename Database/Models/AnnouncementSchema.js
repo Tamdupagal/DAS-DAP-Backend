@@ -8,10 +8,6 @@ const AnnouncementSchema = new Schema(
       type: String,
       // required: true,
     },
-    announcerEmail: {
-      type: String,
-      // required: true,
-    },
     announcementTitle: {
       type: String,
       // required: true,

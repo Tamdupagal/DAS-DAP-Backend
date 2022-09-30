@@ -11,7 +11,6 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
-      announcerEmail
     } = req.body
     console.log(res.locals.connection.databaseObject)
     const newAnnouncement = await AnnouncementModel.create({
@@ -21,7 +20,6 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
-      announcerEmail
     })
     res
       .status(200)
@@ -136,10 +134,10 @@ const submitAnnouncementResponse = async (req, res, next) => {
 }
 
 const viewSelectedAnnouncement  = async (req, res, next) => {
-  const { announcerEmail } = req.query;
+  const { announcementCreatorName } = req.query;
   const { AnnouncementModel } = res.locals.connection.databaseObject;
 
-  const data = await AnnouncementModel.find({ announcerEmail });
+  const data = await AnnouncementModel.find({ announcementCreatorName });
 
   const response = data[data.length - 1];
   res
@@ -154,10 +152,10 @@ const viewSelectedAnnouncement  = async (req, res, next) => {
 
 
 const viewAllAnnouncement = async (req, res, next) => {
-  const { announcerEmail } = req.query;
+  const { announcementCreatorName } = req.query;
   const { AnnouncementModel } = res.locals.connection.databaseObject;
 
-  const data = await AnnouncementModel.find({ announcerEmail });
+  const data = await AnnouncementModel.find({ announcementCreatorName });
 
  
   res
