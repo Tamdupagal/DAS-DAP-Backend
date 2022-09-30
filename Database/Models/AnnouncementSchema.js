@@ -8,6 +8,9 @@ const AnnouncementSchema = new Schema(
       type: String,
       // required: true,
     },
+    announcementTime:{
+     type:String
+    },
     announcementTitle: {
       type: String,
       // required: true,

@@ -11,6 +11,7 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
+      announcementTime
     } = req.body
     console.log(res.locals.connection.databaseObject)
     const newAnnouncement = await AnnouncementModel.create({
@@ -20,6 +21,7 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
+      announcementTime
     })
     res
       .status(200)

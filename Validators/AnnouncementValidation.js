@@ -16,6 +16,7 @@ const schema = {
     announcementTitle: { type: 'string' },
     announcementBody: { type: 'string' },
     announcementAttachment: { type: 'string' },
+    announcementTime:{type: 'string'},
     announcementReceivers: {
       type: 'array',
       items: innerAnnouncementSchema,
@@ -26,6 +27,7 @@ const schema = {
     'announcementDate',
     'announcementTitle',
     'announcementBody',
+    'announcementTime'
   ],
   additionalProperties: false,
 }
