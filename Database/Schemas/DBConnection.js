@@ -25,6 +25,10 @@ const dependencyInjector = (dataBaseName) => {
     'Announcment',
     require('../Models/AnnouncementSchema')
   )
+  const UserFeedBackModel = connection.model(
+    'userFeedBack',
+    require('../Models/UserFeedBack')
+  )
   return {
     connection,
     analyticsModel,
@@ -32,7 +36,8 @@ const dependencyInjector = (dataBaseName) => {
     feedBackResponseModel,
     userModel,
     taskFlowModel,
-    AnnouncementModel
+    AnnouncementModel,
+    UserFeedBackModel
   }
 }
 
