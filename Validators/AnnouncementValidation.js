@@ -11,21 +11,23 @@ const innerAnnouncementSchema = {
 const schema = {
   type: 'object',
   properties: {
-    AnnouncementCreatorName: { type: 'string' },
-    AnnouncementDate: { type: 'string' },
-    AnnouncementTitle: { type: 'string' },
-    AnnouncementBody: { type: 'string' },
-    AnnouncementAttachment: { type: 'string' },
-    AnnouncementReceivers: {
+    announcementCreatorName: { type: 'string' },
+    announcementDate: { type: 'string' },
+    announcementTitle: { type: 'string' },
+    announcementBody: { type: 'string' },
+    announcementAttachment: { type: 'string' },
+    announcementTime:{type: 'string'},
+    announcementReceivers: {
       type: 'array',
       items: innerAnnouncementSchema,
     },
   },
   required: [
-    'AnnouncementCreatorName',
-    'AnnouncementDate',
-    'AnnouncementTitle',
-    'AnnouncementBody',
+    'announcementCreatorName',
+    'announcementDate',
+    'announcementTitle',
+    'announcementBody',
+    'announcementTime'
   ],
   additionalProperties: false,
 }

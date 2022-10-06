@@ -3,18 +3,24 @@ const ObjectID = require('mongoose').Types.ObjectId
 const createFeedBack = async (req, res, next) => {
   try {
     const { feedBackModel } = res.locals.connection.databaseObject
-    const { feedbackCreatorName, feedbackQuestions, feedbackQuestionImage } =
+    const { email, rating, feedbackQuery } =
       req.body
-    const newFeedBack = await feedBackModel.create({
-      feedbackCreatorName,
-      feedbackQuestions,
-      feedbackQuestionImage,
-    })
+    // const newFeedBack = await feedBackModel.create({
+    //   email, rating, feedbackQuery
+    // })
+
+    const newFeedBack = await feedBackModel.findOneAndUpdate(
+      {
+        email,
+      },
+     { email, rating, feedbackQuery },
+      { new: true,upsert:true }
+    )
     res
       .status(200)
       .send({ status: 200, message: 'FeedBack has been published!' })
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
     res.status(400).send({
       status: 400,
       message: "FeedBack can't be saved",
@@ -106,9 +112,100 @@ const submitFeedBackResponse = async (req, res, next) => {
   }
 }
 
+const createUserFeedBack = async (req,res,next)=>{
+  try {
+    const {UserFeedBackModel}= res.locals.connection.databaseObject
+    const {userEmail,userQuery,userQueryDescription} = req.body
+    const newResponse = await UserFeedBackModel.create({
+      userEmail,
+      userQuery,
+      userQueryDescription
+    })
+    res
+      .status(200)
+      .send({ status: 200, message: 'Response has been submitted!',data:newResponse })
+    
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      status: 400,
+      message: "FeedBack Response can't be saved",
+    })
+}
+}
+
+const getUserFeedBack = async(req,res,next)=>{
+  try {
+    
+    const {UserFeedBackModel}= res.locals.connection.databaseObject;
+    const {userEmail}= req.query;
+
+    const newResponse = await UserFeedBackModel.find({userEmail});
+
+        res
+      .status(200)
+      .send({ status: 200, result:newResponse.length,data:newResponse })
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      status: 400,
+      message: "FeedBack can't be Viewed Please Try Again",
+    })
+    
+  }
+}
+
+const updateUserFeedBack = async(req,res,next)=>{
+  try {
+    const {UserFeedBackModel}= res.locals.connection.databaseObject;
+    const {id}=req.params
+    const {userQuery,userQueryDescription} = req.body
+
+    await UserFeedBackModel.findByIdAndUpdate(id,{
+    userQuery,
+    userQueryDescription
+    })
+
+    res
+    .status(200)
+    .send({ status: 200,message:'FeedBack Has Been Updated!' })
+    
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      status: 400,
+      message: "FeedBack can't be Updated!",
+    })
+  }
+  
+}
+
+const deleteUserFeedBack = async(req,res,next)=>{
+  try {
+    const {UserFeedBackModel}= res.locals.connection.databaseObject;
+    const {id}=req.params
+    await UserFeedBackModel.findByIdAndDelete(id)
+    res
+    .status(200)
+    .send({ status: 200,message:'FeedBack Has Been Deleted!' })
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      status: 400,
+      message: "FeedBack can't be Deleted!",
+    })
+  }
+}
+
 module.exports = {
   createFeedBack,
   viewFeedBackQuestions,
   viewFeedBackResponses,
   submitFeedBackResponse,
+  createUserFeedBack,
+  getUserFeedBack,
+  updateUserFeedBack,
+  deleteUserFeedBack
 }

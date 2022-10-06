@@ -7,6 +7,6 @@ const {
 } = require('../../../../Utils/FeedBack/feedback.utils')
 
 Router.route('/search?').get(viewFeedBackQuestions)
-Router.route('/submit?').post(submitFeedBackResponse)
+Router.route('/submit').post(submitFeedBackResponse)
 
 module.exports = Router

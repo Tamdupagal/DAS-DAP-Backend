@@ -11,7 +11,9 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
+      announcementTime
     } = req.body
+    console.log(res.locals.connection.databaseObject)
     const newAnnouncement = await AnnouncementModel.create({
       announcementCreatorName,
       announcementDate,
@@ -19,10 +21,11 @@ const createAnnouncement = async (req, res, next) => {
       announcementBody,
       announcementAttachment,
       announcementReceivers,
+      announcementTime
     })
     res
       .status(200)
-      .send({ status: 200, message: 'Announcement has been published!' })
+      .send({ status: 200, message: 'Announcement has been published!',data:newAnnouncement })
   } catch (error) {
     console.log(error.message)
     res.status(400).send({
@@ -132,9 +135,46 @@ const submitAnnouncementResponse = async (req, res, next) => {
   }
 }
 
+const viewSelectedAnnouncement  = async (req, res, next) => {
+  const { announcementCreatorName } = req.query;
+  const { AnnouncementModel } = res.locals.connection.databaseObject;
+
+  const data = await AnnouncementModel.find({ announcementCreatorName });
+
+  const response = data[data.length - 1];
+  res
+    .status(200)
+    .send({
+      status: 200,
+      message: "Announcement has been published!",
+      result: data.length,
+      data: response,
+    });
+}
+
+
+const viewAllAnnouncement = async (req, res, next) => {
+  const { announcementCreatorName } = req.query;
+  const { AnnouncementModel } = res.locals.connection.databaseObject;
+
+  const data = await AnnouncementModel.find({ announcementCreatorName });
+
+ 
+  res
+    .status(200)
+    .send({
+      status: 200,
+      message: "Announcement has been published!",
+      result: data.length,
+      data
+    });
+}
 module.exports = {
   createAnnouncement,
   viewAnnouncements,
   viewAnnouncementResponse,
   submitAnnouncementResponse,
+  viewSelectedAnnouncement,
+  viewAllAnnouncement
 }
+
