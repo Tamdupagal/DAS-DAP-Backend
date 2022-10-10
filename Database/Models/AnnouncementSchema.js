@@ -38,4 +38,5 @@ const AnnouncementSchema = new Schema(
   }
 )
 
+
 module.exports = AnnouncementSchema

@@ -169,6 +169,7 @@ const viewAllAnnouncement = async (req, res, next) => {
       data
     });
 }
+
 module.exports = {
   createAnnouncement,
   viewAnnouncements,
