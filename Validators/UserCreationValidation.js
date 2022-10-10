@@ -11,7 +11,7 @@ const schema = {
     password: { type: 'string' },
   },
   required: ['userName', 'email', 'password'],
-  additionalProperties: false,
+  // additionalProperties: false,
 }
 
 module.exports = {

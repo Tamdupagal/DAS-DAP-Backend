@@ -22,7 +22,7 @@ const createAnnouncement = async (req, res, next) => {
       announcementAttachment,
       announcementReceivers,
       announcerEmail
-    })
+    })--
     res
       .status(200)
       .send({ status: 200, message: 'Announcement has been published!',data:newAnnouncement })

@@ -16,7 +16,7 @@ const schema = {
     announcementTitle: { type: 'string' },
     announcementBody: { type: 'string' },
     announcementAttachment: { type: 'string' },
-    announcerEmail:{type:'string'},
+    // announcerEmail:{type:'string'},
     announcementReceivers: {
       type: 'array',
       items: innerAnnouncementSchema,
@@ -27,7 +27,7 @@ const schema = {
     'announcementDate',
     'announcementTitle',
     'announcementBody',
-    'announcerEmail'
+    // 'announcerEmail'
   ],
   additionalProperties: false,
 }
