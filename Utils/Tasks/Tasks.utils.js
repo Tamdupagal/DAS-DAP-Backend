@@ -10,6 +10,7 @@ const createTaskFlow = async (req, res) => {
       applicationDomain,
       applicationTaskFlowUseCase,
       taskList,
+      organizationEmail
     } = req.body
 
     const taskFlow = await taskFlowModel.findTaskFlow({
@@ -29,6 +30,7 @@ const createTaskFlow = async (req, res) => {
       applicationName,
       applicationDomain,
       applicationTaskFlowUseCase,
+      organizationEmail,
       taskList,
     })
     if (result.isError) {
@@ -43,6 +45,7 @@ const createTaskFlow = async (req, res) => {
     res.status(201).send({
       status: 201,
       message: `Taskflow named ${applicationTaskFlowUseCase} has been published!`,
+      result
     })
   } catch (e) {
     res.status(e.status).send({ message: e.message, reference: e.reference })
@@ -150,9 +153,28 @@ const deleteTaskFlow = async (req, res, next) => {
   }
 }
 
+const fetchMyTasks = async (req,res,next)=>{
+  try {
+    const { taskFlowModel } = res.locals.connection.databaseObject
+    const {organizationEmail} = req.query;
+    const response = await taskFlowModel.find({organizationEmail})
+    res.status(200).send({
+      status: 200,
+      result:response.length,
+      data:response
+    })
+  } catch (e) {
+    console.log(e)
+    res
+    .status(e.status)
+    .send({ status: e.status, message: e.message, reference: e.reference })
+  }
+}
+
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
   updateTaskFlow,
   deleteTaskFlow,
+  fetchMyTasks
 }
