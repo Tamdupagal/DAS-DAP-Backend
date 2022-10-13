@@ -7,10 +7,19 @@ const UserFeedBack  = new Schema(
     type:String
  },
  userQuery:{
-    type:String
+    type:String,
+   unique: true 
  },
  userQueryDescription:{
     type:String
+ },
+ isFeedback:{
+   type:Boolean,
+   default:false
+ },
+ rating:{
+   type:Number,
+   default:0
  }
 
 },
@@ -18,6 +27,14 @@ const UserFeedBack  = new Schema(
     timestamps: true,
 }
 )
+
+
+UserFeedBack.index(
+   {
+      userQuery: "text",
+      userQueryDescription: "text"
+   }
+ )
 
 
 module.exports = UserFeedBack

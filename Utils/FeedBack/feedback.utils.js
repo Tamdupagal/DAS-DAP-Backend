@@ -116,6 +116,12 @@ const createUserFeedBack = async (req,res,next)=>{
   try {
     const {UserFeedBackModel}= res.locals.connection.databaseObject
     const {userEmail,userQuery,userQueryDescription} = req.body
+    
+    const data = await  UserFeedBackModel.find({userQuery})
+    if(data.length>0 && data){
+      throw new Error('query is already exist')
+    }
+    
     const newResponse = await UserFeedBackModel.create({
       userEmail,
       userQuery,
@@ -129,7 +135,7 @@ const createUserFeedBack = async (req,res,next)=>{
     console.log(error)
     res.status(400).send({
       status: 400,
-      message: "FeedBack Response can't be saved",
+      message: error.message || "FeedBack Response can't be saved",
     })
 }
 }
@@ -160,11 +166,13 @@ const updateUserFeedBack = async(req,res,next)=>{
   try {
     const {UserFeedBackModel}= res.locals.connection.databaseObject;
     const {id}=req.params
-    const {userQuery,userQueryDescription} = req.body
+    const {userQuery,userQueryDescription,rating,isFeedback} = req.body
 
     await UserFeedBackModel.findByIdAndUpdate(id,{
     userQuery,
-    userQueryDescription
+    userQueryDescription,
+    rating,
+    isFeedback
     })
 
     res
@@ -175,7 +183,7 @@ const updateUserFeedBack = async(req,res,next)=>{
     console.log(error)
     res.status(400).send({
       status: 400,
-      message: "FeedBack can't be Updated!",
+      message: error.message || "FeedBack can't be Updated!",
     })
   }
   
@@ -199,6 +207,26 @@ const deleteUserFeedBack = async(req,res,next)=>{
   }
 }
 
+const searchFeedback = async(req,res,next)=>{
+try {
+  const {UserFeedBackModel}= res.locals.connection.databaseObject;
+  const {text,email} = req.query
+
+  const response = await UserFeedBackModel.find({ $text: { $search: text } ,userEmail:email})
+
+  res
+  .status(200)
+  .send({ status: 200,result:response.length,data:response })
+  
+} catch (error) {
+  console.log(error)
+  res.status(400).send({
+    status: 400,
+    message: "SOME ERROR OCCURED",
+  })
+}
+}
+
 module.exports = {
   createFeedBack,
   viewFeedBackQuestions,
@@ -207,5 +235,6 @@ module.exports = {
   createUserFeedBack,
   getUserFeedBack,
   updateUserFeedBack,
-  deleteUserFeedBack
+  deleteUserFeedBack,
+  searchFeedback
 }
