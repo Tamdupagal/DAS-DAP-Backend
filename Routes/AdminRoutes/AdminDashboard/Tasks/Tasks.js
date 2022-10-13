@@ -1,5 +1,5 @@
 const Express = require('express')
-const { fetchTaskFlow } = require('../../../../Utils/Tasks/Tasks.utils')
+const { fetchTaskFlow, fetchMyTasks } = require('../../../../Utils/Tasks/Tasks.utils')
 const Router = Express.Router()
 
 Router.route('/search?').get(fetchTaskFlow)
@@ -17,5 +17,7 @@ Router.route('/').get(async (req,res,next)=>{
     }
       
   })
+
+Router.route('/myTasks?').get(fetchMyTasks)
 
 module.exports = Router
