@@ -88,6 +88,7 @@ const updateUser = async (req, res, next) => {
         res.status(200).send({ status: 200, message: 'Task Updated' })
       }
     )
+    
   } catch (err) {
     console.log(error.message)
     res.status(200).send({
