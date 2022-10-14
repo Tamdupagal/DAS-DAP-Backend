@@ -3,6 +3,7 @@ const {
   createUser,
   fetchUser,
   updateUser,
+  fetchMyUsers,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -23,6 +24,8 @@ Router.route('/').get(async (req,res,next)=>{
     
 })
 Router.route('/search?').get(fetchUser)
+
+Router.route('/myUsers?').get(fetchMyUsers)
 // Router.route('/search?').put(updateUser)
 
 module.exports = Router

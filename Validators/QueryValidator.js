@@ -1,9 +1,9 @@
 const Error = require('../Errors/Error')
 const queryFields = {
-  users: { GET: ['email', 'page', 'userId', 'userName', 'search'], POST: [] },
+  users: { GET: ['email', 'page', 'userId', 'userName', 'search','organizationEmail'], POST: [] },
   tasks: {
     POST: [],
-    GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
+    GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain','organizationEmail'],
     PUT: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
     DELETE: ['applicationTaskFlowUseCase', 'applicationDomain'],
   },

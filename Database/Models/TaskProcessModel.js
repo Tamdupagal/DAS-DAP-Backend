@@ -12,6 +12,9 @@ const taskFlowSchema = new Schema(
     applicationTaskFlowUseCase: {
       type: String,
     },
+    organizationEmail:{
+      type:String,
+    },
     taskList: [
       {
         stepNumber: {
@@ -66,12 +69,14 @@ taskFlowSchema.statics.createNewTask = async function (data) {
       applicationDomain,
       applicationTaskFlowUseCase,
       taskList,
+      organizationEmail
     } = data
     const newTask = await this.create({
       applicationName,
       applicationDomain,
       applicationTaskFlowUseCase,
       taskList,
+      organizationEmail
     })
     return newTask
   } catch (e) {
