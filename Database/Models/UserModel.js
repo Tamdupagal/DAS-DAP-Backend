@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const ObjectId = require('mongoose').Types.ObjectId
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const UserSchema = new Schema(
   {
@@ -18,10 +18,7 @@ const UserSchema = new Schema(
       type: String,
     },
 
-    companyEmail:{
-
-    
-
+    companyEmail: {
       type: String,
     },
     userCreatedOn: {
@@ -37,22 +34,22 @@ const UserSchema = new Schema(
   {
     timestamps: true,
   }
-)
+);
 
 UserSchema.statics.findUser = async function (value) {
   try {
-    if (value == null) throw new Error(`Invalid ${value}`)
-    const { email, userName, userID } = value
-    let query = {}
-    if (email) query.email = email
-    if (userName) query.userName = userName
-    if (userID) query._id = ObjectId(userID)
-    let User = await this.findOne(query)
-    if (User) return { User, isExisting: true }
-    return { isExisting: false }
+    if (value == null) throw new Error(`Invalid ${value}`);
+    const { email, userName, userID } = value;
+    let query = {};
+    if (email) query.email = email;
+    if (userName) query.userName = userName;
+    if (userID) query._id = ObjectId(userID);
+    let User = await this.findOne(query);
+    if (User) return { User, isExisting: true };
+    return { isExisting: false };
   } catch (e) {
-    console.log(e.message)
+    console.log(e.message);
   }
-}
+};
 
-module.exports = UserSchema
+module.exports = UserSchema;
