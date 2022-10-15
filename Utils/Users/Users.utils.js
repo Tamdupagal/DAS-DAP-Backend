@@ -58,7 +58,7 @@ const fetchUser = async (req, res, next) => {
       pageNumber = 1
     }
     skip = pageNumber * 10 - 10
-    limit = 10
+    limit = 1000
     let totalCount = await userModel.count()
     let result = await userModel
       .find(query, { password: 0 })
