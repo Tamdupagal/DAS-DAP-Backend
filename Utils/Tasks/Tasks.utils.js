@@ -10,7 +10,7 @@ const createTaskFlow = async (req, res) => {
       applicationDomain,
       applicationTaskFlowUseCase,
       taskList,
-      organizationEmail
+      companyEmail
     } = req.body
 
     const taskFlow = await taskFlowModel.findTaskFlow({
@@ -30,7 +30,7 @@ const createTaskFlow = async (req, res) => {
       applicationName,
       applicationDomain,
       applicationTaskFlowUseCase,
-      organizationEmail,
+      companyEmail,
       taskList,
     })
     if (result.isError) {
@@ -156,8 +156,8 @@ const deleteTaskFlow = async (req, res, next) => {
 const fetchMyTasks = async (req,res,next)=>{
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject
-    const {organizationEmail} = req.query;
-    const response = await taskFlowModel.find({organizationEmail})
+    const {companyEmail} = req.query;
+    const response = await taskFlowModel.find({companyEmail})
     res.status(200).send({
       status: 200,
       result:response.length,

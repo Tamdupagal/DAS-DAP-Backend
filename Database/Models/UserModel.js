@@ -17,7 +17,7 @@ const UserSchema = new Schema(
     typeOfUser: {
       type: String,
     },
-    organizationEmail:{
+    companyEmail:{
       type: String,
     },
     userCreatedOn: {

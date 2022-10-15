@@ -8,10 +8,10 @@ const schema = {
       type: 'string',
       pattern: '[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$',
     },
-    organizationEmail:{ type: 'string' },
+    companyEmail:{ type: 'string' },
     password: { type: 'string' },
   },
-  required: ['userName', 'email', 'password','organizationEmail'],
+  required: ['userName', 'email', 'password','companyEmail'],
   additionalProperties: false,
 }
 
