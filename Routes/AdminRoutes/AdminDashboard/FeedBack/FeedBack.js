@@ -9,7 +9,8 @@ const {
   createUserFeedBack,
   getUserFeedBack,
   updateUserFeedBack,
-  deleteUserFeedBack
+  deleteUserFeedBack,
+  searchFeedback
 } = require('../../../../Utils/FeedBack/feedback.utils')
 const {
   feedBackSchemaValidation,
@@ -23,6 +24,7 @@ Router.route('/userFeedBack').post(createUserFeedBack)
 Router.route('/userFeedBack').get(getUserFeedBack)
 Router.route('/userFeedBack/:id').put(updateUserFeedBack)
 Router.route('/userFeedBack/:id').delete(deleteUserFeedBack)
+Router.route('/userFeedback/search?').get(searchFeedback)
 
 
 
