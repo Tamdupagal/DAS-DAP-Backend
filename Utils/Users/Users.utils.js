@@ -109,9 +109,6 @@ const fetchMyUsers = async (req,res,next)=>{
     const {companyEmail} = req.query;
     const response = await userModel.find({companyEmail});
 
-    const {organizationEmail} = req.query;
-    const response = await userModel.find({organizationEmail});
-
     res.status(200).send({ status: 200, result: response.length,data:response })
     
   } catch (err) {
