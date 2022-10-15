@@ -25,7 +25,11 @@ const schema = {
     applicationName: { type: 'string' },
     applicationDomain: { type: 'string' },
     applicationTaskFlowUseCase: { type: 'string' },
+
     companyEmail: { type: 'string' },
+
+    
+
     taskList: {
       type: 'array',
       items: innerProperties,
@@ -35,7 +39,11 @@ const schema = {
     'applicationTaskFlowUseCase',
     'applicationName',
     'applicationDomain',
+
     'companyEmail'
+
+    
+
   ],
   additionalProperties: false,
 }

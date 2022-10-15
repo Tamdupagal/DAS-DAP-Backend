@@ -17,7 +17,11 @@ const UserSchema = new Schema(
     typeOfUser: {
       type: String,
     },
+
     companyEmail:{
+
+    
+
       type: String,
     },
     userCreatedOn: {
