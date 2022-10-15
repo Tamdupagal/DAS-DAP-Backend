@@ -7,7 +7,9 @@ const {
 
 const createUser = async (req, res) => {
   try {
-    const { userName, email, password ,organizationEmail} = req.body
+
+    const { userName, email, password ,companyEmail} = req.body
+
 
     let testCase = new RegExp(res.locals.params, 'g')
     if (!testCase.test(email)) {
@@ -25,7 +27,9 @@ const createUser = async (req, res) => {
       userName: userName,
       email: email,
       password: password,
-      organizationEmail:organizationEmail,
+
+      companyEmail:companyEmail,
+
       typeOfUser: 'User',
     })
     let newLoginUser = await companyUserModel.create({
@@ -58,7 +62,7 @@ const fetchUser = async (req, res, next) => {
       pageNumber = 1
     }
     skip = pageNumber * 10 - 10
-    limit = 10
+    limit = 1000
     let totalCount = await userModel.count()
     let result = await userModel
       .find(query, { password: 0 })
@@ -101,8 +105,13 @@ const updateUser = async (req, res, next) => {
 const fetchMyUsers = async (req,res,next)=>{
   const { userModel } = res.locals.connection.databaseObject
   try {
+
+    const {companyEmail} = req.query;
+    const response = await userModel.find({companyEmail});
+
     const {organizationEmail} = req.query;
     const response = await userModel.find({organizationEmail});
+
     res.status(200).send({ status: 200, result: response.length,data:response })
     
   } catch (err) {
