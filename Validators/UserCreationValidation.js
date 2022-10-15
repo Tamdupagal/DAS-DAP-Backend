@@ -13,10 +13,6 @@ const schema = {
     password: { type: 'string' },
   },
   required: ['userName', 'email', 'password','companyEmail'],
-
-    
-
-
   additionalProperties: false,
 }
 
