@@ -1,3 +1,5 @@
+const { SuperAdminAnnouncement } = require('../../Database/Schemas/SuperAdminConnection')
+
 const ObjectId = require('mongoose').Types.ObjectId
 
 // Create New Announcement MiddleWare
@@ -169,8 +171,72 @@ const viewAllAnnouncement = async (req, res, next) => {
       data
     });
 }
+
+const createSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    
+    const {  announcementCreatorName,
+      announcementDate,
+      announcementTitle,
+      announcementBody,
+      announcementAttachment,
+      announcementReceivers,
+      announcementTime} = req.body
+
+      const newAnnouncement = await SuperAdminAnnouncement.create({
+        announcementCreatorName,
+        announcementDate,
+        announcementTitle,
+        announcementBody,
+        announcementAttachment,
+        announcementReceivers,
+        announcementTime
+      })
+
+      res.status(201).send({
+        status:201,
+        message:'Announcement has been Published!',
+        data:newAnnouncement
+      })
+
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:error.message || 'Some Error Occured!'
+    })
+  }
+}
+
+const getAllSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    const response = await SuperAdminAnnouncement.find();
+    res.status(200).send({
+      status:200,
+      result:response.length,
+      data:response
+    })
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:error.message || 'Some Error Occured!'
+    })
+  }
+}
+
+const getCurrentSuperAdminAnnouncement = async (req,res,next)=>{
+  const response = await SuperAdminAnnouncement.find()
+
+  res.status(200).send({
+    status:200,
+    data:response[response.length-1]
+  })
+}
+
 module.exports = {
   createAnnouncement,
+  createSuperAdminAnnouncement,
+  getAllSuperAdminAnnouncement,
+  getCurrentSuperAdminAnnouncement,
   viewAnnouncements,
   viewAnnouncementResponse,
   submitAnnouncementResponse,

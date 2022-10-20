@@ -7,7 +7,8 @@ const pushAnalytics = async (req, res, next) => {
       applicationDomain,
       isCompleted,
       isAborted,
-      email
+      userEmail,
+      companyEmail
     } = req.body
     // const { email } = req.query
     console.log(req.body)
@@ -24,6 +25,8 @@ const pushAnalytics = async (req, res, next) => {
     let query = {
       applicationTaskFlowUseCase,
       applicationDomain,
+      userEmail,
+      companyEmail
     }
     if (isCompleted) query.isCompleted = isCompleted
     if (isAborted) query.isAborted = isAborted
