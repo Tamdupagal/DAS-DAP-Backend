@@ -21,6 +21,12 @@ const taskFlowAnalytics = new Schema({
     type: Number,
     default: 0,
   },
+  timeStampStartByUsers:{
+    type:String
+  },
+  timeStampCompletedByUsers:{
+    type:String,
+  },
 })
 
 taskFlowAnalytics.statics.updateAnalytics = async function (data) {
@@ -31,7 +37,9 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
       isCompleted,
       isAborted,
       userEmail,
-      companyEmail
+      companyEmail,
+      timeStampStartByUsers,
+      timeStampCompletedByUsers
     } = data
     let query
 
@@ -42,7 +50,7 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
         applicationTaskFlowUseCase,
         applicationDomain,
         userEmail,
-        companyEmail
+        companyEmail,
       },
        query ,
       { new: true,upsert:true }

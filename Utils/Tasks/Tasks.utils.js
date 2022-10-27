@@ -156,9 +156,20 @@ const deleteTaskFlow = async (req, res, next) => {
 const fetchMyTasks = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
+    const { companyEmail,page } = req.query;
+    let query = {companyEmail},
+    projection = { taskList: 0 },
+    skip,
+    limit = 10,
+    pageNumber = parseInt(page);
+    if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
-    const { companyEmail } = req.query;
-    const response = await taskFlowModel.find({ companyEmail });
+    skip = pageNumber * 10 - 10;
+
+    
+    const response = await taskFlowModel.find(query, projection)
+    .skip(skip)
+    .limit(limit);
 
     res.status(200).send({
       status: 200,

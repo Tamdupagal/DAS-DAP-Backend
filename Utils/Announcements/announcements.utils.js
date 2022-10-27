@@ -232,6 +232,47 @@ const getCurrentSuperAdminAnnouncement = async (req,res,next)=>{
   })
 }
 
+const deleteAnnouncement = async (req,res,next)=>{
+try {
+  const { id } = req.params;
+  const { AnnouncementModel } = res.locals.connection.databaseObject;
+  
+  await AnnouncementModel.findByIdAndDelete(id);
+  res.status(200).send({
+    status:200,
+    message:'Announcement has been deleted'
+  })
+  
+} catch (error) {
+  res.status(400).send({
+    status:400,
+    message:'Some Error occured'
+  })
+}
+}
+
+
+const updateAnnouncement = async (req,res,next)=>{
+  try {
+    const { id } = req.params;
+    const { AnnouncementModel } = res.locals.connection.databaseObject;
+
+    const {isAnnouncement}= req.body;
+    
+    await AnnouncementModel.findByIdAndUpdate(id,{isAnnouncement});
+    res.status(200).send({
+      status:200,
+      message:'Announcement has been Updated'
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:'Some Error occured'
+    })
+  }
+}
+
 module.exports = {
   createAnnouncement,
   createSuperAdminAnnouncement,
@@ -241,6 +282,8 @@ module.exports = {
   viewAnnouncementResponse,
   submitAnnouncementResponse,
   viewSelectedAnnouncement,
-  viewAllAnnouncement
+  viewAllAnnouncement,
+  deleteAnnouncement,
+  updateAnnouncement
 }
 

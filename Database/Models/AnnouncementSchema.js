@@ -21,6 +21,10 @@ const AnnouncementSchema = new Schema(
     announcementAttachment: {
       type: String,
     },
+    isAnnouncement:{
+      type:Boolean,
+      default:false
+    },
     announcementReceivers: [
       {
         email: {
