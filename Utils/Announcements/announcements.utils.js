@@ -148,7 +148,6 @@ const viewSelectedAnnouncement  = async (req, res, next) => {
     .status(200)
     .send({
       status: 200,
-      message: "Announcement has been published!",
       result: data.length,
       data: response,
     });

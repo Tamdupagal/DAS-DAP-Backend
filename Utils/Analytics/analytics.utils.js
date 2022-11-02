@@ -51,11 +51,24 @@ const pushAnalytics = async (req, res, next) => {
 
 const getAllAnalytics = async(req,res,next)=>{
   try {
-    const {companyEmail}= req.query;
+    const { companyEmail,page } = req.query;
     const {analyticsModel}= res.locals.connection.databaseObject
 
-    const response = await analyticsModel.find({companyEmail})
-    res.status(200).send({ status: 200, result:response.length,data:response })
+    let query = {companyEmail},
+    projection = { analyticsList: 0 },
+    skip,
+    limit = 10,
+    pageNumber = parseInt(page);
+    if (!pageNumber || pageNumber <= 1) pageNumber = 1;
+
+    skip = pageNumber * 10 - 10;
+
+    const totalCount = await analyticsModel.find({companyEmail})
+
+    const response = await analyticsModel.find(query,projection)
+    .skip(skip)
+    .limit(limit);
+    res.status(200).send({ status: 200, result:response.length, totalCount:totalCount.length, data:response })
 
   } catch (e) {
     res.status(e.status).send({ status: e.status, message: e.message })
