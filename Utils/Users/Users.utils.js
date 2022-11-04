@@ -27,9 +27,7 @@ const createUser = async (req, res) => {
       userName: userName,
       email: email,
       password: password,
-
       companyEmail:companyEmail,
-
       typeOfUser: 'User',
     })
     let newLoginUser = await companyUserModel.create({
@@ -37,6 +35,7 @@ const createUser = async (req, res) => {
       email: email,
       password: await bcrypt.hash(password, 10),
       typeOfUser: 'User',
+      companyEmail:companyEmail,
     })
 
     res.status(200).send({ status: 200, message: `${userName} has joined ` })

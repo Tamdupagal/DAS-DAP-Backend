@@ -84,6 +84,7 @@ const Authorization = async (req, res) => {
         typeOfUser: record.typeOfUser,
         databaseID: databaseID,
         userEmail: record.email,
+        companyEmail:record.companyEmail
       })
     }
   } catch (e) {

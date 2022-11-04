@@ -256,9 +256,41 @@ const updateAnnouncement = async (req,res,next)=>{
     const { id } = req.params;
     const { AnnouncementModel } = res.locals.connection.databaseObject;
 
-    const {isAnnouncement}= req.body;
+    const {allUsers}= req.body;
     
-    await AnnouncementModel.findByIdAndUpdate(id,{isAnnouncement});
+    const myAnnouncement =  await AnnouncementModel.findById(id);
+
+    if(allUsers){
+      allUsers.map((data)=>{myAnnouncement.allUsers.push(data)})
+    }
+    await myAnnouncement.save();
+
+    res.status(200).send({
+      status:200,
+      message:'Announcement has been Updated'
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:'Some Error occured'
+    })
+  }
+}
+
+const updateSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    const { id } = req.params;
+
+    const {allUsers}= req.body;
+    
+    const superAdminAnnouncement = await SuperAdminAnnouncement.findById(id);
+
+    if(allUsers){
+      allUsers.map((data)=>{superAdminAnnouncement.allUsers.push(data)})
+    }
+    await superAdminAnnouncement.save();
+
     res.status(200).send({
       status:200,
       message:'Announcement has been Updated'
@@ -277,6 +309,7 @@ module.exports = {
   createSuperAdminAnnouncement,
   getAllSuperAdminAnnouncement,
   getCurrentSuperAdminAnnouncement,
+  updateSuperAdminAnnouncement,
   viewAnnouncements,
   viewAnnouncementResponse,
   submitAnnouncementResponse,

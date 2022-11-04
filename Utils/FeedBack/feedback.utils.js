@@ -172,14 +172,15 @@ const updateUserFeedBack = async (req, res, next) => {
   try {
     const { UserFeedBackModel } = res.locals.connection.databaseObject;
     const { id } = req.params;
-    const { userQuery, userQueryDescription, rating, isFeedback } = req.body;
+    const { userQuery, userQueryDescription} = req.body;
 
-    await UserFeedBackModel.findByIdAndUpdate(id, {
+   const userFeedback =  await UserFeedBackModel.findByIdAndUpdate(id, {
       userQuery,
-      userQueryDescription,
-      rating,
-      isFeedback,
     });
+
+    if(userQueryDescription)
+    userQueryDescription.map((data)=>{userFeedback.userQueryDescription.push(data)})
+    await userFeedback.save();
 
     res
       .status(200)
@@ -283,15 +284,15 @@ const getSuperAdminFeedBack = async (req, res, next) => {
 const updateSuperAdminFeedBack = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { userQuery, userQueryDescription, rating, isFeedback } = req.body;
+    const { userQuery, userQueryDescription} = req.body;
 
-    await SuperAdminFeedback.findByIdAndUpdate(id, {
+   const superAdminFeedback = await SuperAdminFeedback.findByIdAndUpdate(id, {
       userQuery,
-      userQueryDescription,
-      rating,
-      isFeedback,
     });
-
+   
+    if(userQueryDescription)
+    userQueryDescription.map((data)=>{superAdminFeedback.userQueryDescription.push(data)})
+    await superAdminFeedback.save();
     res
       .status(200)
       .send({ status: 200, message: "FeedBack Has Been Updated!" });
