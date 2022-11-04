@@ -7,6 +7,12 @@ const taskFlowAnalytics = new Schema({
   applicationTaskFlowUseCase: {
     type: String,
   },
+  userEmail:{
+    type:String,
+  },
+  companyEmail:{
+    type:String
+  },
   timesCompletedByUsers: {
     type: Number,
     default: 0,
@@ -14,6 +20,12 @@ const taskFlowAnalytics = new Schema({
   timesStoppedByUsers: {
     type: Number,
     default: 0,
+  },
+  timeStampStartByUsers:{
+    type:String
+  },
+  timeStampCompletedByUsers:{
+    type:String,
   },
 })
 
@@ -24,15 +36,21 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
       applicationDomain,
       isCompleted,
       isAborted,
+      userEmail,
+      companyEmail,
+      timeStampStartByUsers,
+      timeStampCompletedByUsers
     } = data
     let query
 
-    if (isCompleted) query = {$inc: { timesCompletedByUsers: 1 } }
+    if (isCompleted) query = {timeStampCompletedByUsers,timeStampStartByUsers, $inc: { timesCompletedByUsers: 1 } }
     if (isAborted) query = { $inc: { timesStoppedByUsers: 1 } }
     const existingAnalytics = await this.findOneAndUpdate(
       {
         applicationTaskFlowUseCase,
         applicationDomain,
+        userEmail,
+        companyEmail,
       },
        query ,
       { new: true,upsert:true }

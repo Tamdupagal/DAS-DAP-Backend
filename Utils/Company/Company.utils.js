@@ -67,4 +67,21 @@ const createCompany = async (req, res, next) => {
   }
 }
 
-module.exports = createCompany
+const getAllCompanies = async (req,res,next)=>{
+  try {
+    const response = await companyModel.find();
+    res.status(200).send({
+      status:200,
+      result:response.length,
+      data:response
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:error.message||'Some Error occured!'
+    })
+  }
+}
+
+module.exports = {createCompany,getAllCompanies}

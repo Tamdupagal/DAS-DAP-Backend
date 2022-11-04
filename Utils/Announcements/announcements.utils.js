@@ -1,3 +1,5 @@
+const { SuperAdminAnnouncement } = require('../../Database/Schemas/SuperAdminConnection')
+
 const ObjectId = require('mongoose').Types.ObjectId
 
 // Create New Announcement MiddleWare
@@ -146,7 +148,6 @@ const viewSelectedAnnouncement  = async (req, res, next) => {
     .status(200)
     .send({
       status: 200,
-      message: "Announcement has been published!",
       result: data.length,
       data: response,
     });
@@ -169,12 +170,152 @@ const viewAllAnnouncement = async (req, res, next) => {
       data
     });
 }
+
+const createSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    
+    const {  announcementCreatorName,
+      announcementDate,
+      announcementTitle,
+      announcementBody,
+      announcementAttachment,
+      announcementReceivers,
+      announcementTime} = req.body
+
+      const newAnnouncement = await SuperAdminAnnouncement.create({
+        announcementCreatorName,
+        announcementDate,
+        announcementTitle,
+        announcementBody,
+        announcementAttachment,
+        announcementReceivers,
+        announcementTime
+      })
+
+      res.status(201).send({
+        status:201,
+        message:'Announcement has been Published!',
+        data:newAnnouncement
+      })
+
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:error.message || 'Some Error Occured!'
+    })
+  }
+}
+
+const getAllSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    const response = await SuperAdminAnnouncement.find();
+    res.status(200).send({
+      status:200,
+      result:response.length,
+      data:response
+    })
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:error.message || 'Some Error Occured!'
+    })
+  }
+}
+
+const getCurrentSuperAdminAnnouncement = async (req,res,next)=>{
+  const response = await SuperAdminAnnouncement.find()
+
+  res.status(200).send({
+    status:200,
+    data:response[response.length-1]
+  })
+}
+
+const deleteAnnouncement = async (req,res,next)=>{
+try {
+  const { id } = req.params;
+  const { AnnouncementModel } = res.locals.connection.databaseObject;
+  
+  await AnnouncementModel.findByIdAndDelete(id);
+  res.status(200).send({
+    status:200,
+    message:'Announcement has been deleted'
+  })
+  
+} catch (error) {
+  res.status(400).send({
+    status:400,
+    message:'Some Error occured'
+  })
+}
+}
+
+
+const updateAnnouncement = async (req,res,next)=>{
+  try {
+    const { id } = req.params;
+    const { AnnouncementModel } = res.locals.connection.databaseObject;
+
+    const {allUsers}= req.body;
+    
+    const myAnnouncement =  await AnnouncementModel.findById(id);
+
+    if(allUsers){
+      allUsers.map((data)=>{myAnnouncement.allUsers.push(data)})
+    }
+    await myAnnouncement.save();
+
+    res.status(200).send({
+      status:200,
+      message:'Announcement has been Updated'
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:'Some Error occured'
+    })
+  }
+}
+
+const updateSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    const { id } = req.params;
+
+    const {allUsers}= req.body;
+    
+    const superAdminAnnouncement = await SuperAdminAnnouncement.findById(id);
+
+    if(allUsers){
+      allUsers.map((data)=>{superAdminAnnouncement.allUsers.push(data)})
+    }
+    await superAdminAnnouncement.save();
+
+    res.status(200).send({
+      status:200,
+      message:'Announcement has been Updated'
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:'Some Error occured'
+    })
+  }
+}
+
 module.exports = {
   createAnnouncement,
+  createSuperAdminAnnouncement,
+  getAllSuperAdminAnnouncement,
+  getCurrentSuperAdminAnnouncement,
+  updateSuperAdminAnnouncement,
   viewAnnouncements,
   viewAnnouncementResponse,
   submitAnnouncementResponse,
   viewSelectedAnnouncement,
-  viewAllAnnouncement
+  viewAllAnnouncement,
+  deleteAnnouncement,
+  updateAnnouncement
 }
 
