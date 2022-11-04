@@ -10,17 +10,12 @@ const UserFeedBack  = new Schema(
     type:String,
    unique: true 
  },
- userQueryDescription:{
-    type:String
- },
- isFeedback:{
-   type:Boolean,
-   default:false
- },
- rating:{
-   type:Number,
-   default:0
- }
+ userQueryDescription:[{
+    email:{type:String,default:'',unique:true},
+    description:{type:String,default:''},
+    rating:{type:Number,default:0},
+    isFeedback:{type:Boolean,default:false}
+}],
 
 },
 {
@@ -32,7 +27,6 @@ const UserFeedBack  = new Schema(
 UserFeedBack.index(
    {
       userQuery: "text",
-      userQueryDescription: "text"
    }
  )
 

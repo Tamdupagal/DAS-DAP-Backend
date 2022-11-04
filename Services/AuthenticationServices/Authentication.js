@@ -6,6 +6,8 @@ const {
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const Error = require('../../Errors/Error')
+const { promisify } = require("util");
+const { companyModel } = require('../../Database/Schemas/SuperAdminConnection')
 
 const Authentication = async (req, res, next) => {
   const { authorization } = req.headers
@@ -82,6 +84,7 @@ const Authorization = async (req, res) => {
         typeOfUser: record.typeOfUser,
         databaseID: databaseID,
         userEmail: record.email,
+        companyEmail:record.companyEmail
       })
     }
   } catch (e) {
@@ -125,9 +128,52 @@ const Logout = async (req, res) => {
   }
 }
 
+
+const SuperAdminAuthorization = async (req, res, next) => {
+  
+  try {
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+    if (!token) { 
+      throw  new Error ("You are not logged in Please Login To get Access")
+    }
+    
+    const decoded = await promisify(JWT.verify)(token, process.env.secret);
+    let record = await EnrolledCompanies.findOne({
+      companyName: "digitalaidedschool",
+    })
+
+    const { companyUserModel } = await dependencyInjector(record.companyName)
+
+    const superAdmin = await companyUserModel.findOne({
+      email: "admin@digitalaidedschool.com",
+    })
+
+    if(superAdmin._id == decoded.id  && superAdmin.typeOfUser == 'SuperAdmin'){
+      return next()
+  }else{
+    throw new Error (`You Don't have permission for these route`)
+  }
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      status:400,
+      message: error.message || error.name || 'Some Error Occurred',
+    })
+  }
+  
+}
+
 module.exports = {
   isAuthenticated: Authentication,
   isAuthorized: Authorization,
   hasLoggedOut: Logout,
   DatabaseValidation,
+  SuperAdminAuthorization
 }
