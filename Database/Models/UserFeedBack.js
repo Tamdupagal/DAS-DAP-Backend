@@ -11,7 +11,9 @@ const UserFeedBack  = new Schema(
    unique: true 
  },
  userQueryDescription:[{
+
     email:{type:String,default:''},
+
     description:{type:String,default:''},
     rating:{type:Number,default:0},
     isFeedback:{type:Boolean,default:false}
