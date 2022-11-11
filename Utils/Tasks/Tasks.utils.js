@@ -58,7 +58,9 @@ const fetchTaskFlow = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
+
     const { applicationTaskFlowUseCase, applicationDomain, page,companyEmail } = req.query;
+
 
     let query = {},
       projection = { taskList: 0 },
@@ -181,7 +183,9 @@ const fetchMyTasks = async (req, res, next) => {
       status: 200,
       result: response.length,
 
+
       totalCount:totalCount.length,
+
 
       data: response,
     });
