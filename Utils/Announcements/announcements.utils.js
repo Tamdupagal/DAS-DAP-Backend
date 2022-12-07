@@ -304,12 +304,30 @@ const updateSuperAdminAnnouncement = async (req,res,next)=>{
   }
 }
 
+const deleteSuperAdminAnnouncement = async (req,res,next)=>{
+  try {
+    const {id}=req.params;
+    await SuperAdminAnnouncement.findByIdAndDelete(id);
+    res.status(200).send({
+      status:200,
+      message:'Announcement has been Deleted!'
+    })
+    
+  } catch (error) {
+    res.status(400).send({
+      status:400,
+      message:'Some Error occured'
+    })
+  }
+}
+
 module.exports = {
   createAnnouncement,
   createSuperAdminAnnouncement,
   getAllSuperAdminAnnouncement,
   getCurrentSuperAdminAnnouncement,
   updateSuperAdminAnnouncement,
+  deleteSuperAdminAnnouncement,
   viewAnnouncements,
   viewAnnouncementResponse,
   submitAnnouncementResponse,

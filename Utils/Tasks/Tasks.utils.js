@@ -58,12 +58,14 @@ const fetchTaskFlow = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
+
     const { applicationTaskFlowUseCase, applicationDomain, page,companyEmail } = req.query;
+
 
     let query = {},
       projection = { taskList: 0 },
       skip,
-      limit = 10,
+      limit = 8,
       pageNumber = parseInt(page);
 
     if (applicationTaskFlowUseCase && applicationDomain) {
@@ -79,14 +81,15 @@ const fetchTaskFlow = async (req, res, next) => {
 
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
-    skip = pageNumber * 10 - 10;
+    skip = pageNumber * 8 - 8;
+    const totalCount  = await taskFlowModel.find(query);
 
     const result = await taskFlowModel
       .find(query, projection)
       .skip(skip)
       .limit(limit);
-    res.status(200).send({ status: 200, result, totalCount: result.length });
-  } catch (e) {
+    res.status(200).send({ status: 200, result, totalCount: totalCount.length });
+  } catch (e) {totalCount
     res.status(400).send({
       status: 400,
       message: e.message,
@@ -181,7 +184,9 @@ const fetchMyTasks = async (req, res, next) => {
       status: 200,
       result: response.length,
 
+
       totalCount:totalCount.length,
+
 
       data: response,
     });
