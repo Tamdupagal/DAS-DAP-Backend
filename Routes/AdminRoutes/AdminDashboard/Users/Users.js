@@ -4,6 +4,8 @@ const {
   fetchUser,
   updateUser,
   fetchMyUsers,
+  postChat,
+  getChat,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -26,6 +28,10 @@ Router.route('/').get(async (req,res,next)=>{
 Router.route('/search?').get(fetchUser)
 
 Router.route('/myUsers?').get(fetchMyUsers)
+
+Router.route('/postChat').put(postChat)
+
+Router.route('/getChat').get(getChat)
 // Router.route('/search?').put(updateUser)
 
 module.exports = Router

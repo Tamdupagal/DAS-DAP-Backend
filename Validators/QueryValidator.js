@@ -1,7 +1,7 @@
 const Error = require('../Errors/Error')
 const queryFields = {
 
-  users: { GET: ['email', 'page', 'userId', 'userName', 'search','companyEmail'], POST: [] },
+  users: { GET: ['email', 'page', 'userId', 'userName', 'search','companyEmail' ,'senderId','receiverId'], POST: [] },
   tasks: {
     POST: [],
     GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain','companyEmail'],
