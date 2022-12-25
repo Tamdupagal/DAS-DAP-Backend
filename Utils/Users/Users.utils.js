@@ -168,7 +168,9 @@ const getChat = async (req, res, next) => {
     else if(response2){
       res
       .status(200)
-      .send({ status: 200, message:response2});
+      .send({ status: 200, data:response2});
+    }else{
+      throw new Error('Chat Not Found!')
     }
     
   } catch (error) {
@@ -179,11 +181,143 @@ const getChat = async (req, res, next) => {
   }
 };
 
+const createGroup = async(req,res,next)=>{
+  try {
+
+    const {adminId,groupName,members } = req.body
+    const { userModel } = res.locals.connection.databaseObject;
+    const { GroupChatModel } = res.locals.connection.databaseObject;
+    
+     const user = await userModel.findById(adminId)
+     console.log(user)
+     if(user && (user.typeOfUser === 'Admin' || user.typeOfUser === 'SuperAdmin')){
+        const response = await GroupChatModel.create({
+          adminId,
+          groupName,
+          members
+        })
+
+        res.status(201).send({
+          status:'success',
+          message:'Group Created!',
+          data:response
+        })
+     }else{
+       throw new Error('You do not have access to these route!')
+     }
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: error.message 
+    });
+  }
+}
+
+const sendGroupChat = async(req,res,next)=>{
+  try {
+    const {groupName,senderId,message} = req.body
+  const { GroupChatModel } = res.locals.connection.databaseObject;
+
+  const group = await GroupChatModel.find({groupName})
+  if(group && group.members.includes(senderId) ){
+    if(message)
+    message.map((data)=>{group.message.push(data)})
+    group.save()
+    res
+    .status(200)
+    .send({ status: 200, message:'message is sent'});
+  }else{
+    throw new Error('User does not belong to these group!')
+  }
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: error.message 
+    });
+  }
+}
+
+const getGroupChat = async(req,res,next)=>{
+  try {
+    const {groupName} = req.query
+    const { GroupChatModel } = res.locals.connection.databaseObject;
+    const response = await GroupChatModel.find({groupName})
+    res
+    .status(200)
+    .send({ status: 200,data:response});
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: 'Group Not Found!' 
+    });
+  }
+}
+
+const newMember =  async(req,res,next)=>{
+  try {
+    const {groupName,members} = req.body;
+const { GroupChatModel } = res.locals.connection.databaseObject;
+ const group = await GroupChatModel.find({groupName})
+
+ if(group){
+  if(members){
+    members.map((data)=>{group.members.push(data)})
+    group.save()
+    res
+    .status(200)
+    .send({ status: 200, message:'member is added'});
+  }
+ }
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: 'Group Not Found!' 
+    });
+  }
+
+} 
+
+const deleteGroupMessage = async(req,res,next)=>{
+  try {
+
+    const {id} = req.params
+    const {groupName,senderId} = req.query
+    const { GroupChatModel } = res.locals.connection.databaseObject;
+   const group = await GroupChatModel.find({groupName})
+
+   if(group){
+
+    
+     res
+     .status(200)
+     .send({ status: 200, message:group.message});
+
+   }
+
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: 'Some Error Occured Please Try Again Later!' 
+    });
+  }
+
+
+
+}
+
 module.exports = {
   createUser,
   fetchUser,
   updateUser,
   fetchMyUsers,
   postChat,
-  getChat
+  getChat,
+  createGroup,
+  sendGroupChat,
+  getGroupChat,
+  newMember,
+  deleteGroupMessage
 };

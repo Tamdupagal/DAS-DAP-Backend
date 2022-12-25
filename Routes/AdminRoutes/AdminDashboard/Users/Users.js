@@ -6,6 +6,10 @@ const {
   fetchMyUsers,
   postChat,
   getChat,
+  createGroup,
+  sendGroupChat,
+  getGroupChat,
+  newMember,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -32,6 +36,12 @@ Router.route('/myUsers?').get(fetchMyUsers)
 Router.route('/postChat').put(postChat)
 
 Router.route('/getChat').get(getChat)
+
+Router.route('/groupChat').post(createGroup)
+// Router.route('/groupChat').get(sendGroupChat)
+Router.route('/groupChat').put(sendGroupChat)
+Router.route('/groupChat').get(getGroupChat)
+Router.route('/newMember').put(newMember)
 // Router.route('/search?').put(updateUser)
 
 module.exports = Router
