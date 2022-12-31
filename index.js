@@ -30,10 +30,18 @@ io.on("connection", (socket) => {
     socket.join(options.roomName);
   });
   socket.on("groupChat", (options, callback) => {
-    io.to(options.groupName).emit("groupMessage", {
-      message: options.message,
-    });
+    io.to(options.groupName).emit("groupMessage", 
+     options
+    );
   });
+  socket.on('startTyping',(options,callback)=>{
+    console.log("startTyping",options.receiverId)
+    io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
+  })
+  socket.on('stopTyping',(options,callback)=>{
+    console.log("stopTyping",options.receiverId)
+    io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
+  })
 });
 
 if (cluster.isMaster) {

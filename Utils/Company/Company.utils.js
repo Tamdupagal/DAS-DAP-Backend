@@ -10,21 +10,21 @@ const dependencyInjectorTest = require('../../Database/Schemas/DBConnection')
 
 const createCompany = async (req, res, next) => {
   try {
-    const { companyEmail, companyUserEmail, companyPassword, companyUserName } =
+    const { companyEmail, companyUserEmail, companyPassword, companyUserName, } =
       req.body
     const { companyUserModel } = dependencyInjector(companyEmail.split('.')[0])
 
     let companyName = req.body.companyName.split(' ').join('').toLowerCase()
 
     const newCompany = new companyModel({
-      companyUserName,
+      companyUserName:companyUserName||  companyUserEmail.split('@')[0],
       companyName,
       companyEmail,
       companyUserEmail,
     })
 
     const newLoginUser = new companyUserModel({
-      userName: companyUserName,
+      userName: companyUserName ||  companyUserEmail.split('@')[0],
       email: companyUserEmail,
       password: await bcrypt.hash(req.body.companyPassword, 10),
       typeOfUser: 'Admin',
@@ -46,10 +46,11 @@ const createCompany = async (req, res, next) => {
     //  console.log("model",UserModel,"name",req.body.companyEmail.split('.')[0])
     // console.log("models",models)
     const newUser = await userModel.create({
-      userName: companyUserName,
+      userName:  companyUserName ||  companyUserEmail.split('@')[0],
       email: companyUserEmail,
       password: companyPassword,
       typeOfUser: 'Admin',
+      companyEmail:companyUserEmail
     })
 
     res.status(200).send({

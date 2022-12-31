@@ -77,26 +77,26 @@ const fetchUser = async (req, res, next) => {
 
 // Update Task Flow
 
-const updateUser = async (req, res, next) => {
-  const { UserModel } = res.locals.connection.databaseObject;
-  try {
-    UserModel.findOneAndUpdate(
-      {
-        email: req.params.email,
-      },
-      { email: req.body.email, userName: req.body.userName },
-      (err, doc) => {
-        if (err) throw new Error(err);
-        res.status(200).send({ status: 200, message: "Task Updated" });
-      }
-    );
-  } catch (err) {
-    res.status(400).send({
-      status: 400,
-      message: err.message,
-    });
-  }
-};
+// const updateUser = async (req, res, next) => {
+//   const { UserModel } = res.locals.connection.databaseObject;
+//   try {
+//     UserModel.findOneAndUpdate(
+//       {
+//         email: req.params.email,
+//       },
+//       { email: req.body.email, userName: req.body.userName },
+//       (err, doc) => {
+//         if (err) throw new Error(err);
+//         res.status(200).send({ status: 200, message: "Task Updated" });
+//       }
+//     );
+//   } catch (err) {
+//     res.status(400).send({
+//       status: 400,
+//       message: err.message,
+//     });
+//   }
+// };
 
 const fetchMyUsers = async (req, res, next) => {
   const { userModel } = res.locals.connection.databaseObject;
@@ -191,6 +191,11 @@ const createGroup = async(req,res,next)=>{
      const user = await userModel.findById(adminId)
      console.log(user)
      if(user && (user.typeOfUser === 'Admin' || user.typeOfUser === 'SuperAdmin')){
+      for(let i of members){
+        const user = await userModel.findById(i)
+        user.myGroups.push(groupName)
+        await user.save()
+      }
         const response = await GroupChatModel.create({
           adminId,
           groupName,
@@ -219,11 +224,12 @@ const sendGroupChat = async(req,res,next)=>{
     const {groupName,senderId,message} = req.body
   const { GroupChatModel } = res.locals.connection.databaseObject;
 
-  const group = await GroupChatModel.find({groupName})
+  const group = await GroupChatModel.findOne({groupName})
+console.log(group)
   if(group && group.members.includes(senderId) ){
     if(message)
     message.map((data)=>{group.message.push(data)})
-    group.save()
+    await group.save()
     res
     .status(200)
     .send({ status: 200, message:'message is sent'});
@@ -240,12 +246,16 @@ const sendGroupChat = async(req,res,next)=>{
 
 const getGroupChat = async(req,res,next)=>{
   try {
-    const {groupName} = req.query
+    const {groupName,userId} = req.query
     const { GroupChatModel } = res.locals.connection.databaseObject;
-    const response = await GroupChatModel.find({groupName})
-    res
-    .status(200)
-    .send({ status: 200,data:response});
+    const group = await GroupChatModel.findOne({groupName})
+    if(group && group.members.includes(userId)){
+      res
+      .status(200)
+      .send({ status: 200,data:group});
+    }else{
+      throw new Error('You do not have access')
+    }
     
   } catch (error) {
     res.status(404).send({
@@ -257,14 +267,20 @@ const getGroupChat = async(req,res,next)=>{
 
 const newMember =  async(req,res,next)=>{
   try {
-    const {groupName,members} = req.body;
+const {members,groupName} = req.body;
 const { GroupChatModel } = res.locals.connection.databaseObject;
- const group = await GroupChatModel.find({groupName})
+const { userModel } = res.locals.connection.databaseObject;
+ const group = await GroupChatModel.findOne({groupName})
 
  if(group){
   if(members){
+      for(let i of members){
+        const user = await userModel.findById(i)
+        user.myGroups.push(groupName)
+        await user.save()
+      }
     members.map((data)=>{group.members.push(data)})
-    group.save()
+  await group.save()
     res
     .status(200)
     .send({ status: 200, message:'member is added'});
@@ -280,22 +296,79 @@ const { GroupChatModel } = res.locals.connection.databaseObject;
 
 } 
 
+
+const removeMembers = async (req,res,next)=>{
+  try {
+const {groupName,membersId,adminId} = req.body;
+const { GroupChatModel } = res.locals.connection.databaseObject;
+const { userModel } = res.locals.connection.databaseObject;
+const group = await GroupChatModel.findOne({groupName})  
+if(group && adminId !==group.adminId && membersId ){
+      for(let i of membersId){
+        const user = await userModel.findById(i)
+          user.myGroups = user.myGroups.filter((data)=>data !== groupName)
+        user &&  await user.save()
+      }
+   group.members =  group.members.filter((data)=>data !==membersId[0])
+  await group.save()
+    res
+    .status(200)
+    .send({ status: 200, message:'member is removed'});
+  
+ }else{
+  throw new Error('Admin Can Not Be Removed!')
+ }
+
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message:  error.message || 'Remove Members Successfully!' 
+    });
+  }
+}
+
+const deleteMessage = async(req,res,next)=>{
+  try {
+
+    const { chatId,userId,messageId } = req.body;
+    const { ChatModel } = res.locals.connection.databaseObject;
+
+    const userChat = await ChatModel.findById(chatId)
+    const currentChat = userChat.message.filter((data)=> data._id == messageId)
+    if(currentChat[0].senderId == userId){
+    userChat.message =  userChat.message.filter((data)=>  data._id != messageId)
+    await userChat.save()
+      res
+      .status(200)
+      .send({ status: 200, message:'message deleted!'});
+    }else{
+      throw new Error('Some Error Occured!')
+    }
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: error.message ||  'Some Error Occured Please Try Again Later!' 
+    });
+  }
+}
+
 const deleteGroupMessage = async(req,res,next)=>{
   try {
 
-    const {id} = req.params
-    const {groupName,senderId} = req.query
+    const { chatId,userId,messageId } = req.body;
     const { GroupChatModel } = res.locals.connection.databaseObject;
-   const group = await GroupChatModel.find({groupName})
-
-   if(group){
-
-    
-     res
-     .status(200)
-     .send({ status: 200, message:group.message});
-
-   }
+    const userChat = await GroupChatModel.findById(chatId)
+    const currentChat = userChat.message.filter((data)=> data._id == messageId)
+    if(currentChat[0].senderId == userId){
+    userChat.message =  userChat.message.filter((data)=>  data._id != messageId)
+    await userChat.save()
+      res
+      .status(200)
+      .send({ status: 200, message:'message deleted!'});
+    }else{
+      throw new Error('Some Error Occured!')
+    }
 
   } catch (error) {
     res.status(404).send({
@@ -304,8 +377,69 @@ const deleteGroupMessage = async(req,res,next)=>{
     });
   }
 
+}
 
 
+
+const deleteGroup = async (req,res,next)=>{
+try {
+const {adminId,groupId} = req.body;
+
+console.log(adminId,groupId)
+const { GroupChatModel } = res.locals.connection.databaseObject;
+const { userModel } = res.locals.connection.databaseObject;
+const group = await GroupChatModel.findById(groupId)
+console.log(group)
+if(group && group.adminId == adminId){
+  for(let i of group.members){
+   const user =  await userModel.findById(i)
+  user.myGroups = user.myGroups.filter((data)=>data !== group.groupName)
+  await user.save()
+  }
+  await GroupChatModel.findByIdAndDelete(groupId)
+  res
+  .status(200)
+  .send({ status: 200, message:'Deleted Group'});
+}else{
+  throw new Error('You Do Not Have Access')
+}
+
+  
+} catch (error) {
+  res.status(404).send({
+    status: 404,
+    message:  error.message || 'Some Error Occured Please Try Again Later!' 
+  });
+}
+
+}
+
+const updateUser = async(req,res,next)=>{
+try {
+  const {aboutUs,socialMediaLinks,userName,email} = req.body
+const { userModel } = res.locals.connection.databaseObject;
+const { companyUserModel } = await dependencyInjector(res.locals.params);
+await userModel.findOneAndUpdate({email},{
+  aboutUs,
+  socialMediaLinks,
+  userName
+}, { new: true,upsert:true })
+
+await companyUserModel.findOneAndUpdate({email},{
+  aboutUs,
+  socialMediaLinks,
+  userName
+}, { new: true,upsert:true })
+
+res
+.status(200)
+.send({ status: 200, message:'User Updated SuccessFully!'});
+} catch (error) {
+  res.status(404).send({
+    status: 404,
+    message:  'User Not Found!' 
+  });
+}
 }
 
 module.exports = {
@@ -319,5 +453,8 @@ module.exports = {
   sendGroupChat,
   getGroupChat,
   newMember,
-  deleteGroupMessage
+  deleteGroupMessage,
+  removeMembers,
+  deleteGroup,
+  deleteMessage
 };
