@@ -12,34 +12,40 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join", (options, callback) => {
+  // console.log('connection done')
+  socket.on("join", (options, callback) => { 
     socket.join(options.senderId);
+    
+    console.log('join ',options.senderId);
   });
   socket.on("message", (options, callback) => {
-    io.to(options.receiverId).emit("message", { message: options.message });
+    console.log(Object.keys(io.of('/').adapter.rooms).length);
+   console.log(options.message)
+    io.to(options.receiverId).emit("message", options);
   });
-  socket.on("createGroup", (options, callback) => {
-    socket.join(options.roomName);
+  socket.on("createGroup", (options, callback) => { 
+    socket.join(options.roomName); 
     for (user of options.users) {
       io.to(user).emit("groupJoined", {
         roomName: options.roomName,
       });
     }
   });
+  
   socket.on("joinGroup", (options, callback) => {
+    console.log('user join ',options.roomName)
     socket.join(options.roomName);
   });
   socket.on("groupChat", (options, callback) => {
-    io.to(options.groupName).emit("groupMessage", 
-     options
-    );
+    console.log(options.message)
+    socket.broadcast.to(options.groupName).emit("groupMessage", options);
   });
   socket.on('startTyping',(options,callback)=>{
-    console.log("startTyping",options.receiverId)
+    // console.log("startTyping",options.receiverId)
     io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
   })
   socket.on('stopTyping',(options,callback)=>{
-    console.log("stopTyping",options.receiverId)
+    // console.log("stopTyping",options.receiverId)
     io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
   })
 });
