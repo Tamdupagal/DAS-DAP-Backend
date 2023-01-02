@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
     console.log('join ',options.senderId);
   });
   socket.on("message", (options, callback) => {
-    console.log(Object.keys(io.of('/').adapter.rooms).length);
+    // console.log(Object.keys(io.of('/').adapter.rooms).length);
    console.log(options.message)
     io.to(options.receiverId).emit("message", options);
   });
@@ -38,8 +38,19 @@ io.on("connection", (socket) => {
   });
   socket.on("groupChat", (options, callback) => {
     console.log(options.message)
-    socket.broadcast.to(options.groupName).emit("groupMessage", options);
+    io.to(options.groupName).emit("groupMessage", options);
   });
+
+  socket.on("deleteMsg",(options,callback)=>{
+    console.log("deleted msg start")
+    io.to(options.receiverId).emit("deletedMsg",options)
+  })
+
+  socket.on("deleteGroupMsg",(options,callback)=>{
+    console.log("deleted group msg start")
+    socket.broadcast.to(options.groupName).emit("groupMsgDelete",options)
+  })
+
   socket.on('startTyping',(options,callback)=>{
     // console.log("startTyping",options.receiverId)
     io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
