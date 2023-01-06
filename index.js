@@ -31,6 +31,12 @@ io.on("connection", (socket) => {
       });
     }
   });
+
+  socket.on('taskAssigned',(options,callback)=>{
+     for(assigned of options.assignedTo){
+       io.to(assigned).emit('newTaskAssigned',options);
+     }
+  })
   
   socket.on("joinGroup", (options, callback) => {
     console.log('user join ',options.roomName)

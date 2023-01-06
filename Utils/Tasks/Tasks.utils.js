@@ -219,36 +219,103 @@ const createTask = async (req, res, next) => {
       checkList,
     } = req.body;
     const { taskManagementModel } = res.locals.connection.databaseObject;
-  console.log(startDate)
+    console.log(startDate);
 
-    const date = new Date().toLocaleDateString().split('/').map((data)=>Number(data))
-    const time = new Date().toLocaleTimeString("en-in", { hour12: false, }).split(':').map((data)=>Number(data))
-    const startDateCheck = startDate.split(',')[0].split('/').map((data)=>Number(data))
-    const startTimeCheck = startDate.split(" ,")[1].split(':').map((data)=>Number(data))
-    const endDateCheck = endDate.split(',')[0].split('/').map((data)=>Number(data))
-    const endTimeCheck = endDate.split(",")[1].split(':').map((data)=>Number(data))
+    const date = new Date()
+      .toLocaleDateString()
+      .split("/")
+      .map((data) => Number(data));
+    const time = new Date()
+      .toLocaleTimeString("en-in", { hour12: false })
+      .split(":")
+      .map((data) => Number(data));
+    const startDateCheck = startDate
+      .split(",")[0]
+      .split("/")
+      .map((data) => Number(data));
+    const startTimeCheck = startDate
+      .split(" ,")[1]
+      .split(":")
+      .map((data) => Number(data));
+    const endDateCheck = endDate
+      .split(",")[0]
+      .split("/")
+      .map((data) => Number(data));
+    const endTimeCheck = endDate
+      .split(",")[1]
+      .split(":")
+      .map((data) => Number(data));
 
-  if(date[2] >startDateCheck[2] ){
-    throw new Error('please select current year or greater than current year')
-  }else if(date[2] == startDateCheck[2] && date[1]>startDateCheck[1]){
-    throw new Error('please select current month or greater than current month')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]>startDateCheck[0]){
-    throw new Error('please select current day or greater than current day')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]>startTimeCheck[0] ){
-    throw new Error('please select current hour or greater than current hour')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]==startTimeCheck[0] && time[1]>startTimeCheck[1] ){
-    throw new Error('please select current minute or greater than current minute')
-  } else if(startDateCheck[2] >endDateCheck[2] ){
-    throw new Error('please select current year or greater than current year')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]>endDateCheck[1]){
-    throw new Error('please select current month or greater than current month')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]>endDateCheck[0]){
-    throw new Error('please select current day or greater than current day')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]>endTimeCheck[0] ){
-    throw new Error('please select current hour or greater than current hour')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]==endTimeCheck[0] && startTimeCheck[1]>endTimeCheck[1] ){
-    throw new Error('please select current minute or greater than current minute')
-  }
+    if (date[2] > startDateCheck[2]) {
+      throw new Error(
+        "please select current year or greater than current year"
+      );
+    } else if (date[2] == startDateCheck[2] && date[1] > startDateCheck[1]) {
+      throw new Error(
+        "please select current month or greater than current month"
+      );
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] > startDateCheck[0]
+    ) {
+      throw new Error("please select current day or greater than current day");
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] == startDateCheck[0] &&
+      time[0] > startTimeCheck[0]
+    ) {
+      throw new Error(
+        "please select current hour or greater than current hour"
+      );
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] == startDateCheck[0] &&
+      time[0] == startTimeCheck[0] &&
+      time[1] > startTimeCheck[1]
+    ) {
+      throw new Error(
+        "please select current minute or greater than current minute"
+      );
+    } else if (startDateCheck[2] > endDateCheck[2]) {
+      throw new Error(
+        "please select current year or greater than current year"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] > endDateCheck[1]
+    ) {
+      throw new Error(
+        "please select current month or greater than current month"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] > endDateCheck[0]
+    ) {
+      throw new Error("please select current day or greater than current day");
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] == endDateCheck[0] &&
+      startTimeCheck[0] > endTimeCheck[0]
+    ) {
+      throw new Error(
+        "please select current hour or greater than current hour"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] == endDateCheck[0] &&
+      startTimeCheck[0] == endTimeCheck[0] &&
+      startTimeCheck[1] > endTimeCheck[1]
+    ) {
+      throw new Error(
+        "please select current minute or greater than current minute"
+      );
+    }
     await taskManagementModel.create({
       title,
       description,
@@ -267,13 +334,12 @@ const createTask = async (req, res, next) => {
       message: "Task created successFully!",
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       res.status(404).send({
         status: 404,
-        message:
-          Object.values(error.errors)
-            .map((el) => el.message)
-            .toString() 
+        message: Object.values(error.errors)
+          .map((el) => el.message)
+          .toString(),
       });
     }
     res.status(404).send({
@@ -285,10 +351,10 @@ const createTask = async (req, res, next) => {
 
 const getTask = async (req, res, next) => {
   try {
-    const {assignedBy,assignedTo} = req.query
+    const { assignedBy, assignedTo } = req.query;
     const { taskManagementModel } = res.locals.connection.databaseObject;
     const response = await taskManagementModel
-      .find({$or:[{assignedBy},{assignedTo}]})
+      .find({ $or: [{ assignedBy }, { assignedTo }] })
       .populate({
         path: "assignedBy",
         select: ["email", "typeOfUser", "userName"],
@@ -323,9 +389,36 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const updateTask = async(req,res,next)=>{
+const starred = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { taskId, userId } = req.body;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const task = await taskManagementModel.findById(taskId);
+    const userTask = task.starred.filter((data) => data.userId == userId);
+    if (userTask.length) {
+      for (let i in task.starred) {
+        if (task.starred[i].userId == userId) {
+          task.starred[i].isStarred = !task.stareed[i].isStarred;
+          break;
+        }
+      }
+    } else {
+      task.starred.push({ userId, isStarred: true });
+    }
+    await task.save();
+    res.status(202).send({
+      status: 202,
+      message: "Task Updated SuccessFully!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
+const updateTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
     const {
       title,
       description,
@@ -339,7 +432,8 @@ const updateTask = async(req,res,next)=>{
       checkList,
     } = req.body;
 
-    const updatedObj = {title,
+    const updatedObj = {
+      title,
       description,
       list,
       label,
@@ -348,50 +442,121 @@ const updateTask = async(req,res,next)=>{
       assignedTo,
       startDate,
       endDate,
-      checkList,}
+      checkList,
+    };
     const { taskManagementModel } = res.locals.connection.databaseObject;
-    const date = new Date().toLocaleDateString().split('/').map((data)=>Number(data))
-    const time = new Date().toLocaleTimeString("en-in", { hour12: false, }).split(':').map((data)=>Number(data))
-    const startDateCheck = startDate.split(',')[0].split('/').map((data)=>Number(data))
-    const startTimeCheck = startDate.split(" ,")[1].split(':').map((data)=>Number(data))
-    const endDateCheck = endDate.split(',')[0].split('/').map((data)=>Number(data))
-    const endTimeCheck = endDate.split(",")[1].split(':').map((data)=>Number(data))
+    const date = new Date()
+      .toLocaleDateString()
+      .split("/")
+      .map((data) => Number(data));
+    const time = new Date()
+      .toLocaleTimeString("en-in", { hour12: false })
+      .split(":")
+      .map((data) => Number(data));
+    const startDateCheck = startDate
+      .split(",")[0]
+      .split("/")
+      .map((data) => Number(data));
+    const startTimeCheck = startDate
+      .split(" ,")[1]
+      .split(":")
+      .map((data) => Number(data));
+    const endDateCheck = endDate
+      .split(",")[0]
+      .split("/")
+      .map((data) => Number(data));
+    const endTimeCheck = endDate
+      .split(",")[1]
+      .split(":")
+      .map((data) => Number(data));
 
-  if(date[2] >startDateCheck[2] ){
-    throw new Error('please select current year or greater than current year')
-  }else if(date[2] == startDateCheck[2] && date[1]>startDateCheck[1]){
-    throw new Error('please select current month or greater than current month')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]>startDateCheck[0]){
-    throw new Error('please select current day or greater than current day')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]>startTimeCheck[0] ){
-    throw new Error('please select current hour or greater than current hour')
-  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]==startTimeCheck[0] && time[1]>startTimeCheck[1] ){
-    throw new Error('please select current minute or greater than current minute')
-  } else if(startDateCheck[2] >endDateCheck[2] ){
-    throw new Error('please select current year or greater than current year')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]>endDateCheck[1]){
-    throw new Error('please select current month or greater than current month')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]>endDateCheck[0]){
-    throw new Error('please select current day or greater than current day')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]>endTimeCheck[0] ){
-    throw new Error('please select current hour or greater than current hour')
-  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]==endTimeCheck[0] && startTimeCheck[1]>endTimeCheck[1] ){
-    throw new Error('please select current minute or greater than current minute')
-  }
+    if (date[2] > startDateCheck[2]) {
+      throw new Error(
+        "please select current year or greater than current year"
+      );
+    } else if (date[2] == startDateCheck[2] && date[1] > startDateCheck[1]) {
+      throw new Error(
+        "please select current month or greater than current month"
+      );
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] > startDateCheck[0]
+    ) {
+      throw new Error("please select current day or greater than current day");
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] == startDateCheck[0] &&
+      time[0] > startTimeCheck[0]
+    ) {
+      throw new Error(
+        "please select current hour or greater than current hour"
+      );
+    } else if (
+      date[2] == startDateCheck[2] &&
+      date[1] == startDateCheck[1] &&
+      date[0] == startDateCheck[0] &&
+      time[0] == startTimeCheck[0] &&
+      time[1] > startTimeCheck[1]
+    ) {
+      throw new Error(
+        "please select current minute or greater than current minute"
+      );
+    } else if (startDateCheck[2] > endDateCheck[2]) {
+      throw new Error(
+        "please select current year or greater than current year"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] > endDateCheck[1]
+    ) {
+      throw new Error(
+        "please select current month or greater than current month"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] > endDateCheck[0]
+    ) {
+      throw new Error("please select current day or greater than current day");
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] == endDateCheck[0] &&
+      startTimeCheck[0] > endTimeCheck[0]
+    ) {
+      throw new Error(
+        "please select current hour or greater than current hour"
+      );
+    } else if (
+      startDateCheck[2] == endDateCheck[2] &&
+      startDateCheck[1] == endDateCheck[1] &&
+      startDateCheck[0] == endDateCheck[0] &&
+      startTimeCheck[0] == endTimeCheck[0] &&
+      startTimeCheck[1] > endTimeCheck[1]
+    ) {
+      throw new Error(
+        "please select current minute or greater than current minute"
+      );
+    }
 
-    await taskManagementModel.findByIdAndUpdate(id,updatedObj,{ new: true,upsert:true, runValidators: true, })
+    await taskManagementModel.findByIdAndUpdate(id, updatedObj, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    });
     res.status(201).send({
       status: 201,
       message: "Task Updated SuccessFully!",
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
+    if (error.name === "ValidationError") {
       res.status(404).send({
         status: 404,
-        message:
-          Object.values(error.errors)
-            .map((el) => el.message)
-            .toString() 
+        message: Object.values(error.errors)
+          .map((el) => el.message)
+          .toString(),
       });
     }
     res.status(404).send({
@@ -399,7 +564,7 @@ const updateTask = async(req,res,next)=>{
       message: error.message || error.name || "Some Error Occured!",
     });
   }
-}
+};
 
 module.exports = {
   createTaskFlow,
@@ -411,4 +576,5 @@ module.exports = {
   updateTask,
   getTask,
   deleteTask,
+  starred
 };

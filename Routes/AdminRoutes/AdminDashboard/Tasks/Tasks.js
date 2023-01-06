@@ -1,5 +1,5 @@
 const Express = require('express')
-const { fetchTaskFlow, fetchMyTasks, createTask, getTask, deleteTask, updateTask } = require('../../../../Utils/Tasks/Tasks.utils')
+const { fetchTaskFlow, fetchMyTasks, createTask, getTask, deleteTask, updateTask, starred } = require('../../../../Utils/Tasks/Tasks.utils')
 const Router = Express.Router()
 
 Router.route('/search?').get(fetchTaskFlow)
@@ -9,6 +9,7 @@ Router.route('/myTasks?').get(fetchMyTasks)
 
 Router.route('/taskManagement').post(createTask).get(getTask)
 Router.route('/taskManagement/:id').delete(deleteTask).put(updateTask)
+Router.route('/starredUnstarred').put(starred)
 // Router.route('/taskManagement')
 
 

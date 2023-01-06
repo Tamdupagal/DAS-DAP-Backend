@@ -43,7 +43,12 @@ checkList:[{listItem: {type:String}}],
 isStarred:{
     type:Boolean,
     default:false
-}
+},
+starred:[{userId:{
+    type:mongoose.Schema.ObjectId
+},isStarred:{
+    type:Boolean,
+}}]
 })
 
 module.exports = TaskManagementModel
