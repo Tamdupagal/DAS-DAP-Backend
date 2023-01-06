@@ -58,9 +58,12 @@ const fetchTaskFlow = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
-
-    const { applicationTaskFlowUseCase, applicationDomain, page,companyEmail } = req.query;
-
+    const {
+      applicationTaskFlowUseCase,
+      applicationDomain,
+      page,
+      companyEmail,
+    } = req.query;
 
     let query = {},
       projection = { taskList: 0 },
@@ -70,26 +73,31 @@ const fetchTaskFlow = async (req, res, next) => {
 
     if (applicationTaskFlowUseCase && applicationDomain) {
       query = {
-
-        $and: [{ applicationTaskFlowUseCase }, { applicationDomain },{companyEmail}],
+        $and: [
+          { applicationTaskFlowUseCase },
+          { applicationDomain },
+          { companyEmail },
+        ],
       };
       projection = {};
     } else if (applicationDomain) {
-      query = {   $and: [{ applicationDomain },{companyEmail}]};
-
+      query = { $and: [{ applicationDomain }, { companyEmail }] };
     }
 
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
     skip = pageNumber * 8 - 8;
-    const totalCount  = await taskFlowModel.find(query);
+    const totalCount = await taskFlowModel.find(query);
 
     const result = await taskFlowModel
       .find(query, projection)
       .skip(skip)
       .limit(limit);
-    res.status(200).send({ status: 200, result, totalCount: totalCount.length });
-  } catch (e) {totalCount
+    res
+      .status(200)
+      .send({ status: 200, result, totalCount: totalCount.length });
+  } catch (e) {
+    totalCount;
     res.status(400).send({
       status: 400,
       message: e.message,
@@ -164,29 +172,27 @@ const fetchMyTasks = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
-    const { companyEmail,page } = req.query;
-    let query = {companyEmail},
-    projection = { taskList: 0 },
-    skip,
-    limit = 10,
-    pageNumber = parseInt(page);
+    const { companyEmail, page } = req.query;
+    let query = { companyEmail },
+      projection = { taskList: 0 },
+      skip,
+      limit = 10,
+      pageNumber = parseInt(page);
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
     skip = pageNumber * 10 - 10;
 
-    const totalCount = await taskFlowModel.find({companyEmail})
-    const response = await taskFlowModel.find(query, projection)
-    .skip(skip)
-    .limit(limit);
-
+    const totalCount = await taskFlowModel.find({ companyEmail });
+    const response = await taskFlowModel
+      .find(query, projection)
+      .skip(skip)
+      .limit(limit);
 
     res.status(200).send({
       status: 200,
       result: response.length,
 
-
-      totalCount:totalCount.length,
-
+      totalCount: totalCount.length,
 
       data: response,
     });
@@ -198,10 +204,211 @@ const fetchMyTasks = async (req, res, next) => {
   }
 };
 
+const createTask = async (req, res, next) => {
+  try {
+    const {
+      title,
+      description,
+      list,
+      label,
+      priorities,
+      assignedBy,
+      assignedTo,
+      startDate,
+      endDate,
+      checkList,
+    } = req.body;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+  console.log(startDate)
+
+    const date = new Date().toLocaleDateString().split('/').map((data)=>Number(data))
+    const time = new Date().toLocaleTimeString("en-in", { hour12: false, }).split(':').map((data)=>Number(data))
+    const startDateCheck = startDate.split(',')[0].split('/').map((data)=>Number(data))
+    const startTimeCheck = startDate.split(" ,")[1].split(':').map((data)=>Number(data))
+    const endDateCheck = endDate.split(',')[0].split('/').map((data)=>Number(data))
+    const endTimeCheck = endDate.split(",")[1].split(':').map((data)=>Number(data))
+
+  if(date[2] >startDateCheck[2] ){
+    throw new Error('please select current year or greater than current year')
+  }else if(date[2] == startDateCheck[2] && date[1]>startDateCheck[1]){
+    throw new Error('please select current month or greater than current month')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]>startDateCheck[0]){
+    throw new Error('please select current day or greater than current day')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]>startTimeCheck[0] ){
+    throw new Error('please select current hour or greater than current hour')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]==startTimeCheck[0] && time[1]>startTimeCheck[1] ){
+    throw new Error('please select current minute or greater than current minute')
+  } else if(startDateCheck[2] >endDateCheck[2] ){
+    throw new Error('please select current year or greater than current year')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]>endDateCheck[1]){
+    throw new Error('please select current month or greater than current month')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]>endDateCheck[0]){
+    throw new Error('please select current day or greater than current day')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]>endTimeCheck[0] ){
+    throw new Error('please select current hour or greater than current hour')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]==endTimeCheck[0] && startTimeCheck[1]>endTimeCheck[1] ){
+    throw new Error('please select current minute or greater than current minute')
+  }
+    await taskManagementModel.create({
+      title,
+      description,
+      list,
+      label,
+      priorities,
+      assignedBy,
+      assignedTo,
+      startDate,
+      endDate,
+      checkList,
+    });
+
+    res.status(201).send({
+      status: 201,
+      message: "Task created successFully!",
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(404).send({
+        status: 404,
+        message:
+          Object.values(error.errors)
+            .map((el) => el.message)
+            .toString() 
+      });
+    }
+    res.status(404).send({
+      status: 404,
+      message: error.message || error.name || "Some Error Occured!",
+    });
+  }
+};
+
+const getTask = async (req, res, next) => {
+  try {
+    const {assignedBy,assignedTo} = req.query
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const response = await taskManagementModel
+      .find({$or:[{assignedBy},{assignedTo}]})
+      .populate({
+        path: "assignedBy",
+        select: ["email", "typeOfUser", "userName"],
+      })
+      .populate({
+        path: "assignedTo",
+        select: ["email", "typeOfUser", "userName"],
+      });
+    res.status(200).send({
+      status: 200,
+      result: response.length,
+      data: response,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
+const deleteTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    await taskManagementModel.findByIdAndDelete(id);
+    res.status(202).send({
+      status: 202,
+      message: "Task Deleted SuccessFully!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
+const updateTask = async(req,res,next)=>{
+  try {
+    const {id} = req.params;
+    const {
+      title,
+      description,
+      list,
+      label,
+      priorities,
+      assignedBy,
+      assignedTo,
+      startDate,
+      endDate,
+      checkList,
+    } = req.body;
+
+    const updatedObj = {title,
+      description,
+      list,
+      label,
+      priorities,
+      assignedBy,
+      assignedTo,
+      startDate,
+      endDate,
+      checkList,}
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const date = new Date().toLocaleDateString().split('/').map((data)=>Number(data))
+    const time = new Date().toLocaleTimeString("en-in", { hour12: false, }).split(':').map((data)=>Number(data))
+    const startDateCheck = startDate.split(',')[0].split('/').map((data)=>Number(data))
+    const startTimeCheck = startDate.split(" ,")[1].split(':').map((data)=>Number(data))
+    const endDateCheck = endDate.split(',')[0].split('/').map((data)=>Number(data))
+    const endTimeCheck = endDate.split(",")[1].split(':').map((data)=>Number(data))
+
+  if(date[2] >startDateCheck[2] ){
+    throw new Error('please select current year or greater than current year')
+  }else if(date[2] == startDateCheck[2] && date[1]>startDateCheck[1]){
+    throw new Error('please select current month or greater than current month')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]>startDateCheck[0]){
+    throw new Error('please select current day or greater than current day')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]>startTimeCheck[0] ){
+    throw new Error('please select current hour or greater than current hour')
+  }else if(date[2] == startDateCheck[2] && date[1]==startDateCheck[1] && date[0]==startDateCheck[0] && time[0]==startTimeCheck[0] && time[1]>startTimeCheck[1] ){
+    throw new Error('please select current minute or greater than current minute')
+  } else if(startDateCheck[2] >endDateCheck[2] ){
+    throw new Error('please select current year or greater than current year')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]>endDateCheck[1]){
+    throw new Error('please select current month or greater than current month')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]>endDateCheck[0]){
+    throw new Error('please select current day or greater than current day')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]>endTimeCheck[0] ){
+    throw new Error('please select current hour or greater than current hour')
+  }else if(startDateCheck[2] == endDateCheck[2] && startDateCheck[1]==endDateCheck[1] && startDateCheck[0]==endDateCheck[0] && startTimeCheck[0]==endTimeCheck[0] && startTimeCheck[1]>endTimeCheck[1] ){
+    throw new Error('please select current minute or greater than current minute')
+  }
+
+    await taskManagementModel.findByIdAndUpdate(id,updatedObj,{ new: true,upsert:true, runValidators: true, })
+    res.status(201).send({
+      status: 201,
+      message: "Task Updated SuccessFully!",
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(404).send({
+        status: 404,
+        message:
+          Object.values(error.errors)
+            .map((el) => el.message)
+            .toString() 
+      });
+    }
+    res.status(404).send({
+      status: 404,
+      message: error.message || error.name || "Some Error Occured!",
+    });
+  }
+}
+
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
   updateTaskFlow,
   deleteTaskFlow,
+  createTask,
   fetchMyTasks,
+  updateTask,
+  getTask,
+  deleteTask,
 };

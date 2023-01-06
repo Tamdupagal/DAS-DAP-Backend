@@ -1,23 +1,17 @@
 const Express = require('express')
-const { fetchTaskFlow, fetchMyTasks } = require('../../../../Utils/Tasks/Tasks.utils')
+const { fetchTaskFlow, fetchMyTasks, createTask, getTask, deleteTask, updateTask } = require('../../../../Utils/Tasks/Tasks.utils')
 const Router = Express.Router()
 
 Router.route('/search?').get(fetchTaskFlow)
-
-Router.route('/').get(async (req,res,next)=>{
-
-    try {
-
-      const { taskFlowModel } = res.locals.connection.databaseObject
-        
-      const result = await taskFlowModel.find()
-      res.status(200).send({ status: 200, result,totalCount:result.length })
-    } catch (error) {
-      console.log(error)
-    }
-      
-  })
-
 Router.route('/myTasks?').get(fetchMyTasks)
+
+// task management routes
+
+Router.route('/taskManagement').post(createTask).get(getTask)
+Router.route('/taskManagement/:id').delete(deleteTask).put(updateTask)
+// Router.route('/taskManagement')
+
+
+
 
 module.exports = Router
