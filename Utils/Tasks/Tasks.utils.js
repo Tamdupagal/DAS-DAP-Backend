@@ -428,7 +428,15 @@ const getStarredTasks = async (req,res,next)=>{
     const {userId,isStarred} = req.query;
     const { taskManagementModel } = res.locals.connection.databaseObject;
   
-    const response = await taskManagementModel.find({starred:{$elemMatch:{userId,isStarred}}});
+    const response = await taskManagementModel.find({starred:{$elemMatch:{userId,isStarred}}}) 
+    .populate({
+      path: "assignedBy",
+      select: ["email", "typeOfUser", "userName"],
+    })
+    .populate({
+      path: "assignedTo",
+      select: ["email", "typeOfUser", "userName"],
+    });;
     res.status(200).send({
       status:200,
       result:response.length,
@@ -600,8 +608,15 @@ const getCompletedTask = async (req, res, next) => {
   try {
     const { assignedBy,assignedTo } = req.query;
     const { taskManagementModel } = res.locals.connection.databaseObject;
-    const myTask = await taskManagementModel.find({ $or: [{ assignedBy }, { assignedTo }] });
-    console.log(myTask)
+    const myTask = await taskManagementModel.find({ $or: [{ assignedBy }, { assignedTo }] }) 
+    .populate({
+      path: "assignedBy",
+      select: ["email", "typeOfUser", "userName"],
+    })
+    .populate({
+      path: "assignedTo",
+      select: ["email", "typeOfUser", "userName"],
+    });
     const completedTask = myTask.filter(data=>data.list=='Done');
     res.status(200).send({
       status:200,
