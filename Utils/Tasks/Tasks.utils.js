@@ -363,9 +363,15 @@ const getTask = async (req, res, next) => {
         path: "assignedTo",
         select: ["email", "typeOfUser", "userName"],
       });
+      let set = new Set();
+      for(let i in response){
+        for(let j in response[i].label)
+        set.add(response[i].label[j])
+      }
     res.status(200).send({
       status: 200,
       result: response.length,
+      allLabels:[...set],
       data: response,
     });
   } catch (error) {
