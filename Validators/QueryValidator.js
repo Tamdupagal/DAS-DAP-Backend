@@ -4,7 +4,7 @@ const queryFields = {
   users: { GET: ['email', 'page', 'userId', 'userName', 'search','companyEmail' ,'senderId','receiverId','groupName','userId'], POST: [] },
   tasks: {
     POST: [],
-    GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain','companyEmail',"assignedBy","assignedTo"],
+    GET: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain','companyEmail',"assignedBy","assignedTo","userId","isStarred"],
     PUT: ['limit', 'page', 'applicationTaskFlowUseCase', 'applicationDomain'],
     DELETE: ['applicationTaskFlowUseCase', 'applicationDomain'],
   },

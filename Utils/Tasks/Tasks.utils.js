@@ -219,7 +219,7 @@ const createTask = async (req, res, next) => {
       checkList,
     } = req.body;
     const { taskManagementModel } = res.locals.connection.databaseObject;
-    console.log(startDate);
+    console.log(startDate.split(",")[0]);
 
     const date = new Date()
       .toLocaleDateString()
@@ -389,7 +389,7 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
-const starred = async (req, res, next) => {
+const UpdatestarredTasks = async (req, res, next) => {
   try {
     const { taskId, userId } = req.body;
     const { taskManagementModel } = res.locals.connection.databaseObject;
@@ -398,7 +398,7 @@ const starred = async (req, res, next) => {
     if (userTask.length) {
       for (let i in task.starred) {
         if (task.starred[i].userId == userId) {
-          task.starred[i].isStarred = !task.stareed[i].isStarred;
+          task.starred[i].isStarred = !task.starred[i].isStarred;
           break;
         }
       }
@@ -415,6 +415,25 @@ const starred = async (req, res, next) => {
     res.status(404).send({ status: 404, message: "Some Error Occured!" });
   }
 };
+
+const getStarredTasks = async (req,res,next)=>{
+
+  try {
+    const {userId,isStarred} = req.query;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+  
+    const response = await taskManagementModel.find({starred:{$elemMatch:{userId,isStarred}}});
+    res.status(200).send({
+      status:200,
+      result:response.length,
+      data:response
+    })
+  } catch (error) {
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+ 
+
+}
 
 const updateTask = async (req, res, next) => {
   try {
@@ -445,7 +464,9 @@ const updateTask = async (req, res, next) => {
       checkList,
     };
     const { taskManagementModel } = res.locals.connection.databaseObject;
-    const date = new Date()
+
+    if(startDate && endDate){
+      const date = new Date()
       .toLocaleDateString()
       .split("/")
       .map((data) => Number(data));
@@ -540,6 +561,8 @@ const updateTask = async (req, res, next) => {
         "please select current minute or greater than current minute"
       );
     }
+    }
+    
 
     await taskManagementModel.findByIdAndUpdate(id, updatedObj, {
       new: true,
@@ -566,6 +589,25 @@ const updateTask = async (req, res, next) => {
   }
 };
 
+
+const getCompletedTask = async (req, res, next) => {
+  try {
+    const { assignedBy,assignedTo } = req.query;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const myTask = await taskManagementModel.find({ $or: [{ assignedBy }, { assignedTo }] });
+    console.log(myTask)
+    const completedTask = myTask.filter(data=>data.list=='Done');
+    res.status(200).send({
+      status:200,
+      result:completedTask.length,
+      data:completedTask
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
@@ -576,5 +618,8 @@ module.exports = {
   updateTask,
   getTask,
   deleteTask,
-  starred
+  UpdatestarredTasks,
+  getStarredTasks,
+  getCompletedTask
+
 };

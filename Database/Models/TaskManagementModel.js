@@ -30,7 +30,7 @@ assignedBy:{
 assignedTo:[{type:mongoose.Schema.ObjectId,ref:"User"}],
 
 label:{
-    type:[{labelType:{ type:String}}]
+    type:Array
 },
 startDate:{
     type:Date,
@@ -39,7 +39,7 @@ startDate:{
 endDate:{
     type:Date,
 },
-checkList:[{listItem: {type:String}}],
+checkList:[{listItem: {type:String},isChecked:{type:Boolean}}],
 isStarred:{
     type:Boolean,
     default:false
