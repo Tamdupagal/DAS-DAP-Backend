@@ -442,6 +442,23 @@ res
 }
 }
 
+const getMyProfile = async(req,res,next)=>{
+  try {
+    const { companyUserModel } = await dependencyInjector(res.locals.params);
+    const {email} = req.query;
+     const response = await companyUserModel.findOne({email})
+   res
+  .status(200)
+  .send({ status: 200, data:response});
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message:  'User Not Found!' 
+    });
+  }
+
+}
+
 module.exports = {
   createUser,
   fetchUser,
@@ -456,5 +473,6 @@ module.exports = {
   deleteGroupMessage,
   removeMembers,
   deleteGroup,
-  deleteMessage
+  deleteMessage,
+  getMyProfile
 };

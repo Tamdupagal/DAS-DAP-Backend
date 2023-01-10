@@ -14,6 +14,7 @@ const {
   deleteGroup,
   deleteMessage,
   deleteGroupMessage,
+  getMyProfile,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -24,6 +25,7 @@ Router.route('/').post([userCreationValidation, createUser])
 Router.route('/search?').get(fetchUser)
 Router.route('/myUsers?').get(fetchMyUsers)
 Router.route('/updateUser').put(updateUser)
+Router.route('/myProfile').get(getMyProfile)
 
 // one on one chat routes
 Router.route('/postChat').put(postChat)
