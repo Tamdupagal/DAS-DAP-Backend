@@ -629,6 +629,31 @@ const getCompletedTask = async (req, res, next) => {
   }
 };
 
+const getLabeledTask = async (req, res, next) => {
+  try {
+    const { assignedBy,assignedTo,label } = req.query;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const myTask = await taskManagementModel.find({ $or: [{ assignedBy }, { assignedTo }] }) 
+    .populate({
+      path: "assignedBy",
+      select: ["email", "typeOfUser", "userName"],
+    })
+    .populate({
+      path: "assignedTo",
+      select: ["email", "typeOfUser", "userName"],
+    });
+    const labeledTask = myTask.filter(data=>data.label.includes(label));
+    res.status(200).send({
+      status:200,
+      result:labeledTask.length,
+      data:labeledTask
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
@@ -641,6 +666,7 @@ module.exports = {
   deleteTask,
   UpdatestarredTasks,
   getStarredTasks,
-  getCompletedTask
+  getCompletedTask,
+  getLabeledTask
 
 };
