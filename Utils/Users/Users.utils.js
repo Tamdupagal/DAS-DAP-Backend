@@ -18,7 +18,6 @@ const createUser = async (req, res) => {
 
     const { userModel } = res.locals.connection.databaseObject;
     const { companyUserModel } = await dependencyInjector(res.locals.params);
-
     let user = await userModel.findUser({ email });
     if (user.isExisting) throw new Error(`${email} already exists.`);
     let newUser = await userModel.create({
@@ -384,12 +383,9 @@ const deleteGroupMessage = async(req,res,next)=>{
 const deleteGroup = async (req,res,next)=>{
 try {
 const {adminId,groupId} = req.body;
-
-console.log(adminId,groupId)
 const { GroupChatModel } = res.locals.connection.databaseObject;
 const { userModel } = res.locals.connection.databaseObject;
 const group = await GroupChatModel.findById(groupId)
-console.log(group)
 if(group && group.adminId == adminId){
   for(let i of group.members){
    const user =  await userModel.findById(i)

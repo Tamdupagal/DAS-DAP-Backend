@@ -14,6 +14,8 @@ const createCompany = async (req, res, next) => {
       req.body
     const { companyUserModel } = dependencyInjector(companyEmail.split('.')[0])
 
+    //admin@digitalaidedschool.com
+
     let companyName = req.body.companyName.split(' ').join('').toLowerCase()
 
     const newCompany = new companyModel({
@@ -85,4 +87,26 @@ const getAllCompanies = async (req,res,next)=>{
   }
 }
 
-module.exports = {createCompany,getAllCompanies}
+const deleteCompany = async(req,res,next)=>{
+try {
+  const {id}=req.params
+  console.log(id)
+  const {companyUserModel } = dependencyInjector(id)
+  console.log(companyUserModel)
+  // console.log(dependencyInjector(id))
+  // await companyModel.findOneAndDelete({companyName:id})
+  //   // await EnrolledCompanies.findOneAndDelete({companyName:id})
+  // await companyUserModel.drop({ writeConcern: { w: 1 } })
+  res.status(202).send({
+    status:202,
+    message:"Company Deleted!"
+  })
+} catch (error) {
+  res.status(400).send({
+    status:400,
+    message:error.message||'Some Error occured!'
+  })
+}
+}
+
+module.exports = {createCompany,getAllCompanies,deleteCompany}
