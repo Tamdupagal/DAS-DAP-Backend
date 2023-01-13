@@ -29,6 +29,18 @@ const dependencyInjector = (dataBaseName) => {
     'userFeedBack',
     require('../Models/UserFeedBack')
   )
+  const ChatModel = connection.model(
+    'Chats',
+    require('../Models/ChatModel')
+  )
+  const GroupChatModel = connection.model(
+    'GroupChat',
+    require('../Models/GroupChatModel')
+  )
+  const taskManagementModel = connection.model(
+    'TaskManagement',
+    require('../Models/TaskManagementModel')
+  )
   return {
     connection,
     analyticsModel,
@@ -37,7 +49,10 @@ const dependencyInjector = (dataBaseName) => {
     userModel,
     taskFlowModel,
     AnnouncementModel,
-    UserFeedBackModel
+    UserFeedBackModel,
+    ChatModel,
+    taskManagementModel,
+    GroupChatModel
   }
 }
 

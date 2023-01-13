@@ -17,7 +17,18 @@ const UserSchema = new Schema(
     typeOfUser: {
       type: String,
     },
-
+    myGroups:{
+     type:[String] 
+    },
+    aboutUs:{
+      type:String,
+      default:''
+    },
+    socialMediaLinks:[{
+     linkdin:{type:String,default:''},
+     instagram:{type:String,default:''},
+     facebook:{type:String,default:''}
+    }],
     companyEmail: {
       type: String,
     },

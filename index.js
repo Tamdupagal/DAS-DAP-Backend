@@ -10,28 +10,62 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: { origin: "http://localhost:3000" },
 });
-// const privateKey = fs.readFileSync(process.env.privateKey, 'utf8')
-// const certificate = fs.readFileSync(process.env.certificate, 'utf8')
-// const ca = fs.readFileSync(process.env.ca, 'utf8')
+
 io.on("connection", (socket) => {
-  socket.on("join", (options, callback) => {
-    console.log('join')
-    socket.join(options.senderId); 
+  // console.log('connection done')
+  socket.on("join", (options, callback) => { 
+    socket.join(options.senderId);
+    
+    console.log('join ',options.senderId);
   });
   socket.on("message", (options, callback) => {
-    if (io.sockets.adapter.rooms.get(options.receiverId) === undefined) {
-      console.log("offline");   
-    }
-    console.log('online')
-    io.to(options.receiverId).emit("message", { message: options.message });
+    // console.log(Object.keys(io.of('/').adapter.rooms).length);
+   console.log(options.message)
+    io.to(options.receiverId).emit("message", options);
   });
-});
+  socket.on("createGroup", (options, callback) => { 
+    socket.join(options.roomName); 
+    for (user of options.users) {
+      io.to(user).emit("groupJoined", {
+        roomName: options.roomName,
+      });
+    }
+  });
 
-// const credentials = {
-//   key: privateKey,
-//   cert: certificate,
-//   ca: ca,
-// }
+  socket.on('taskAssigned',(options,callback)=>{
+     for(assigned of options.assignedTo){
+       io.to(assigned).emit('newTaskAssigned',options);
+     }
+  })
+  
+  socket.on("joinGroup", (options, callback) => {
+    console.log('user join ',options.roomName)
+    socket.join(options.roomName);
+  });
+  socket.on("groupChat", (options, callback) => {
+    console.log(options.message)
+    io.to(options.groupName).emit("groupMessage", options);
+  });
+
+  socket.on("deleteMsg",(options,callback)=>{
+    console.log("deleted msg start")
+    io.to(options.receiverId).emit("deletedMsg",options)
+  })
+
+  socket.on("deleteGroupMsg",(options,callback)=>{
+    console.log("deleted group msg start")
+    socket.broadcast.to(options.groupName).emit("groupMsgDelete",options)
+  })
+
+  socket.on('startTyping',(options,callback)=>{
+    // console.log("startTyping",options.receiverId)
+    io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
+  })
+  socket.on('stopTyping',(options,callback)=>{
+    // console.log("stopTyping",options.receiverId)
+    io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
+  })
+});
 
 if (cluster.isMaster) {
   totalCPUs.forEach(async (node) => {
@@ -45,12 +79,6 @@ if (cluster.isMaster) {
     await cluster.fork();
   });
 } else {
-  // https
-  //   .createServer(credentials, app)
-  //   .listen(process.env.PORT || portNumber, () => {
-  //     console.log(`running on ${process.env.PORT || portNumber}`)
-
-  //  })
   server.listen(process.env.PORT || portNumber, () => {
     logger.info(
       `Process ${process.pid} is online on port number ${portNumber}`
