@@ -65,6 +65,7 @@ const fetchTaskFlow = async (req, res, next) => {
       companyEmail,
     } = req.query;
 
+
     let query = {},
       projection = { taskList: 0 },
       skip,
@@ -193,6 +194,7 @@ const fetchMyTasks = async (req, res, next) => {
       result: response.length,
 
       totalCount: totalCount.length,
+
 
       data: response,
     });
