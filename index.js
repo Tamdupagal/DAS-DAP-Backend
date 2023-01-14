@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
     io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
   })
 });
-
+ 
 if (cluster.isMaster) {
   totalCPUs.forEach(async (node) => {
     await cluster.fork();
