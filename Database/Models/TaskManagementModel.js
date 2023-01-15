@@ -23,7 +23,7 @@ priorities:{
         message:"Please Select Valid Priorities Value"
     }
 },
-assignedBy:{
+assignedBy:{ 
     type:mongoose.Schema.ObjectId,
     ref: "User",
 },

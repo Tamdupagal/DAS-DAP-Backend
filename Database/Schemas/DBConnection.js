@@ -52,7 +52,7 @@ const dependencyInjector = (dataBaseName) => {
     UserFeedBackModel,
     ChatModel,
     taskManagementModel,
-    GroupChatModel
+    GroupChatModel,
   }
 }
 

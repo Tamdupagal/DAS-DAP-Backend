@@ -9,7 +9,7 @@ Router.route('/myTasks?').get(fetchMyTasks)
 
 Router.route('/taskManagement').post(createTask).get(getTask)
 Router.route('/taskManagement/:id').delete(deleteTask).put(updateTask)
-Router.route('/taskmanagement/myTasks/starred').put(UpdatestarredTasks)
+Router.route('/taskmanagement/myTasks/starred').put(UpdatestarredTasks) 
 Router.route('/taskmanagement/myTasks/starred').get(getStarredTasks)
 Router.route('/taskmanagement/myTasks/completedTasks').get(getCompletedTask)
 Router.route('/taskmanagement/myTasks/labeledTasks').get(getLabeledTask)

@@ -7,7 +7,7 @@ const pushAnalytics = async (req, res, next) => {
       applicationDomain,
       isCompleted,
       isAborted,
-      userEmail,
+      userEmail, 
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers
@@ -75,7 +75,68 @@ const getAllAnalytics = async(req,res,next)=>{
   }
 }
 
+const pushTaskAnalytics = async (req, res, next) => {
+  try {
+    const {
+      taskName,
+      completedBy,
+      taskAssignedAt,
+      taskCompletedAt,
+      timeTaken
+    } = req.body;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    await taskManagementModel.create({
+      taskName,
+      completedBy,
+      taskAssignedAt,
+      taskCompletedAt,
+      timeTaken
+    });
+    res.status(201).send({
+      status: 201,
+      response:'Task Analytics Created/Updated Succesfully!' 
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(404).send({
+        status: 404,
+        message: Object.values(error.errors)
+          .map((el) => el.message)
+          .toString(),
+      });
+    }
+    res.status(404).send({
+      status: 404,
+      message: error.message || error.name || "Some Error Occured!",
+    });
+  }
+};
+
+const getTaskAnalytics = async (req, res, next) => {
+  try {
+    const { taskName } = req.params;
+    const { taskManagementModel } = res.locals.connection.databaseObject;
+    const response = await taskManagementModel
+      .find({taskName})
+      .populate({
+        path: "taskName",
+        select: ["email", "typeOfUser", "userName"],
+      });
+    res.status(200).send({
+      status: 200,
+      result: response.length,
+      data: response,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ status: 404, message: "Some Error Occured!" });
+  }
+};
+
+
 module.exports = {
   pushAnalytics,
-  getAllAnalytics
+  getAllAnalytics,
+  getTaskAnalytics,
+  pushTaskAnalytics
 }
