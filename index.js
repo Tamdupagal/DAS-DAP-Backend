@@ -6,11 +6,18 @@ const logger = require("./Services/Logger/Logger");
 const app = require("./app");
 const fs = require("fs");
 const http = require("http");
+const cors = require("cors");
 const server = http.createServer(app);
-const io = require("socket.io")(server, {
-  cors: { origin: "http://localhost:3000" },
-});
+const { Server } = require("socket.io");
+app.use(cors());
 
+const io = new Server(server, {
+  cors: {
+    origin: "*", 
+    methods: ["GET", "POST"],
+  },
+  maxHttpBufferSize: 1e8,
+});
 io.on("connection", (socket) => {
   // console.log('connection done')
   socket.on("join", (options, callback) => { 
@@ -66,7 +73,7 @@ io.on("connection", (socket) => {
     io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
   })
 });
-
+ 
 if (cluster.isMaster) {
   totalCPUs.forEach(async (node) => {
     await cluster.fork();
