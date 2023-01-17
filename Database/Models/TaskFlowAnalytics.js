@@ -43,7 +43,6 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
-      timeTaken
     } = data
     let query
     let result = "";
@@ -51,6 +50,10 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
     const date2 = new Date(timeStampCompletedByUsers);
     let diffTime = Math.abs(date2 - date1) / 1000 / 60 / 60;
     let diffMinute = Math.abs(date2 - date1) / 1000 / 60;
+    let diffSeconds = Math.abs(date2 - date1) / 1000 
+    if(diffSeconds <60){
+      result=diffSeconds+" seconds"
+    }else
     if(diffTime<1){
       result=diffMinute+" minutes"
     }
@@ -63,9 +66,10 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
         to: date2,
       });
     }    
-    console.log( result );
-    data.timeTaken=result;
-    if (isCompleted) query = {timeStampCompletedByUsers,timeStampStartByUsers,timeTaken, $inc: { timesCompletedByUsers: 1 } }
+    let timeTaken = result;
+
+    console.log(timeTaken)
+    if (isCompleted) query = {timeStampCompletedByUsers,timeTaken, timeStampStartByUsers, $inc: { timesCompletedByUsers: 1 } }
     if (isAborted) query = { $inc: { timesStoppedByUsers: 1 } }
     const existingAnalytics = await this.findOneAndUpdate(
       {
@@ -74,7 +78,7 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
         userEmail,
         companyEmail,
       },
-       query ,
+     query,
       { new: true,upsert:true }
     )
     if(!existingAnalytics){

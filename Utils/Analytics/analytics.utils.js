@@ -137,8 +137,23 @@ const pushTaskAnalytics = async (req, res, next) => {
 
 const getTaskAnalytics = async (req, res, next) => {
   try {
-    const { taskAnalyticsModel } = res.locals.connection.databaseObject;
-    const response = await taskAnalyticsModel.find({}).populate({
+    const {page} = req.query
+    const { taskAnalyticsModel} = res.locals.connection.databaseObject;
+    let query = {},
+    projection = { TaskAnalyticsList: 0 },
+    skip,
+    limit = 10,
+    pageNumber = parseInt(page);
+  if (!pageNumber || pageNumber <= 1) pageNumber = 1;
+
+  skip = pageNumber * 10 -10;
+
+  const totalCount = await taskAnalyticsModel.find({})
+
+
+    const response = await taskAnalyticsModel.find(query, projection)
+    .skip(skip)
+    .limit(limit).populate({
       path: "taskId",
       populate: [
         { path: "assignedBy", select: ["email", "typeOfUser", "userName"] },
@@ -148,7 +163,7 @@ const getTaskAnalytics = async (req, res, next) => {
     });
     res.status(200).send({
       status: 200,
-      result: response.length,
+      result: totalCount.length,
       data: response,
     });
   } catch (error) {

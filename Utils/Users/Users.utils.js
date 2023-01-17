@@ -180,6 +180,47 @@ const getChat = async (req, res, next) => {
   }
 };
 
+const getLatestMessage = async (req, res, next) => {
+  try {
+    const { senderId, receiverId } = req.body;
+    const { ChatModel } = res.locals.connection.databaseObject;
+    const latestMessageArray=[];
+    for (let i of receiverId){
+      const response1 = await ChatModel.findOne({senderId,receiverId:i})
+      const response2 = await ChatModel.findOne({senderId:i,receiverId:senderId})
+      if(response1){
+        const obj={senderId,receiverId:i};
+        if(response1.message.length){
+           obj.message = response1.message[response1.message.length-1]
+        }
+        latestMessageArray.push(obj);
+      }
+      else if(response2){
+        const obj={senderId:i,receiverId:senderId};
+        if(response2.message.length){
+          obj.message = response2.message[response2.message.length-1]
+        }
+        latestMessageArray.push(obj);
+      }else{
+        const obj={senderId,receiverId:i,message:[{content:'',senderId,date:null}]};
+        latestMessageArray.push(obj)
+      }
+    }
+    res.status(200).send({
+      status:200,
+      result:latestMessageArray.length,
+      data:latestMessageArray
+    })
+    
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: error.message || 'Chat Not Found!' 
+    });
+  }
+};
+
 const createGroup = async(req,res,next)=>{
   try {
 
@@ -470,5 +511,6 @@ module.exports = {
   removeMembers,
   deleteGroup,
   deleteMessage,
-  getMyProfile
+  getMyProfile,
+  getLatestMessage
 };
