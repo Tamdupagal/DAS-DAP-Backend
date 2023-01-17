@@ -12,6 +12,7 @@ const pushAnalytics = async (req, res, next) => {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
+      timeTaken
     } = req.body;
     // const { email } = req.query
     // console.log(req.body)
@@ -32,6 +33,7 @@ const pushAnalytics = async (req, res, next) => {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
+      timeTaken
     };
     if (isCompleted) query.isCompleted = isCompleted;
     if (isAborted) query.isAborted = isAborted;
