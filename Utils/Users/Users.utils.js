@@ -440,9 +440,9 @@ res
 
 const getMyProfile = async(req,res,next)=>{
   try {
-    const { companyUserModel } = await dependencyInjector(res.locals.params);
+    const { userModel } = res.locals.connection.databaseObject;
     const {email} = req.query;
-     const response = await companyUserModel.findOne({email})
+     const response = await userModel.findOne({email},{"password":false})
    res
   .status(200)
   .send({ status: 200, data:response});
