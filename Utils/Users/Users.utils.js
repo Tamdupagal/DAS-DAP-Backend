@@ -305,6 +305,35 @@ const getGroupChat = async(req,res,next)=>{
   }
 }
 
+const getLatestGroupMessage = async(req,res,next)=>{
+  try {
+    const {groupName,userId} = req.query
+    const { GroupChatModel } = res.locals.connection.databaseObject;
+    let latestMessageArray=[]
+    for(let i of groupName){
+      const group = await GroupChatModel.findOne({groupName:i})
+      if(group && group.members.includes(userId)){
+        if(group.message.length){
+         const obj=(group.message[group.message.length-1]);
+         obj.groupName=i;
+         latestMessageArray.push(obj);
+        }
+      }
+    }
+
+    res.status(200).send({
+      status:200,
+      data:latestMessageArray
+    })
+    
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: 'Group Not Found!' 
+    });
+  }
+}
+
 const newMember =  async(req,res,next)=>{
   try {
 const {members,groupName} = req.body;
@@ -512,5 +541,6 @@ module.exports = {
   deleteGroup,
   deleteMessage,
   getMyProfile,
-  getLatestMessage
+  getLatestMessage,
+  getLatestGroupMessage
 };
