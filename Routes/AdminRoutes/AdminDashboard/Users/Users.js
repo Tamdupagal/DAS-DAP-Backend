@@ -38,10 +38,11 @@ Router.route('/latestMessage').put(getLatestMessage)
 // group chat routes
 Router.route('/groupChat').post(createGroup)
 Router.route('/groupChat').put(sendGroupChat)
-Router.route('/groupChat').get(getGroupChat).get(getLatestGroupMessage)
+Router.route('/groupChat').get(getGroupChat)
 Router.route('/groupChat/deleteGroup').put(deleteGroup)
 Router.route('/newMembers').put(newMember)
 Router.route('/removeMembers').put(removeMembers)
 Router.route('/groupChat/deleteMessage').put(deleteGroupMessage)
+Router.route('/groupChat/latestMessage').put(getLatestGroupMessage)
 
 module.exports = Router

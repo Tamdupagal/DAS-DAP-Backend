@@ -223,11 +223,14 @@ const createTask = async (req, res, next) => {
     const { taskManagementModel } = res.locals.connection.databaseObject;
     console.log(startDate.split(",")[0]);
 
-    const date = new Date()
+    let date = new Date();
+    let time = new Date()
+
+   date
       .toLocaleDateString()
       .split("/")
       .map((data) => Number(data));
-    const time = new Date()
+   time
       .toLocaleTimeString("en-in", { hour12: false })
       .split(":")
       .map((data) => Number(data));
