@@ -317,6 +317,8 @@ const getLatestGroupMessage = async(req,res,next)=>{
          const obj=(group.message[group.message.length-1]);
          obj.groupName=i;
          latestMessageArray.push(obj);
+        }else {
+          latestMessageArray.push({})
         }
       }
     }
