@@ -193,6 +193,9 @@ const getLatestMessage = async (req, res, next) => {
         if(response1.message.length){
            obj.message = response1.message[response1.message.length-1]
         }
+        else{
+          obj.message = {senderId,message:{content:'',senderId,date:null}}
+        }
         latestMessageArray.push(obj);
       }
       else if(response2){
@@ -200,9 +203,13 @@ const getLatestMessage = async (req, res, next) => {
         if(response2.message.length){
           obj.message = response2.message[response2.message.length-1]
         }
+        else{
+          obj.message = {senderId,message:{content:'',senderId,date:null}}
+        }
         latestMessageArray.push(obj);
       }else{
-        const obj={senderId,receiverId:i,message:[{content:'',senderId,date:null}]};
+        const obj={senderId:i,receiverId:senderId};
+        obj.message={senderId,message:{content:'',senderId,date:null}};
         latestMessageArray.push(obj)
       }
     }
