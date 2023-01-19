@@ -209,36 +209,19 @@ const getLatestMessage = async (req, res, next) => {
           senderId: response1.senderId,
           receiverId: response1.receiverId,
         };
-        if (response1.message.length) {
+        if (response1.message.length>0) {
           obj.message = response1.message[response1.message.length - 1];
-        } else {
-          obj.message = {
-            senderId,
-            message: { content: "", senderId, date: null },
-          };
-        }
-        latestMessageArray.push(obj);
+          latestMessageArray.push(obj);
+        } 
       } else if (response2) {
         const obj = {
           senderId: response2.receiverId,
           receiverId: response2.senderId,
         };
-        if (response2.message.length) {
+        if (response2.message.length>0) {
           obj.message = response2.message[response2.message.length - 1];
-        } else {
-          obj.message = {
-            senderId,
-            message: { content: "", senderId, date: null },
-          };
+          latestMessageArray.push(obj);
         }
-        latestMessageArray.push(obj);
-      } else {
-        const obj = { senderId: i, receiverId: senderId };
-        obj.message = {
-          senderId,
-          message: { content: "", senderId, date: null },
-        };
-        latestMessageArray.push(obj);
       }
     }
     const newlatestMessageArray = latestMessageArray.sort((a, b) => {
