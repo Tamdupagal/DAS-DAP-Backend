@@ -333,15 +333,26 @@ const getLatestGroupMessage = async (req, res, next) => {
     for (let i of groupName) {
       const group = await GroupChatModel.findOne({ groupName: i });
       if (group && group.members.includes(userId)) {
-        if (group.message.length) {
-          const obj = group.message[group.message.length - 1];
-          obj.groupName = i;
+        if (group.message.length>0) {
+          const obj = {}
+           obj.message = group.message[group.message.length - 1];
+          obj.groupName = group.groupName;
           latestMessageArray.push(obj);
         } else {
-          latestMessageArray.push({});
+          const obj = {}
+          obj.message = {content:"",senderName:"",date:null,senderId:""}
+         obj.groupName = group.groupName;
+          latestMessageArray.push(obj);
         }
       }
+
     }
+
+    latestMessageArray = latestMessageArray.sort((a,b)=>{
+      let date1 = new Date(a.message.date);
+      let date2 = new Date(b.message.date);
+      return date2 - date1;
+    })
 
     res.status(200).send({
       status: 200,
