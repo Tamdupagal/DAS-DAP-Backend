@@ -123,6 +123,8 @@ const postChat = async (req, res, next) => {
       senderId: receiverId,
       receiverId: senderId,
     });
+    message._id=ObjectId(message._id);
+
     if (response1) {
       if (message)
         message.map((data) => {
