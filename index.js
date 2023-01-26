@@ -22,13 +22,12 @@ io.on("connection", (socket) => {
   // console.log('connection done')
   socket.on("join", (options, callback) => { 
     socket.join(options.senderId);
-    
-    console.log('join ',options.senderId);
   });
   socket.on("message", (options, callback) => {
     // console.log(Object.keys(io.of('/').adapter.rooms).length);
-   console.log(options.message)
+   console.log(options.message) 
     io.to(options.receiverId).emit("message", options);
+    io.to(options.receiverId).emit('notification',options);
   });
   socket.on("createGroup", (options, callback) => { 
     socket.join(options.roomName); 
@@ -51,7 +50,9 @@ io.on("connection", (socket) => {
   });
   socket.on("groupChat", (options, callback) => {
     console.log(options.message)
+    io.to(options.groupName).emit('groupNotification',options);
     io.to(options.groupName).emit("groupMessage", options);
+   
   });
 
   socket.on("deleteMsg",(options,callback)=>{

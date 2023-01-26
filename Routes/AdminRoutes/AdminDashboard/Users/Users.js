@@ -15,6 +15,8 @@ const {
   deleteMessage,
   deleteGroupMessage,
   getMyProfile,
+  getLatestMessage,
+  getLatestGroupMessage,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -31,6 +33,7 @@ Router.route('/myProfile').get(getMyProfile)
 Router.route('/postChat').put(postChat)
 Router.route('/getChat').get(getChat)
 Router.route('/deleteMessage').put(deleteMessage)
+Router.route('/latestMessage').put(getLatestMessage)
 
 // group chat routes
 Router.route('/groupChat').post(createGroup)
@@ -40,5 +43,6 @@ Router.route('/groupChat/deleteGroup').put(deleteGroup)
 Router.route('/newMembers').put(newMember)
 Router.route('/removeMembers').put(removeMembers)
 Router.route('/groupChat/deleteMessage').put(deleteGroupMessage)
+Router.route('/groupChat/latestMessage').put(getLatestGroupMessage)
 
 module.exports = Router

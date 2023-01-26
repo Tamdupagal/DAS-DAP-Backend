@@ -15,8 +15,9 @@ const GroupChatModel = new Schema(
     },
     message: [
       {
+        _id:{type:String},
         content: { type: String, default: "" },
-        date: { type: Date, default: Date.now() },
+        date: { type: Date, default: Date.now },
         senderId: { type: String, default: "" },
         senderName:{type:String,default:''}
       },
