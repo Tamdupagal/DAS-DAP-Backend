@@ -111,7 +111,7 @@ const deleteNotification = async (req, res, next) => {
 const filterNotification = async (req, res, next) => {
   try {
     const { notificationModel } = res.locals.connection.databaseObject;
-    const { receiverId, senderId, groupName } = req.query;
+    const { receiverId, senderId, groupName } = req.body;
     const notification = await notificationModel.findOne({ receiverId });
 
     if (senderId) {
