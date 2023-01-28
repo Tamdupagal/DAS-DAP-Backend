@@ -47,11 +47,11 @@ const pushNotification = async (req, res, next) => {
             content: groupChatNotification[0].content,
           });
         }
-        if (taskNotification) {
-          notification.taskNotification.content.push(
-            taskNotification.content[0]
-          );
-        }
+      }
+      if (taskNotification) {
+        notification.taskNotification.content.push(
+          taskNotification.content[0]
+        );
       }
       await notification.save();
     } else {
