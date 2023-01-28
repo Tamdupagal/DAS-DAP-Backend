@@ -339,11 +339,13 @@ const getLatestGroupMessage = async (req, res, next) => {
           const obj = {}
            obj.message = group.message[group.message.length - 1];
           obj.groupName = group.groupName;
+          obj.groupId = group._id;
           latestMessageArray.push(obj);
         } else {
           const obj = {}
           obj.message = {content:"",senderName:"",date:null,senderId:""}
          obj.groupName = group.groupName;
+         obj.groupId = group._id;
           latestMessageArray.push(obj);
         }
       }

@@ -66,12 +66,20 @@ io.on("connection", (socket) => {
   })
 
   socket.on('startTyping',(options,callback)=>{
-    // console.log("startTyping",options.receiverId)
+    // console.log("startTyping",options)
     io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
   })
+  socket.on('groupTyping',(options,callback)=>{
+    // console.log("startTyping",options)
+    io.to(options.groupName).emit('groupTypingStart',options)
+  })
   socket.on('stopTyping',(options,callback)=>{
-    // console.log("stopTyping",options.receiverId)
+    // console.log("stopTyping",options)
     io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
+  })
+  socket.on('stopGroupTyping',(options,callback)=>{
+    // console.log("stopTyping123")
+    io.to(options.groupName).emit('groupTypingStop',options)
   })
 });
  
