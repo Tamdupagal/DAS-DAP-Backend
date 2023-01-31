@@ -26,6 +26,7 @@ io.on("connection", (socket) => {
   socket.on("message", (options, callback) => {
     // console.log(Object.keys(io.of('/').adapter.rooms).length);
    console.log(options.message) 
+    io.to(options.receiverId).emit("getLatestNotification", options);
     io.to(options.receiverId).emit("message", options);
     io.to(options.receiverId).emit('notification',options);
   });
@@ -41,6 +42,7 @@ io.on("connection", (socket) => {
   socket.on('taskAssigned',(options,callback)=>{
      for(assigned of options.assignedTo){
        io.to(assigned).emit('newTaskAssigned',options);
+       io.to(assigned).emit("getLatestNotification", options);
      }
   })
   
@@ -52,7 +54,7 @@ io.on("connection", (socket) => {
     console.log(options.message)
     io.to(options.groupName).emit('groupNotification',options);
     io.to(options.groupName).emit("groupMessage", options);
-   
+    io.to(options.groupName).emit("getLatestNotification", options);
   });
 
   socket.on("deleteMsg",(options,callback)=>{
