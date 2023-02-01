@@ -26,6 +26,7 @@ io.on("connection", (socket) => {
   socket.on("message", (options, callback) => {
     // console.log(Object.keys(io.of('/').adapter.rooms).length);
    console.log(options.message) 
+    io.to(options.receiverId).emit("getLatestNotification", options);
     io.to(options.receiverId).emit("message", options);
     io.to(options.receiverId).emit('notification',options);
   });
@@ -41,6 +42,7 @@ io.on("connection", (socket) => {
   socket.on('taskAssigned',(options,callback)=>{
      for(assigned of options.assignedTo){
        io.to(assigned).emit('newTaskAssigned',options);
+       io.to(assigned).emit("getLatestNotification", options);
      }
   })
   
@@ -52,7 +54,7 @@ io.on("connection", (socket) => {
     console.log(options.message)
     io.to(options.groupName).emit('groupNotification',options);
     io.to(options.groupName).emit("groupMessage", options);
-   
+    io.to(options.groupName).emit("getLatestNotification", options);
   });
 
   socket.on("deleteMsg",(options,callback)=>{
@@ -66,12 +68,26 @@ io.on("connection", (socket) => {
   })
 
   socket.on('startTyping',(options,callback)=>{
-    // console.log("startTyping",options.receiverId)
+    // console.log("startTyping",options)
     io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
   })
+  socket.on('groupTyping',(options,callback)=>{
+    // console.log("startTyping",options)
+    io.to(options.groupName).emit('groupTypingStart',options)
+  })
   socket.on('stopTyping',(options,callback)=>{
-    // console.log("stopTyping",options.receiverId)
+    // console.log("stopTyping",options)
     io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
+  })
+  socket.on('stopGroupTyping',(options,callback)=>{
+    // console.log("stopTyping123")
+    io.to(options.groupName).emit('groupTypingStop',options)
+  })
+  socket.on("forwardMsg",options=>{
+    options.receiverId.map((id)=>{
+      const newRoom = id.receiverId||id.groupName
+      io.to(newRoom).emit("messageForwarded",options)
+    })
   })
 });
  
