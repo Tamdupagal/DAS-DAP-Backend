@@ -56,6 +56,15 @@ const getAllAnalytics = async (req, res, next) => {
   try {
     const { companyEmail, page } = req.query;
     const { analyticsModel } = res.locals.connection.databaseObject;
+    if(page == -1){
+     const response =  await analyticsModel.find({ companyEmail });
+     res.status(200).send({
+      status: 200,
+      result: response.length,
+      totalCount: response.length,
+      data: response,
+    });
+    }
 
     let query = { companyEmail },
       projection = { analyticsList: 0 },
