@@ -251,8 +251,13 @@ const createGroup = async (req, res, next) => {
     const { userModel } = res.locals.connection.databaseObject;
     const { GroupChatModel } = res.locals.connection.databaseObject;
 
+    const response = await GroupChatModel.create({
+      adminId,
+      groupName,
+      members,
+    });
+
     const user = await userModel.findById(adminId);
-    console.log(user);
     if (
       user &&
       (user.typeOfUser === "Admin" || user.typeOfUser === "SuperAdmin")
@@ -262,11 +267,7 @@ const createGroup = async (req, res, next) => {
         user.myGroups.push(groupName);
         await user.save();
       }
-      const response = await GroupChatModel.create({
-        adminId,
-        groupName,
-        members,
-      });
+     
 
       res.status(201).send({
         status: "success",
@@ -277,10 +278,17 @@ const createGroup = async (req, res, next) => {
       throw new Error("You do not have access to these route!");
     }
   } catch (error) {
-    res.status(404).send({
-      status: 404,
-      message: error.message,
-    });
+    if ( error.code === 11000) {
+      res.status(404).send({
+        status: 404,
+        message: "Group Name will be unique!",
+      });
+    }else{
+      res.status(404).send({
+        status: 404,
+        message: error.message,
+      });
+    }
   }
 };
 

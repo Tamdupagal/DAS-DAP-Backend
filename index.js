@@ -83,6 +83,12 @@ io.on("connection", (socket) => {
     // console.log("stopTyping123")
     io.to(options.groupName).emit('groupTypingStop',options)
   })
+  socket.on("forwardMsg",options=>{
+    options.receiverId.map((id)=>{
+      const newRoom = id.receiverId||id.groupName
+      io.to(newRoom).emit("messageForwarded",options)
+    })
+  })
 });
  
 if (cluster.isMaster) {

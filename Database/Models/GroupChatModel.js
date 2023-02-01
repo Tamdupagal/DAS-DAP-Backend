@@ -9,6 +9,8 @@ const GroupChatModel = new Schema(
     },
     groupName:{
         type:String,
+        unique:true,
+        trim:true
     },
     members:{
      type:[String]
