@@ -4,6 +4,6 @@ const { SuperAdminAuthorization } = require('../../Services/AuthenticationServic
 const Router = Express.Router()
 const Dashboard = require('./SuperAdminDashboard/Dashboard')
 
-Router.use('/dashboard', [SuperAdminAuthorization,Dashboard])
+Router.use('/dashboard', [SuperAdminAuthorization, Dashboard])
 
 module.exports = Router

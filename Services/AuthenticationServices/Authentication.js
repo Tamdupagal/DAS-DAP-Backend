@@ -146,13 +146,13 @@ const SuperAdminAuthorization = async (req, res, next) => {
     
     const decoded = await promisify(JWT.verify)(token, process.env.secret);
     let record = await EnrolledCompanies.findOne({
-      companyName: "digitalaidedschool",
+      companyName: process.env.SUPER_ADMIN_COMPANY_NAME,
     })
 
     const { companyUserModel } = await dependencyInjector(record.companyName)
 
     const superAdmin = await companyUserModel.findOne({
-      email: "admin@digitalaidedschool.com",
+      email: process.env.SUPER_ADMIN_EMAIL,
     })
 
     if(superAdmin._id == decoded.id  && superAdmin.typeOfUser == 'SuperAdmin'){
