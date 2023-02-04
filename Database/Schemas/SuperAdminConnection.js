@@ -13,5 +13,9 @@ const SuperAdminFeedback = connection.model(
   'SuperAdminFeedback',
   require('../Models/UserFeedBack')
 )
+const adminUpdates = connection.model(
+  'adminUpdates',
+  require('../Models/AdminUpdates')
+)
 const issueModel = connection.model('Issues', require('../Models/Issue'))
-module.exports = { connection, companyModel,SuperAdminFeedback,SuperAdminAnnouncement, issueModel }
+module.exports = { connection, companyModel,SuperAdminFeedback,SuperAdminAnnouncement, issueModel, adminUpdates}
