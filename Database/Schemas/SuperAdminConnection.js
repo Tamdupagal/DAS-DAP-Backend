@@ -19,7 +19,7 @@ const adminUpdates = connection.model(
 )
 const adminQuery = connection.model(
   'adminQuery',
-  require('../Models/ChatModel')
+  require('../Models/ChatQueryModel')
 )
 const issueModel = connection.model('Issues', require('../Models/Issue'))
 module.exports = { connection, companyModel,SuperAdminFeedback,SuperAdminAnnouncement, issueModel, adminUpdates,adminQuery}

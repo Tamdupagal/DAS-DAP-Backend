@@ -49,31 +49,24 @@ const deleteUpdates = async (req, res, next) => {
 
 const postQuery = async (req, res, next) => {
   try {
-    const { senderId, receiverId, message } = req.body;
+    const { senderId, receiverId, message,senderObj } = req.body;
     const response1 = await adminQuery.findOne({ senderId, receiverId });
-    const response2 = await adminQuery.findOne({
-      senderId: receiverId,
-      receiverId: senderId,
-    });
     if (response1) {
       if (message)
         message.map((data) => {
           response1.message.push(data);
         });
+      if(senderObj)
+      response1.senderObj = senderObj
       response1.save();
       res.status(200).send({ status: 200, message: "message is sent" });
-    } else if (response2) {
-      if (message)
-        message.map((data) => {
-          response2.message.push(data);
-        });
-      response2.save();
-      res.status(200).send({ status: 200, message: "message is sent" });
-    } else {
+    } 
+      else {
       await adminQuery.create({
         senderId,
         receiverId,
         message,
+        senderObj
       });
       res.status(200).send({ status: 200, message: "message is sent" });
     }
@@ -90,17 +83,7 @@ const getAllQuery = async (req, res, next) => {
   try {
     const { senderId, receiverId } = req.query;
     const response1 = await adminQuery.findOne({ senderId, receiverId })
-    const response2 = await adminQuery.findOne({
-      senderId: receiverId,
-      receiverId: senderId,
-    })
-    if (response1) {
-      res.status(200).send({ status: 200, data: response1 });
-    } else if (response2) {
-      res.status(200).send({ status: 200, data: response2 });
-    } else {
-      throw new Error("Chat Not Found!");
-    }
+    res.status(200).send({ status: 200, data: response1 });
   } catch (error) {
     res.status(404).send({
       status: 404,

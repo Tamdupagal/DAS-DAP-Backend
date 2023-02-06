@@ -18,6 +18,7 @@ const {
   getMyProfile,
   getLatestMessage,
   getLatestGroupMessage,
+  deleteUser,
 } = require('../../../../Utils/Users/Users.utils')
 const {
   userCreationValidation,
@@ -29,6 +30,7 @@ Router.route('/search?').get(fetchUser)
 Router.route('/myUsers?').get(fetchMyUsers)
 Router.route('/updateUser').put(updateUser)
 Router.route('/myProfile').get(getMyProfile)
+Router.route('/deleteUser/:email').delete(deleteUser)
 
 //get Updates
 Router.route('/myUpdates').get(getAllUpdates)
