@@ -6,6 +6,7 @@ const {
   isAuthenticated,
   DatabaseValidation,
 } = require('../../Services/AuthenticationServices/Authentication')
+const { getAllQuery, postQuery, deleteQuery } = require('../../Utils/Updates/Updates.utils')
 
 Router.use('/dashboard/:databaseID', [
   isAuthenticated,
