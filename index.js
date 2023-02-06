@@ -94,6 +94,11 @@ io.on("connection", (socket) => {
     // console.log("stopTyping123")
     io.to(options.groupName).emit('groupTypingStop',options)
   })
+  socket.on("deleteTask",(options,callback)=>{
+     options.assignedTo.map(data=>{
+      io.to(data).emit("taskDeleted",{});
+     })
+  })
   socket.on("forwardMsg",options=>{
     options.receiverId.map((id)=>{
       const newRoom = id.receiverId||id.groupName
