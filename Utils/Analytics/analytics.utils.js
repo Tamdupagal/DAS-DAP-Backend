@@ -12,7 +12,7 @@ const pushAnalytics = async (req, res, next) => {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
-      timeTaken
+      timeTaken,
     } = req.body;
     // const { email } = req.query
     // console.log(req.body)
@@ -33,7 +33,7 @@ const pushAnalytics = async (req, res, next) => {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
-      timeTaken
+      timeTaken,
     };
     if (isCompleted) query.isCompleted = isCompleted;
     if (isAborted) query.isAborted = isAborted;
@@ -56,14 +56,14 @@ const getAllAnalytics = async (req, res, next) => {
   try {
     const { companyEmail, page } = req.query;
     const { analyticsModel } = res.locals.connection.databaseObject;
-    if(page == -1){
-     const response =  await analyticsModel.find({ companyEmail });
-     res.status(200).send({
-      status: 200,
-      result: response.length,
-      totalCount: response.length,
-      data: response,
-    });
+    if (page == -1) {
+      const response = await analyticsModel.find({ companyEmail });
+      res.status(200).send({
+        status: 200,
+        result: response.length,
+        totalCount: response.length,
+        data: response,
+      });
     }
 
     let query = { companyEmail },
@@ -76,6 +76,10 @@ const getAllAnalytics = async (req, res, next) => {
     skip = pageNumber * 10 - 10;
 
     const totalCount = await analyticsModel.find({ companyEmail });
+    let totalCountNumber = 0;
+    totalCount.map((flow) => {
+      return (totalCountNumber += flow.timesCompletedByUsers);
+    });
 
     const response = await analyticsModel
       .find(query, projection)
@@ -85,6 +89,7 @@ const getAllAnalytics = async (req, res, next) => {
       status: 200,
       result: response.length,
       totalCount: totalCount.length,
+      totalFlowsShown: totalCountNumber,
       data: response,
     });
   } catch (e) {
@@ -94,13 +99,7 @@ const getAllAnalytics = async (req, res, next) => {
 
 const pushTaskAnalytics = async (req, res, next) => {
   try {
-    const {
-      taskId,
-      completedBy,
-      taskAssignedAt,
-      taskCompletedAt,
-
-    } = req.body;
+    const { taskId, completedBy, taskAssignedAt, taskCompletedAt } = req.body;
     const { taskAnalyticsModel } = res.locals.connection.databaseObject;
 
     let result = "";
@@ -114,16 +113,19 @@ const pushTaskAnalytics = async (req, res, next) => {
         from: date1,
         to: date2,
       });
-    }    
-    const newObj = {
-      taskId, completedBy, taskAssignedAt, taskCompletedAt, timeTaken:result
     }
+    const newObj = {
+      taskId,
+      completedBy,
+      taskAssignedAt,
+      taskCompletedAt,
+      timeTaken: result,
+    };
 
-    await taskAnalyticsModel.findOneAndUpdate(
-      { taskId },
-      newObj,
-      { new: true, upsert: true }
-    );
+    await taskAnalyticsModel.findOneAndUpdate({ taskId }, newObj, {
+      new: true,
+      upsert: true,
+    });
     res.status(201).send({
       status: 201,
       response: "Task Analytics Created/Updated Succesfully!",
@@ -146,30 +148,31 @@ const pushTaskAnalytics = async (req, res, next) => {
 
 const getTaskAnalytics = async (req, res, next) => {
   try {
-    const {page} = req.query
-    const { taskAnalyticsModel} = res.locals.connection.databaseObject;
+    const { page } = req.query;
+    const { taskAnalyticsModel } = res.locals.connection.databaseObject;
     let query = {},
-    projection = { TaskAnalyticsList: 0 },
-    skip,
-    limit = 10,
-    pageNumber = parseInt(page);
-  if (!pageNumber || pageNumber <= 1) pageNumber = 1;
+      projection = { TaskAnalyticsList: 0 },
+      skip,
+      limit = 10,
+      pageNumber = parseInt(page);
+    if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
-  skip = pageNumber * 10 -10;
+    skip = pageNumber * 10 - 10;
 
-  const totalCount = await taskAnalyticsModel.find({})
+    const totalCount = await taskAnalyticsModel.find({});
 
-
-    const response = await taskAnalyticsModel.find(query, projection)
-    .skip(skip)
-    .limit(limit).populate({
-      path: "taskId",
-      populate: [
-        { path: "assignedBy", select: ["email", "typeOfUser", "userName"] },
-        { path: "assignedTo", select: ["email", "typeOfUser", "userName"] },
-      ],
-      select: ["assignedAt", "title", "assignedTo", "startDate", "endDate"],
-    });
+    const response = await taskAnalyticsModel
+      .find(query, projection)
+      .skip(skip)
+      .limit(limit)
+      .populate({
+        path: "taskId",
+        populate: [
+          { path: "assignedBy", select: ["email", "typeOfUser", "userName"] },
+          { path: "assignedTo", select: ["email", "typeOfUser", "userName"] },
+        ],
+        select: ["assignedAt", "title", "assignedTo", "startDate", "endDate"],
+      });
     res.status(200).send({
       status: 200,
       result: totalCount.length,

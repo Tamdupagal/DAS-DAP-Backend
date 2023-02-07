@@ -1,16 +1,17 @@
 const Schema = require("mongoose").Schema;
 const demoModel = new Schema({
-  firstName: {
-    type: String,
-  },
-  lastName: {
+  userName: {
     type: String,
   },
   companyName: {
     type: String,
+    unique: true,
+    trim: true,
   },
   workEmail: {
     type: String,
+    unique: true,
+    trim: true,
   },
 });
 

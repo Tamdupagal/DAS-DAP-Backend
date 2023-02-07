@@ -88,7 +88,7 @@ const fetchTaskFlow = async (req, res, next) => {
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
     skip = pageNumber * 8 - 8;
-    const totalCount = await taskFlowModel.find(query);
+    const totalCount = await taskFlowModel.countDocuments(query);
 
     const result = await taskFlowModel
       .find(query, projection)
@@ -96,7 +96,7 @@ const fetchTaskFlow = async (req, res, next) => {
       .limit(limit);
     res
       .status(200)
-      .send({ status: 200, result, totalCount: totalCount.length });
+      .send({ status: 200, result, totalCount });
   } catch (e) {
     totalCount;
     res.status(400).send({
@@ -183,7 +183,7 @@ const fetchMyTasks = async (req, res, next) => {
 
     skip = pageNumber * 8 - 8;
 
-    const totalCount = await taskFlowModel.find({ companyEmail });
+    const totalCount = await taskFlowModel.countDocuments({ companyEmail });
     const response = await taskFlowModel
       .find(query, projection)
       .skip(skip)
@@ -192,10 +192,7 @@ const fetchMyTasks = async (req, res, next) => {
     res.status(200).send({
       status: 200,
       result: response.length,
-
-      totalCount: totalCount.length,
-
-
+      totalCount: totalCount,
       data: response,
     });
   } catch (e) {
