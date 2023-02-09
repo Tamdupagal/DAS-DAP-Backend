@@ -1,4 +1,7 @@
-const { adminUpdates, adminQuery } = require("../../Database/Schemas/SuperAdminConnection");
+const {
+  adminUpdates,
+  adminQuery,
+} = require("../../Database/Schemas/SuperAdminConnection");
 
 const createUpdates = async (req, res, next) => {
   try {
@@ -49,24 +52,22 @@ const deleteUpdates = async (req, res, next) => {
 
 const postQuery = async (req, res, next) => {
   try {
-    const { senderId, receiverId, message,senderObj } = req.body;
+    const { senderId, message, senderObj,receiverId } = req.body;
     const response1 = await adminQuery.findOne({ senderId, receiverId });
     if (response1) {
       if (message)
         message.map((data) => {
           response1.message.push(data);
         });
-      if(senderObj)
-      response1.senderObj = senderObj
+      if (senderObj) response1.senderObj = senderObj;
       response1.save();
       res.status(200).send({ status: 200, message: "message is sent" });
-    } 
-      else {
+    } else {
       await adminQuery.create({
         senderId,
         receiverId,
         message,
-        senderObj
+        senderObj,
       });
       res.status(200).send({ status: 200, message: "message is sent" });
     }
@@ -78,12 +79,16 @@ const postQuery = async (req, res, next) => {
   }
 };
 
-
 const getAllQuery = async (req, res, next) => {
   try {
-    const { senderId, receiverId } = req.query;
-    const response1 = await adminQuery.findOne({ senderId, receiverId })
-    res.status(200).send({ status: 200, data: response1 });
+    const { senderId, receiverId, typeOfUser } = req.query;
+    if (typeOfUser === "SuperAdmin") {
+      const response = await adminQuery.find({});
+      res.status(200).send({ status: 200, data: response });
+    } else {
+      const response1 = await adminQuery.findOne({ senderId, receiverId });
+      res.status(200).send({ status: 200, data: response1 });
+    }
   } catch (error) {
     res.status(404).send({
       status: 404,
@@ -91,7 +96,6 @@ const getAllQuery = async (req, res, next) => {
     });
   }
 };
-
 
 const deleteQuery = async (req, res, next) => {
   try {
@@ -117,12 +121,11 @@ const deleteQuery = async (req, res, next) => {
   }
 };
 
-
 module.exports = {
   createUpdates,
   getAllUpdates,
   deleteUpdates,
   postQuery,
   getAllQuery,
-  deleteQuery
+  deleteQuery,
 };

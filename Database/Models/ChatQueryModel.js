@@ -7,7 +7,7 @@ const ChatModel = new Schema(
       type: mongoose.Schema.ObjectId,
     },
     receiverId: {
-      type: mongoose.Schema.ObjectId,
+      type: String,
     },
     senderObj: {
       email: { type: String },

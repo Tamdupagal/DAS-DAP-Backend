@@ -183,21 +183,43 @@ const fetchMyTasks = async (req, res, next) => {
 
     skip = pageNumber * 8 - 8;
 
-    const totalCount = await taskFlowModel.countDocuments({ companyEmail });
+    const totalFlows = await taskFlowModel.find({companyEmail});
+    let allDomain = new Set();
+    totalFlows.map(flows=>{allDomain.add(flows.applicationDomain)});
     const response = await taskFlowModel
       .find(query, projection)
       .skip(skip)
       .limit(limit);
-
+    console.log(allDomain,'ssssssssssssssss')
     res.status(200).send({
       status: 200,
       result: response.length,
-      totalCount: totalCount,
+      totalCount: totalFlows.length,
+      allDomain:Array.from(allDomain),
       data: response,
     });
   } catch (e) {
     console.log(e);
     res
+      .status(e.status)
+      .send({ status: e.status, message: e.message, reference: e.reference });
+  }
+};
+
+const fetchMyTasksWithDomain = async (req, res, next) => {
+  try {
+    const {applicationDomain} = req.query
+    // console.log(applicationDomain)
+    const { taskFlowModel } = res.locals.connection.databaseObject;
+    const totalFlows = await taskFlowModel.find({applicationDomain});
+    res.status(200).send({
+      status: 200,
+      data: totalFlows,
+      length:totalFlows.length
+    });
+  } catch (e) {
+    console.log(e);
+    res 
       .status(e.status)
       .send({ status: e.status, message: e.message, reference: e.reference });
   }
@@ -693,4 +715,5 @@ module.exports = {
   getLabeledTask,
   assignedByMeTask,
   assignedToMeTask,
+  fetchMyTasksWithDomain
 };
