@@ -173,7 +173,7 @@ const fetchMyTasks = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
-    const { companyEmail, page } = req.query;
+    const { companyEmail, page, applicationDomain } = req.query;
     let query = { companyEmail },
       projection = { taskList: 0 },
       skip,
@@ -183,21 +183,40 @@ const fetchMyTasks = async (req, res, next) => {
 
     skip = pageNumber * 8 - 8;
 
-    const totalFlows = await taskFlowModel.find({companyEmail});
+    const totalFlows = await taskFlowModel.find({ companyEmail });
     let allDomain = new Set();
-    totalFlows.map(flows=>{allDomain.add(flows.applicationDomain)});
-    const response = await taskFlowModel
-      .find(query, projection)
-      .skip(skip)
-      .limit(limit);
-    console.log(allDomain,'ssssssssssssssss')
-    res.status(200).send({
-      status: 200,
-      result: response.length,
-      totalCount: totalFlows.length,
-      allDomain:Array.from(allDomain),
-      data: response,
+    totalFlows.map((flows) => {
+      allDomain.add(flows.applicationDomain);
     });
+    if (applicationDomain!=undefined) {
+      console.log('appDomain')
+      const response = await taskFlowModel
+        .find({ companyEmail, applicationDomain })
+        .skip(skip)
+        .limit(limit);
+      res.status(200).send({
+        status: 200,
+        result: response.length,
+        totalCount: totalFlows.length,
+        applicationDomain: Array.from(allDomain),
+        data: response,
+        totalFlows
+      });
+    } else {
+      console.log('notAppDomain')
+      const response = await taskFlowModel
+        .find(query, projection)
+        .skip(skip)
+        .limit(limit);
+      res.status(200).send({
+        status: 200,
+        result: response.length,
+        totalCount: totalFlows.length,
+        applicationDomain: Array.from(allDomain),
+        data: response,
+        totalFlows
+      });
+    }
   } catch (e) {
     console.log(e);
     res
@@ -206,24 +225,7 @@ const fetchMyTasks = async (req, res, next) => {
   }
 };
 
-const fetchMyTasksWithDomain = async (req, res, next) => {
-  try {
-    const {applicationDomain} = req.query
-    // console.log(applicationDomain)
-    const { taskFlowModel } = res.locals.connection.databaseObject;
-    const totalFlows = await taskFlowModel.find({applicationDomain});
-    res.status(200).send({
-      status: 200,
-      data: totalFlows,
-      length:totalFlows.length
-    });
-  } catch (e) {
-    console.log(e);
-    res 
-      .status(e.status)
-      .send({ status: e.status, message: e.message, reference: e.reference });
-  }
-};
+
 
 const createTask = async (req, res, next) => {
   try {
@@ -243,13 +245,13 @@ const createTask = async (req, res, next) => {
     console.log(startDate.split(",")[0]);
 
     let date = new Date();
-    let time = new Date()
+    let time = new Date();
 
-   date
+    date
       .toLocaleDateString()
       .split("/")
       .map((data) => Number(data));
-   time
+    time
       .toLocaleTimeString("en-in", { hour12: false })
       .split(":")
       .map((data) => Number(data));
@@ -393,7 +395,8 @@ const getTask = async (req, res, next) => {
       });
     let set = new Set();
     for (let i in response) {
-      for (let j in response[i].label) set.add(response[i].label[j].toLowerCase().trim());
+      for (let j in response[i].label)
+        set.add(response[i].label[j].toLowerCase().trim());
     }
     res.status(200).send({
       status: 200,
@@ -517,7 +520,7 @@ const updateTask = async (req, res, next) => {
       .split(":")
       .map((data) => Number(data));
 
-  if (startDateCheck[2] > endDateCheck[2]) {
+    if (startDateCheck[2] > endDateCheck[2]) {
       throw new Error(
         "please select current year or greater than current year"
       );
@@ -697,8 +700,6 @@ const assignedToMeTask = async (req, res, next) => {
   }
 };
 
-
-
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
@@ -715,5 +716,4 @@ module.exports = {
   getLabeledTask,
   assignedByMeTask,
   assignedToMeTask,
-  fetchMyTasksWithDomain
 };
