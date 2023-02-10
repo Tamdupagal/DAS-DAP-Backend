@@ -11,6 +11,9 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       taskList,
       companyEmail,
+      isTooltip,
+      isModel,
+      isHintBox,
     } = req.body;
 
     const taskFlow = await taskFlowModel.findTaskFlow({
@@ -32,6 +35,9 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       companyEmail,
       taskList,
+      isTooltip,
+      isModel,
+      isHintBox,
     });
     if (result.isError) {
       throw new Error(
@@ -65,7 +71,6 @@ const fetchTaskFlow = async (req, res, next) => {
       companyEmail,
     } = req.query;
 
-
     let query = {},
       projection = { taskList: 0 },
       skip,
@@ -94,9 +99,7 @@ const fetchTaskFlow = async (req, res, next) => {
       .find(query, projection)
       .skip(skip)
       .limit(limit);
-    res
-      .status(200)
-      .send({ status: 200, result, totalCount });
+    res.status(200).send({ status: 200, result, totalCount });
   } catch (e) {
     totalCount;
     res.status(400).send({
@@ -188,8 +191,8 @@ const fetchMyTasks = async (req, res, next) => {
     totalFlows.map((flows) => {
       allDomain.add(flows.applicationDomain);
     });
-    if (applicationDomain!=undefined) {
-      console.log('appDomain')
+    if (applicationDomain != undefined) {
+      console.log("appDomain");
       const response = await taskFlowModel
         .find({ companyEmail, applicationDomain })
         .skip(skip)
@@ -200,10 +203,10 @@ const fetchMyTasks = async (req, res, next) => {
         totalCount: totalFlows.length,
         applicationDomain: Array.from(allDomain),
         data: response,
-        totalFlows
+        totalFlows,
       });
     } else {
-      console.log('notAppDomain')
+      console.log("notAppDomain");
       const response = await taskFlowModel
         .find(query, projection)
         .skip(skip)
@@ -214,7 +217,7 @@ const fetchMyTasks = async (req, res, next) => {
         totalCount: totalFlows.length,
         applicationDomain: Array.from(allDomain),
         data: response,
-        totalFlows
+        totalFlows,
       });
     }
   } catch (e) {
@@ -224,8 +227,6 @@ const fetchMyTasks = async (req, res, next) => {
       .send({ status: e.status, message: e.message, reference: e.reference });
   }
 };
-
-
 
 const createTask = async (req, res, next) => {
   try {
