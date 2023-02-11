@@ -11,6 +11,9 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       taskList,
       companyEmail,
+      isTooltip,
+      isModel,
+      isHintBox,
     } = req.body;
 
     const taskFlow = await taskFlowModel.findTaskFlow({
@@ -32,6 +35,9 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       companyEmail,
       taskList,
+      isTooltip,
+      isModel,
+      isHintBox,
     });
     if (result.isError) {
       throw new Error(
@@ -65,7 +71,6 @@ const fetchTaskFlow = async (req, res, next) => {
       companyEmail,
     } = req.query;
 
-
     let query = {},
       projection = { taskList: 0 },
       skip,
@@ -88,15 +93,13 @@ const fetchTaskFlow = async (req, res, next) => {
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
     skip = pageNumber * 8 - 8;
-    const totalCount = await taskFlowModel.find(query);
+    const totalCount = await taskFlowModel.countDocuments(query);
 
     const result = await taskFlowModel
       .find(query, projection)
       .skip(skip)
       .limit(limit);
-    res
-      .status(200)
-      .send({ status: 200, result, totalCount: totalCount.length });
+    res.status(200).send({ status: 200, result, totalCount });
   } catch (e) {
     totalCount;
     res.status(400).send({
@@ -173,7 +176,7 @@ const fetchMyTasks = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
-    const { companyEmail, page } = req.query;
+    const { companyEmail, page, applicationDomain } = req.query;
     let query = { companyEmail },
       projection = { taskList: 0 },
       skip,
@@ -183,21 +186,40 @@ const fetchMyTasks = async (req, res, next) => {
 
     skip = pageNumber * 8 - 8;
 
-    const totalCount = await taskFlowModel.find({ companyEmail });
-    const response = await taskFlowModel
-      .find(query, projection)
-      .skip(skip)
-      .limit(limit);
-
-    res.status(200).send({
-      status: 200,
-      result: response.length,
-
-      totalCount: totalCount.length,
-
-
-      data: response,
+    const totalFlows = await taskFlowModel.find({ companyEmail });
+    let allDomain = new Set();
+    totalFlows.map((flows) => {
+      allDomain.add(flows.applicationDomain);
     });
+    if (applicationDomain != undefined) {
+      console.log("appDomain");
+      const response = await taskFlowModel
+        .find({ companyEmail, applicationDomain })
+        .skip(skip)
+        .limit(limit);
+      res.status(200).send({
+        status: 200,
+        result: response.length,
+        totalCount: totalFlows.length,
+        applicationDomain: Array.from(allDomain),
+        data: response,
+        totalFlows,
+      });
+    } else {
+      console.log("notAppDomain");
+      const response = await taskFlowModel
+        .find(query, projection)
+        .skip(skip)
+        .limit(limit);
+      res.status(200).send({
+        status: 200,
+        result: response.length,
+        totalCount: totalFlows.length,
+        applicationDomain: Array.from(allDomain),
+        data: response,
+        totalFlows,
+      });
+    }
   } catch (e) {
     console.log(e);
     res
@@ -224,13 +246,13 @@ const createTask = async (req, res, next) => {
     console.log(startDate.split(",")[0]);
 
     let date = new Date();
-    let time = new Date()
+    let time = new Date();
 
-   date
+    date
       .toLocaleDateString()
       .split("/")
       .map((data) => Number(data));
-   time
+    time
       .toLocaleTimeString("en-in", { hour12: false })
       .split(":")
       .map((data) => Number(data));
@@ -374,7 +396,8 @@ const getTask = async (req, res, next) => {
       });
     let set = new Set();
     for (let i in response) {
-      for (let j in response[i].label) set.add(response[i].label[j].toLowerCase().trim());
+      for (let j in response[i].label)
+        set.add(response[i].label[j].toLowerCase().trim());
     }
     res.status(200).send({
       status: 200,
@@ -498,7 +521,7 @@ const updateTask = async (req, res, next) => {
       .split(":")
       .map((data) => Number(data));
 
-  if (startDateCheck[2] > endDateCheck[2]) {
+    if (startDateCheck[2] > endDateCheck[2]) {
       throw new Error(
         "please select current year or greater than current year"
       );
@@ -677,8 +700,6 @@ const assignedToMeTask = async (req, res, next) => {
     res.status(404).send({ status: 404, message: "Some Error Occured!" });
   }
 };
-
-
 
 module.exports = {
   createTaskFlow,

@@ -4,6 +4,7 @@ const cors = require('cors')
 const logger = require('../Services/Logger/Logger')
 const AdminRoutes = require('./AdminRoutes/AdminRoutes')
 const SuperAdminRoutes = require('./SuperAdminRoutes/SuperAdminRoutes')
+const RegistrationRoutes = require('./RegistrationRoutes/RegistrationRoutes')
 // const Misc = require('./Misc/Misc')
 const ExtensionRoutes = require('./ExtensionRoutes/ExtensionRoutes')
 const AuthorizationRoutes = require('./AuthorizationRoutes/AuthorizationRoutes')
@@ -36,6 +37,7 @@ Router.use('/auth', AuthorizationRoutes)
 Router.use('/admin', AdminRoutes)
 Router.use('/extension', ExtensionRoutes)
 Router.use('/superAdmin', SuperAdminRoutes)
+Router.use('/registration',RegistrationRoutes)
 
 // Invalid request Middleware
 

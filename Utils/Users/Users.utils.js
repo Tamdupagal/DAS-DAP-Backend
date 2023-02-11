@@ -562,6 +562,26 @@ const getMyProfile = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req,res,next)=>{
+  try {
+    const {email} = req.params
+    const { userModel } = res.locals.connection.databaseObject; 
+    const { companyUserModel } = await dependencyInjector(res.locals.params);
+    await userModel.findOneAndDelete({email})
+    await companyUserModel.findOneAndDelete({email})
+    res.status(202).send({
+      status:202,
+      message:"User deleted successfully!"
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(404).send({
+      status: 404,
+      message: "Some Error Occured!",
+    });
+  }
+}
+
 module.exports = {
   createUser,
   fetchUser,
@@ -580,4 +600,5 @@ module.exports = {
   getMyProfile,
   getLatestMessage,
   getLatestGroupMessage,
+  deleteUser
 };

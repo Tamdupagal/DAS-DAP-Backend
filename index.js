@@ -11,6 +11,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 app.use(cors());
 
+
 const io = new Server(server, {
   cors: {
     origin: "*", 
@@ -46,6 +47,9 @@ io.on("connection", (socket) => {
      }
   })
   
+  socket.on("createAnnouncement",(options,callback)=>{
+    io.to(options.companyName).emit("announcementCreated",options);
+  })
   socket.on("joinGroup", (options, callback) => {
     console.log('user join ',options.roomName)
     socket.join(options.roomName);
@@ -57,6 +61,9 @@ io.on("connection", (socket) => {
     io.to(options.groupName).emit("getLatestNotification", options);
   });
 
+  socket.on("joinCompany",(options,callback)=>{
+    socket.join(options.companyName)
+  })
   socket.on("deleteMsg",(options,callback)=>{
     console.log("deleted msg start")
     io.to(options.receiverId).emit("deletedMsg",options)
@@ -65,6 +72,10 @@ io.on("connection", (socket) => {
   socket.on("deleteGroupMsg",(options,callback)=>{
     console.log("deleted group msg start")
     socket.broadcast.to(options.groupName).emit("groupMsgDelete",options)
+  })
+
+  socket.on("joinAdminRoom",(options,callback)=>{
+    socket.join("adminRoom");
   })
 
   socket.on('startTyping',(options,callback)=>{
@@ -82,6 +93,11 @@ io.on("connection", (socket) => {
   socket.on('stopGroupTyping',(options,callback)=>{
     // console.log("stopTyping123")
     io.to(options.groupName).emit('groupTypingStop',options)
+  })
+  socket.on("deleteTask",(options,callback)=>{
+     options.assignedTo.map(data=>{
+      io.to(data).emit("taskDeleted",{});
+     })
   })
   socket.on("forwardMsg",options=>{
     options.receiverId.map((id)=>{

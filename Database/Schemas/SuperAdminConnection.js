@@ -13,5 +13,17 @@ const SuperAdminFeedback = connection.model(
   'SuperAdminFeedback',
   require('../Models/UserFeedBack')
 )
+const adminUpdates = connection.model(
+  'adminUpdates',
+  require('../Models/AdminUpdates')
+)
+const adminQuery = connection.model(
+  'adminQuery',
+  require('../Models/ChatQueryModel')
+)
+const Registration = connection.model(
+  'dijitizationWeb',
+  require('../Models/RegistrationModel')
+)
 const issueModel = connection.model('Issues', require('../Models/Issue'))
-module.exports = { connection, companyModel,SuperAdminFeedback,SuperAdminAnnouncement, issueModel }
+module.exports = { connection, companyModel,SuperAdminFeedback,SuperAdminAnnouncement, issueModel, adminUpdates,adminQuery,Registration}
