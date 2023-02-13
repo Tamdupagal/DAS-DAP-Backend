@@ -15,15 +15,6 @@ const taskFlowSchema = new Schema(
     companyEmail:{
       type:String,
     },
-    isTooltip:{
-      type:Boolean,default:false
-    },
-    isModel:{
-      type:Boolean,default:false
-    },
-    isHintBox:{
-      type:Boolean,default:false
-    },
     taskList: [
       {
         stepNumber: {
@@ -64,6 +55,15 @@ const taskFlowSchema = new Schema(
         },
         targetClickOffsetY: {
           type: Number,
+        },
+        isTooltip:{
+          type:Boolean,default:false
+        },
+        isModel:{
+          type:Boolean,default:false
+        },
+        isHintBox:{
+          type:Boolean,default:false
         },
       },
     ],
