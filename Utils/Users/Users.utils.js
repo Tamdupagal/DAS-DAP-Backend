@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const ObjectId = require("mongoose").Types.ObjectId;
-const {sendOtp} = require("../../Services/EmailServices/Email");
+const { sendOtp } = require("../../Services/EmailServices/Email");
 
 const {
   dependencyInjector,
@@ -569,7 +569,7 @@ const getMyProfile = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const { email } = req.params;
-    const { userModel } = res.locals.connection.databaseObject;
+
     const { companyUserModel } = await dependencyInjector(res.locals.params);
     await userModel.findOneAndDelete({ email });
     await companyUserModel.findOneAndDelete({ email });
@@ -588,10 +588,13 @@ const deleteUser = async (req, res, next) => {
 
 const forgotPassword = async (req, res, next) => {
   try {
-    console.log('ssssssssssssss')
     const { email } = req.body;
     const { userModel } = res.locals.connection.databaseObject;
+    const { companyUserModel } = await dependencyInjector(
+      req.params.databaseID
+    );
     const user = await userModel.findOne({ email });
+    const user1 = await companyUserModel.findOne({ email });
 
     if (!user) {
       return res.status(400).send({
@@ -603,13 +606,15 @@ const forgotPassword = async (req, res, next) => {
     if (otp < 1000) otp += 1056;
     sendOtp(email, otp);
     user.otp = otp;
+    user1.otp = otp;
     await user.save();
+    await user1.save();
     res.status(200).send({
       satus: 200,
-      message: "otp is send succesfully to your email!",
+      message: { user, user1 },
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(404).send({
       status: 404,
       message: "Some Error Occured!",
@@ -620,18 +625,25 @@ const forgotPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { email, otp, password } = req.body;
-    const { userModel } = res.locals.connection.databaseObject;
-    const user = await userModel.findOne({ email, otp });
 
+    const { userModel } = res.locals.connection.databaseObject;
+    const { companyUserModel } = await dependencyInjector(
+      req.params.databaseID
+    );
+    const user = await userModel.findOne({ email, otp });
+    const user1 = await companyUserModel.findOne({ email, otp });
     if (!user) {
       return res.status(400).send({
         status: 400,
-        message: "User not found with this email!",
+        message: "Wrong OTP!",
       });
     }
     user.otp = 0;
+    user1.otp = 0;
     user.password = password;
+    user1.password = await bcrypt.hash(password,10);
     await user.save();
+    await user1.save();
     res.status(202).send({
       status: 202,
       message: "Password Updated Successfully!",

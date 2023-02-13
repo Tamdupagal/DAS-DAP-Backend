@@ -4,7 +4,7 @@ sg.setApiKey(api);
 
 const sendOtp = (email, otp) => {
   sg.send({
-    to: email,
+    to: "raghavsharma6996@gmail.com",
     from: "dijitization@gmail.com",
     subject: "forget password!",
     text: `Your one time password (otp) is ${otp}`,

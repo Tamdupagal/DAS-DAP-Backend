@@ -3,7 +3,7 @@ const {
   Registration,
 } = require("../../Database/Schemas/SuperAdminConnection");
 const {
-  dependencyInjector,
+  dependencyInjector, 
   EnrolledCompanies,
 } = require("../../Database/Schemas/AuthenticationDBConnection");
 const bcrypt = require("bcrypt");
