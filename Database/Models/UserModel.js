@@ -32,6 +32,10 @@ const UserSchema = new Schema(
     companyEmail: {
       type: String,
     },
+    otp:{
+      type:Number,
+      default:0
+    },
     userCreatedOn: {
       type: String,
     },

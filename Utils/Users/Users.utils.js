@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const ObjectId = require("mongoose").Types.ObjectId;
+const { sendOtp } = require("../../Services/EmailServices/Email");
 
 const {
   dependencyInjector,
@@ -123,7 +124,7 @@ const postChat = async (req, res, next) => {
       senderId: receiverId,
       receiverId: senderId,
     });
-    message._id=ObjectId(message._id);
+    message._id = ObjectId(message._id);
 
     if (response1) {
       if (message)
@@ -211,16 +212,16 @@ const getLatestMessage = async (req, res, next) => {
           senderId: response1.senderId,
           receiverId: response1.receiverId,
         };
-        if (response1.message.length>0) {
+        if (response1.message.length > 0) {
           obj.message = response1.message[response1.message.length - 1];
           latestMessageArray.push(obj);
-        } 
+        }
       } else if (response2) {
         const obj = {
           senderId: response2.receiverId,
           receiverId: response2.senderId,
         };
-        if (response2.message.length>0) {
+        if (response2.message.length > 0) {
           obj.message = response2.message[response2.message.length - 1];
           latestMessageArray.push(obj);
         }
@@ -267,7 +268,6 @@ const createGroup = async (req, res, next) => {
         user.myGroups.push(groupName);
         await user.save();
       }
-     
 
       res.status(201).send({
         status: "success",
@@ -278,12 +278,12 @@ const createGroup = async (req, res, next) => {
       throw new Error("You do not have access to these route!");
     }
   } catch (error) {
-    if ( error.code === 11000) {
+    if (error.code === 11000) {
       res.status(404).send({
         status: 404,
         message: "Group Name will be unique!",
       });
-    }else{
+    } else {
       res.status(404).send({
         status: 404,
         message: error.message,
@@ -343,28 +343,32 @@ const getLatestGroupMessage = async (req, res, next) => {
     for (let i of groupName) {
       const group = await GroupChatModel.findOne({ groupName: i });
       if (group && group.members.includes(userId)) {
-        if (group.message.length>0) {
-          const obj = {}
-           obj.message = group.message[group.message.length - 1];
+        if (group.message.length > 0) {
+          const obj = {};
+          obj.message = group.message[group.message.length - 1];
           obj.groupName = group.groupName;
           obj.groupId = group._id;
           latestMessageArray.push(obj);
         } else {
-          const obj = {}
-          obj.message = {content:"",senderName:"",date:null,senderId:""}
-         obj.groupName = group.groupName;
-         obj.groupId = group._id;
+          const obj = {};
+          obj.message = {
+            content: "",
+            senderName: "",
+            date: null,
+            senderId: "",
+          };
+          obj.groupName = group.groupName;
+          obj.groupId = group._id;
           latestMessageArray.push(obj);
         }
       }
-
     }
 
-    latestMessageArray = latestMessageArray.sort((a,b)=>{
+    latestMessageArray = latestMessageArray.sort((a, b) => {
       let date1 = new Date(a.message.date);
       let date2 = new Date(b.message.date);
       return date2 - date1;
-    })
+    });
 
     res.status(200).send({
       status: 200,
@@ -562,25 +566,95 @@ const getMyProfile = async (req, res, next) => {
   }
 };
 
-const deleteUser = async (req,res,next)=>{
+const deleteUser = async (req, res, next) => {
   try {
-    const {email} = req.params
-    const { userModel } = res.locals.connection.databaseObject; 
+    const { email } = req.params;
+
     const { companyUserModel } = await dependencyInjector(res.locals.params);
-    await userModel.findOneAndDelete({email})
-    await companyUserModel.findOneAndDelete({email})
+    await userModel.findOneAndDelete({ email });
+    await companyUserModel.findOneAndDelete({ email });
     res.status(202).send({
-      status:202,
-      message:"User deleted successfully!"
-    })
+      status: 202,
+      message: "User deleted successfully!",
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(404).send({
       status: 404,
       message: "Some Error Occured!",
     });
   }
-}
+};
+
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const { userModel } = res.locals.connection.databaseObject;
+    const { companyUserModel } = await dependencyInjector(
+      req.params.databaseID
+    );
+    const user = await userModel.findOne({ email });
+    const user1 = await companyUserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(400).send({
+        status: 400,
+        message: "User not found with this email!",
+      });
+    }
+    const otp = Math.ceil(Math.random() * 9998);
+    if (otp < 1000) otp += 1056;
+    sendOtp(email, otp);
+    user.otp = otp;
+    user1.otp = otp;
+    await user.save();
+    await user1.save();
+    res.status(200).send({
+      satus: 200,
+      message: { user, user1 },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({
+      status: 404,
+      message: "Some Error Occured!",
+    });
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, password } = req.body;
+
+    const { userModel } = res.locals.connection.databaseObject;
+    const { companyUserModel } = await dependencyInjector(
+      req.params.databaseID
+    );
+    const user = await userModel.findOne({ email, otp });
+    const user1 = await companyUserModel.findOne({ email, otp });
+    if (!user) {
+      return res.status(400).send({
+        status: 400,
+        message: "Wrong OTP!",
+      });
+    }
+    user.otp = 0;
+    user1.otp = 0;
+    user.password = password;
+    user1.password = await bcrypt.hash(password,10);
+    await user.save();
+    await user1.save();
+    res.status(202).send({
+      status: 202,
+      message: "Password Updated Successfully!",
+    });
+  } catch (error) {
+    res.status(404).send({
+      status: 404,
+      message: "Some Error Occured!",
+    });
+  }
+};
 
 module.exports = {
   createUser,
@@ -600,5 +674,7 @@ module.exports = {
   getMyProfile,
   getLatestMessage,
   getLatestGroupMessage,
-  deleteUser
+  deleteUser,
+  forgotPassword,
+  resetPassword,
 };
