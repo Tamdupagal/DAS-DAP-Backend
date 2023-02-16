@@ -8,7 +8,7 @@ const {
 
 const createUser = async (req, res) => {
   try {
-    const { userName, email, password, companyEmail } = req.body;
+    const { userName, email, password, companyEmail,typeOfUser } = req.body;
 
     let testCase = new RegExp(res.locals.params, "g");
     if (!testCase.test(email)) {
@@ -26,13 +26,13 @@ const createUser = async (req, res) => {
       email: email,
       password: password,
       companyEmail: companyEmail,
-      typeOfUser: "User",
+      typeOfUser:typeOfUser,
     });
     let newLoginUser = await companyUserModel.create({
       userName: userName,
       email: email,
       password: await bcrypt.hash(password, 10),
-      typeOfUser: "User",
+      typeOfUser:typeOfUser,
       companyEmail: companyEmail,
     });
 
