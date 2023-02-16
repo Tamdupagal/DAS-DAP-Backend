@@ -149,6 +149,7 @@ const getregisterdUser = async (req, res, next) => {
   }
 };
 
+
 module.exports = {
   createCompany,
   getAllCompanies,
