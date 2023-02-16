@@ -569,7 +569,7 @@ const getMyProfile = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const { email } = req.params;
-
+    const { userModel } = res.locals.connection.databaseObject;
     const { companyUserModel } = await dependencyInjector(res.locals.params);
     await userModel.findOneAndDelete({ email });
     await companyUserModel.findOneAndDelete({ email });
