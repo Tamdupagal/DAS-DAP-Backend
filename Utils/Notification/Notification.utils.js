@@ -132,7 +132,7 @@ const filterNotification = async (req, res, next) => {
           return data;
         });
     }else{
-        notification.taskNotification.content = []
+        notification.taskNotification.content = [] 
     }
 
     notification.save();
