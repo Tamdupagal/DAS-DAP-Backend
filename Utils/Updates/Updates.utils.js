@@ -52,7 +52,7 @@ const deleteUpdates = async (req, res, next) => {
 
 const postQuery = async (req, res, next) => {
   try {
-    const { senderId, message, senderObj,receiverId } = req.body;
+    const { senderId, message, senderObj, receiverId } = req.body;
     const response1 = await adminQuery.findOne({ senderId, receiverId });
     if (response1) {
       if (message)
@@ -97,6 +97,48 @@ const getAllQuery = async (req, res, next) => {
   }
 };
 
+const getLatestQuery = async (req, res, next) => {
+  try {
+    const { senderId, typeOfUser } = req.query;
+    if (typeOfUser === "SuperAdmin") {
+      const response = await adminQuery.find({});
+      const arr = [];
+      for (let i of response) {
+        // console.log(i.message.length)
+        if (i.message.length) {
+          arr.push({
+            latestMessage: i.message.slice(-1),
+            senderObj: i.senderObj,
+          });
+        }
+      }
+    
+      const latestMessageArray = arr.sort((a, b) => {
+        let date1 = new Date(a.latestMessage.date);
+        let date2 = new Date(b.latestMessage.date);
+        return date2 - date1;
+      });
+
+      return res.status(200).send({
+        status: 200,
+        response: latestMessageArray,
+      });
+    } else {
+      const response = await adminQuery.findOne({ senderId });
+      return res.status(200).send({
+        status: 200,
+        response: response.message.slice(-1),
+      });
+    }
+  } catch (error) {
+    // console.log(error)
+    res.status(404).send({
+      status: 404,
+      message: "Not Found!",
+    });
+  }
+};
+
 const deleteQuery = async (req, res, next) => {
   try {
     const { chatId, userId, messageId } = req.body;
@@ -128,4 +170,5 @@ module.exports = {
   postQuery,
   getAllQuery,
   deleteQuery,
+  getLatestQuery,
 };
