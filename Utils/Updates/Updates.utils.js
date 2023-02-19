@@ -112,13 +112,9 @@ const getLatestQuery = async (req, res, next) => {
           });
         }
       }
-    
-      const latestMessageArray = arr.sort((a, b) => {
-        // console.log(first)
-        let date1 = new Date(a.latestMessage[0].date);
-        let date2 = new Date(b.latestMessage[0].date);
-        return date2 - date1;
-      });
+      
+      const latestMessageArray = arr.sort
+      ((a, b) =>  Date.parse(b.latestMessage[0].date) - Date.parse(a.latestMessage[0].date));
 
       return res.status(200).send({
         status: 200,
