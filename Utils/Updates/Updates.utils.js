@@ -114,8 +114,9 @@ const getLatestQuery = async (req, res, next) => {
       }
     
       const latestMessageArray = arr.sort((a, b) => {
-        let date1 = new Date(a.latestMessage.date);
-        let date2 = new Date(b.latestMessage.date);
+        // console.log(first)
+        let date1 = new Date(a.latestMessage[0].date);
+        let date2 = new Date(b.latestMessage[0].date);
         return date2 - date1;
       });
 
