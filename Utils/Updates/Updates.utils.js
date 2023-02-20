@@ -109,6 +109,7 @@ const getLatestQuery = async (req, res, next) => {
           arr.push({
             latestMessage: i.message.slice(-1),
             senderObj: i.senderObj,
+            senderId:i.senderId
           });
         }
       }
@@ -118,13 +119,13 @@ const getLatestQuery = async (req, res, next) => {
 
       return res.status(200).send({
         status: 200,
-        response: latestMessageArray,
+        data: latestMessageArray,
       });
     } else {
       const response = await adminQuery.findOne({ senderId });
       return res.status(200).send({
         status: 200,
-        response: response.message.slice(-1),
+        data: response.message.slice(-1),
       });
     }
   } catch (error) {
