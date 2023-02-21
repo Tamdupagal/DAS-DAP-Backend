@@ -20,7 +20,7 @@ const NotificationModel = new Schema({
     },
   ],
   taskNotification: { content: [{ type: String }] },
-  supportNotification: { type: Number,default:1 },
+  supportNotification: { type: Number,default:0 },
 });
 
 module.exports = NotificationModel;
