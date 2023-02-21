@@ -40,6 +40,11 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on('fileShare',(options,callback)=>{
+    // console.log(options)
+    io.emit("file-download", options);
+  })
+
   socket.on('taskAssigned',(options,callback)=>{
      for(assigned of options.assignedTo){
        io.to(assigned).emit('newTaskAssigned',options);

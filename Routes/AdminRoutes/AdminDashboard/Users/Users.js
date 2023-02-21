@@ -1,5 +1,5 @@
 const Express = require('express')
-const { getAllUpdates, getAllQuery, deleteQuery, postQuery } = require('../../../../Utils/Updates/Updates.utils')
+const { getAllUpdates, getAllQuery, deleteQuery, postQuery, getLatestQuery } = require('../../../../Utils/Updates/Updates.utils')
 const {
   createUser,
   fetchUser,
@@ -57,5 +57,5 @@ Router.route('/groupChat/latestMessage').put(getLatestGroupMessage)
 Router.route('/myQuery/getChat').get(getAllQuery)
 Router.route('/myQuery/postChat').put(postQuery)
 Router.route('/myQuery/deleteMessage').put(deleteQuery)
-
+Router.route('/myQuery/latestMessage?').get(getLatestQuery)
 module.exports = Router

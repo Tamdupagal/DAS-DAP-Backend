@@ -611,7 +611,7 @@ const forgotPassword = async (req, res, next) => {
     await user1.save();
     res.status(200).send({
       satus: 200,
-      message: { user, user1 },
+      message: "Otp send Successfully!",
     });
   } catch (error) {
     console.log(error);

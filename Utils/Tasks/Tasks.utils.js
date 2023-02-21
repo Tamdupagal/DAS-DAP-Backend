@@ -615,7 +615,7 @@ const getCompletedTask = async (req, res, next) => {
         path: "assignedTo",
         select: ["email", "typeOfUser", "userName"],
       });
-    const completedTask = myTask.filter((data) => data.list == "Done");
+    const completedTask = myTask.filter((data) => data.list != "Done");
     res.status(200).send({
       status: 200,
       result: completedTask.length,

@@ -7,6 +7,7 @@ const pushNotification = async (req, res, next) => {
       chatNotification,
       groupChatNotification,
       taskNotification,
+      supportNotification
     } = req.body;
     const notification = await notificationModel.findOne({ receiverId });
     if (notification) {
@@ -53,6 +54,9 @@ const pushNotification = async (req, res, next) => {
           taskNotification.content[0]
         );
       }
+      if(supportNotification){
+        notification.supportNotification+=1;
+      }
       await notification.save();
     } else {
       await notificationModel.create({
@@ -60,6 +64,7 @@ const pushNotification = async (req, res, next) => {
         chatNotification,
         groupChatNotification,
         taskNotification,
+        supportNotification
       });
     }
     res.status(200).send({
@@ -111,7 +116,7 @@ const deleteNotification = async (req, res, next) => {
 const filterNotification = async (req, res, next) => {
   try {
     const { notificationModel } = res.locals.connection.databaseObject;
-    const { receiverId, senderId, groupName } = req.body;
+    const { receiverId, senderId, groupName,supportNotification } = req.body;
     const notification = await notificationModel.findOne({ receiverId });
 
     if (senderId) {
@@ -132,9 +137,11 @@ const filterNotification = async (req, res, next) => {
           return data;
         });
     }else{
-        notification.taskNotification.content = []
+        notification.taskNotification.content = [] 
     }
-
+     if(supportNotification){
+      notification.supportNotification=0;
+     }
     notification.save();
 
     res.status(202).send({
