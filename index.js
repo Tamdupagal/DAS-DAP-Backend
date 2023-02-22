@@ -82,6 +82,14 @@ io.on("connection", (socket) => {
     socket.join("adminRoom");
   });
 
+  socket.on("adminUpdates",(options,callback)=>{
+    io.emit("adminUpdate",options);
+  })
+
+  socket.on("adminSupport",(options,callback)=>{
+    io.to(options.receiverId).emit("adminSupport",options);
+  })
+
   socket.on("startTyping", (options, callback) => {
     // console.log("startTyping",options)
     io.to(options.receiverId).emit("startTyping", {
