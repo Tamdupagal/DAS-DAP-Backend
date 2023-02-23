@@ -36,6 +36,16 @@ const UserSchema = new Schema(
       type:Number,
       default:0
     },
+    department:{
+      type:String,
+      enum:{
+        values:["Hr","IT","Sales","General","Marketing","Operations","Finance","Purchase","Others"],
+        message:"Please Select Valid Department Value!"
+     }
+    },
+    designation:{
+      type:String
+    },
     userCreatedOn: {
       type: String,
     },
