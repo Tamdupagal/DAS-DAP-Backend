@@ -11,11 +11,8 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       taskList,
       companyEmail,
-      isTooltip,
-      isModel,
-      isHintBox,
+     flowDescription
     } = req.body;
-
     const taskFlow = await taskFlowModel.findTaskFlow({
       applicationDomain,
       applicationTaskFlowUseCase,
@@ -35,9 +32,7 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       companyEmail,
       taskList,
-      isTooltip,
-      isModel,
-      isHintBox,
+      flowDescription
     });
     if (result.isError) {
       throw new Error(
