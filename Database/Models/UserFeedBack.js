@@ -11,7 +11,10 @@ const UserFeedBack  = new Schema(
    unique: true 
  },
  userQueryDescription:[{
-
+   date:{
+      type:Date,
+      default:Date.now
+   },
     email:{type:String,default:''},
 
     description:{type:String,default:''},
