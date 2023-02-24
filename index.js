@@ -11,28 +11,27 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 app.use(cors());
 
-
 const io = new Server(server, {
   cors: {
-    origin: "*", 
+    origin: "*",
     methods: ["GET", "POST"],
   },
   maxHttpBufferSize: 1e8,
-}); 
+});
 io.on("connection", (socket) => {
   // console.log('connection done')
-  socket.on("join", (options, callback) => { 
+  socket.on("join", (options, callback) => {
     socket.join(options.senderId);
   });
   socket.on("message", (options, callback) => {
     // console.log(Object.keys(io.of('/').adapter.rooms).length);
-   console.log(options.message) 
+    console.log(options.message);
     io.to(options.receiverId).emit("getLatestNotification", options);
     io.to(options.receiverId).emit("message", options);
-    io.to(options.receiverId).emit('notification',options);
+    io.to(options.receiverId).emit("notification", options);
   });
-  socket.on("createGroup", (options, callback) => { 
-    socket.join(options.roomName); 
+  socket.on("createGroup", (options, callback) => {
+    socket.join(options.roomName);
     for (user of options.users) {
       io.to(user).emit("groupJoined", {
         roomName: options.roomName,
@@ -40,78 +39,90 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on('fileShare',(options,callback)=>{
+  socket.on("fileShare", (options, callback) => {
     // console.log(options)
     io.emit("file-download", options);
-  })
+  });
 
-  socket.on('taskAssigned',(options,callback)=>{
-     for(assigned of options.assignedTo){
-       io.to(assigned).emit('newTaskAssigned',options);
-       io.to(assigned).emit("getLatestNotification", options);
-     }
-  })
-  
-  socket.on("createAnnouncement",(options,callback)=>{
-    io.to(options.companyName).emit("announcementCreated",options);
-  })
+  socket.on("taskAssigned", (options, callback) => {
+    for (assigned of options.assignedTo) {
+      io.to(assigned).emit("newTaskAssigned", options);
+      io.to(assigned).emit("getLatestNotification", options);
+    }
+  });
+
+  socket.on("createAnnouncement", (options, callback) => {
+    io.to(options.companyName).emit("announcementCreated", options);
+  });
   socket.on("joinGroup", (options, callback) => {
-    console.log('user join ',options.roomName)
+    console.log("user join ", options.roomName);
     socket.join(options.roomName);
   });
   socket.on("groupChat", (options, callback) => {
-    console.log(options.message)
-    io.to(options.groupName).emit('groupNotification',options);
+    console.log(options.message);
+    io.to(options.groupName).emit("groupNotification", options);
     io.to(options.groupName).emit("groupMessage", options);
     io.to(options.groupName).emit("getLatestNotification", options);
   });
 
-  socket.on("joinCompany",(options,callback)=>{
-    socket.join(options.companyName)
-  })
-  socket.on("deleteMsg",(options,callback)=>{
-    console.log("deleted msg start")
-    io.to(options.receiverId).emit("deletedMsg",options)
-  })
+  socket.on("joinCompany", (options, callback) => {
+    socket.join(options.companyName);
+  });
+  socket.on("deleteMsg", (options, callback) => {
+    console.log("deleted msg start");
+    io.to(options.receiverId).emit("deletedMsg", options);
+  });
 
-  socket.on("deleteGroupMsg",(options,callback)=>{
-    console.log("deleted group msg start")
-    socket.broadcast.to(options.groupName).emit("groupMsgDelete",options)
-  })
+  socket.on("deleteGroupMsg", (options, callback) => {
+    console.log("deleted group msg start");
+    socket.broadcast.to(options.groupName).emit("groupMsgDelete", options);
+  });
 
-  socket.on("joinAdminRoom",(options,callback)=>{
+  socket.on("joinAdminRoom", (options, callback) => {
     socket.join("adminRoom");
+  });
+
+  socket.on("adminUpdates",(options,callback)=>{
+    io.emit("adminUpdate",options);
   })
 
-  socket.on('startTyping',(options,callback)=>{
-    // console.log("startTyping",options)
-    io.to(options.receiverId).emit('startTyping',{senderId:options.senderId})
+  socket.on("adminSupport",(options,callback)=>{
+    io.to(options.receiverId).emit("adminSupport",options);
   })
-  socket.on('groupTyping',(options,callback)=>{
+
+  socket.on("startTyping", (options, callback) => {
     // console.log("startTyping",options)
-    io.to(options.groupName).emit('groupTypingStart',options)
-  })
-  socket.on('stopTyping',(options,callback)=>{
+    io.to(options.receiverId).emit("startTyping", {
+      senderId: options.senderId,
+    });
+  });
+  socket.on("groupTyping", (options, callback) => {
+    // console.log("startTyping",options)
+    io.to(options.groupName).emit("groupTypingStart", options);
+  });
+  socket.on("stopTyping", (options, callback) => {
     // console.log("stopTyping",options)
-    io.to(options.receiverId).emit('stopTyping',{senderId:options.senderId})
-  })
-  socket.on('stopGroupTyping',(options,callback)=>{
+    io.to(options.receiverId).emit("stopTyping", {
+      senderId: options.senderId,
+    });
+  });
+  socket.on("stopGroupTyping", (options, callback) => {
     // console.log("stopTyping123")
-    io.to(options.groupName).emit('groupTypingStop',options)
-  })
-  socket.on("deleteTask",(options,callback)=>{
-     options.assignedTo.map(data=>{
-      io.to(data).emit("taskDeleted",{});
-     })
-  })
-  socket.on("forwardMsg",options=>{
-    options.receiverId.map((id)=>{
-      const newRoom = id.receiverId||id.groupName
-      io.to(newRoom).emit("messageForwarded",options)
-    })
-  })
+    io.to(options.groupName).emit("groupTypingStop", options);
+  });
+  socket.on("deleteTask", (options, callback) => {
+    options.assignedTo.map((data) => {
+      io.to(data).emit("taskDeleted", {});
+    });
+  });
+  socket.on("forwardMsg", (options) => {
+    options.receiverId.map((id) => {
+      const newRoom = id.receiverId || id.groupName;
+      io.to(newRoom).emit("messageForwarded", options);
+    });
+  });
 });
- 
+
 if (cluster.isMaster) {
   totalCPUs.forEach(async (node) => {
     await cluster.fork();
