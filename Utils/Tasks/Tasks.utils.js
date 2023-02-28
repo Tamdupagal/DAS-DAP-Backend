@@ -175,11 +175,11 @@ const fetchMyTasks = async (req, res, next) => {
     let query = { companyEmail },
       projection = { taskList: 0 },
       skip,
-      limit = 8,
+      limit = 12,
       pageNumber = parseInt(page);
     if (!pageNumber || pageNumber <= 1) pageNumber = 1;
 
-    skip = pageNumber * 8 - 8;
+    skip = pageNumber * 12 - 12;
 
     const totalFlows = await taskFlowModel.find({ companyEmail });
     let allDomain = new Set();
