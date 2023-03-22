@@ -11,7 +11,7 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       taskList,
       companyEmail,
-     flowDescription
+      flowDescription,
     } = req.body;
     const taskFlow = await taskFlowModel.findTaskFlow({
       applicationDomain,
@@ -32,7 +32,7 @@ const createTaskFlow = async (req, res) => {
       applicationTaskFlowUseCase,
       companyEmail,
       taskList,
-      flowDescription
+      flowDescription,
     });
     if (result.isError) {
       throw new Error(
@@ -69,7 +69,7 @@ const fetchTaskFlow = async (req, res, next) => {
     let query = {},
       projection = { taskList: 0 },
       skip,
-      limit = 8,
+      limit = 10000,
       pageNumber = parseInt(page);
 
     if (applicationTaskFlowUseCase && applicationDomain) {
