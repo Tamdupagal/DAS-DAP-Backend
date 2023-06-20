@@ -104,6 +104,47 @@ const fetchTaskFlow = async (req, res, next) => {
   }
 };
 
+
+
+const fetchTaskFlowForCheckList = async (req, res, next) => {
+  try {
+    const { taskFlowModel } = res.locals.connection.databaseObject;
+
+    const {
+      applicationTaskFlowUseCase,
+      applicationDomain,
+      companyEmail,
+    } = req.query;
+
+    let query = {},
+      projection = { taskList: 0 }
+    
+    if (applicationTaskFlowUseCase && applicationDomain) {
+      query = {
+        $and: [
+          { applicationTaskFlowUseCase },
+          { applicationDomain },
+          { companyEmail },
+        ],
+      };
+      projection = {};
+    } else if (applicationDomain) {
+      query = { $and: [{ applicationDomain }, { companyEmail }] };
+    }
+   const totalCount = await taskFlowModel.countDocuments(query);
+    const result = await taskFlowModel
+      .find(query, projection)
+    res.status(200).send({ status: 200, result, totalCount });
+  } catch (e) {
+    totalCount;
+    res.status(400).send({
+      status: 400,
+      message: e.message,
+    });
+  }
+};
+
+
 // Update Task Flow
 
 const updateTaskFlow = async (req, res, next) => {
@@ -699,6 +740,7 @@ const assignedToMeTask = async (req, res, next) => {
 module.exports = {
   createTaskFlow,
   fetchTaskFlow,
+  fetchTaskFlowForCheckList,
   updateTaskFlow,
   deleteTaskFlow,
   createTask,

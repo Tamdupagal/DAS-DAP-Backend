@@ -1,6 +1,6 @@
 const Error = require("../../Errors/Error");
 const dateDiffer = require("date-differ");
-
+ 
 const pushAnalytics = async (req, res, next) => {
   try {
     const {
@@ -97,6 +97,32 @@ const getAllAnalytics = async (req, res, next) => {
   }
 };
 
+const getAllAnalyticss = async (req, res, next) => {
+  try {
+    const { companyEmail } = req.query;
+    const { analyticsModel } = res.locals.connection.databaseObject;
+
+    const response = await analyticsModel.find({ companyEmail });
+
+    const totalCount = response.length;
+    let totalCountNumber = 0;
+    response.forEach((flow) => {
+      totalCountNumber += flow.timesCompletedByUsers;
+    });
+
+    res.status(200).send({
+      status: 200,
+      result: response.length,
+      totalCount: totalCount,
+      totalFlowsShown: totalCountNumber,
+      data: response,
+    });
+  } catch (e) {
+    res.status(e.status).send({ status: e.status, message: e.message });
+  }
+};
+
+
 const pushTaskAnalytics = async (req, res, next) => {
   try {
     const { taskId, completedBy, taskAssignedAt, taskCompletedAt } = req.body;
@@ -189,4 +215,5 @@ module.exports = {
   getAllAnalytics,
   getTaskAnalytics,
   pushTaskAnalytics,
+  getAllAnalyticss,
 };

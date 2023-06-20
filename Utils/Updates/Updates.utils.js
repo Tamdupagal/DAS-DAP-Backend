@@ -48,7 +48,7 @@ const deleteUpdates = async (req, res, next) => {
       message: error.message,
     });
   }
-};
+}; 
 
 const postQuery = async (req, res, next) => {
   try {

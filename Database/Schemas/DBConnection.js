@@ -49,6 +49,16 @@ const dependencyInjector = (dataBaseName) => {
     'Notification',
     require('../Models/NotificationModel')
   )
+  const CheckList = connection.model(
+    'CheckList',
+    require('../Models/CheckList')
+  )
+  
+  const checklistResponseSchema = connection.model(
+    "CheckListResponseSchema",
+    require("../Models/CheckListResponseSchema")
+  );
+
   return {
     connection,
     analyticsModel,
@@ -62,8 +72,10 @@ const dependencyInjector = (dataBaseName) => {
     taskManagementModel,
     GroupChatModel,
     taskAnalyticsModel,
-    notificationModel
-  }
+    notificationModel,
+    CheckList,
+    checklistResponseSchema,
+  };
 }
 
 module.exports = dependencyInjector

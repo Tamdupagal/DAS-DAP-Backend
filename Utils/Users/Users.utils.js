@@ -6,9 +6,138 @@ const {
   dependencyInjector,
 } = require("../../Database/Schemas/AuthenticationDBConnection");
 
+const createChecklist = async (req, res, next) => {
+  try {
+    const { name, adminId, description, members, flows, checkListReceivers } =
+      req.body;
+
+    const { CheckList } = res.locals.connection.databaseObject;
+
+    // Create a new checklist document
+    const Checklist = new CheckList({
+      name,
+      adminId,
+      description,
+      members,
+      flows,
+      checkListReceivers,
+    });
+
+    // Save the checklist to the database
+    const createdChecklist = await Checklist.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "Checklist created successfully",
+      data: createdChecklist,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to create the checklist",
+      error: error.message,
+    });
+  }
+};
+
+const fetchCheckList = async (req, res, next) => {
+  try {
+    const { CheckList } = res.locals.connection.databaseObject;
+    // const { companyEmail } = req.query;
+    const response = await CheckList.find();
+    res
+      .status(200)
+      .send({ status: 200, result: response.length, data: response });
+  } catch (err) {
+    res.status(200).send({
+      status: 400,
+      message: err.message,
+    });
+  }
+};
+
+// const submitAnnouncementResponse = async (req, res, next) => {
+//   try {
+//     const { CheckListResponseSchema } = res.locals.connection.databaseObject;
+//     const { checkListID } = req.query;
+//     const { checkListResponse } = req.body
+//     const newResponse = await CheckListResponseSchema.create({
+//       checklistReferenceId: checkListID,
+//       checkListResponse,
+//     });
+//     await newResponse.save()
+//     res.status(200).send({
+//       status: 200,
+//       message: 'CheckList Response has been submitted!',
+//     })
+//   } catch (e) {
+//     console.log(e.message)
+//     res.status(400).send({
+//       status: 400,
+//       message: "CheckList Response can't be saved",
+//     })
+//   }
+// }
+
+const updateChecklist = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { CheckList } = res.locals.connection.databaseObject;
+
+    const { allUsers } = req.body;
+
+    const myCheckList = await CheckList.findById(id);
+
+    if (allUsers) {
+      allUsers.map((data) => {
+        myCheckList.allUsers.push(data);
+      });
+    }
+    await myCheckList.save();
+
+    res.status(200).send({
+      status: 200,
+      message: "CheckList has been Updated",
+    });
+  } catch (error) {
+    res.status(400).send({
+      status: 400,
+      message: "Some Error occured",
+    });
+  }
+};
+
+
+const fetchNewestChecklistForUser = async (req, res, next) => {
+  try {
+    const { CheckList } = res.locals.connection.databaseObject;
+    // const { userId } = req.body;
+    // console.log(userId);
+    // Find the newest checklist where the members array includes the user ID
+    // const newestChecklist = await checkList.findOne({ members: userId }).sort({
+    //   createdAt: -1,
+    // });
+    const newestChecklist = await CheckList.find();
+    const response = newestChecklist[newestChecklist.length - 1];
+    res.status(200).json({
+      status: "success",
+      data: response || null,
+    });
+  } catch (error) {
+    // Handle any errors that occur during the retrieval process
+    res.status(500).json({
+      status: "error",
+      message: "Failed to fetch the newest checklist",
+      error: error.message,
+    });
+  }
+};
+
+
+
 const createUser = async (req, res) => {
   try {
-    const { userName, email, password, companyEmail,typeOfUser } = req.body;
+    const { userName, email, password, companyEmail, typeOfUser } = req.body;
 
     let testCase = new RegExp(res.locals.params, "g");
     if (!testCase.test(email)) {
@@ -26,13 +155,13 @@ const createUser = async (req, res) => {
       email: email,
       password: password,
       companyEmail: companyEmail,
-      typeOfUser:typeOfUser,
+      typeOfUser: typeOfUser,
     });
     let newLoginUser = await companyUserModel.create({
       userName: userName,
       email: email,
       password: await bcrypt.hash(password, 10),
-      typeOfUser:typeOfUser,
+      typeOfUser: typeOfUser,
       companyEmail: companyEmail,
     });
 
@@ -97,6 +226,7 @@ const fetchUser = async (req, res, next) => {
 //     });
 //   }
 // };
+
 
 const fetchMyUsers = async (req, res, next) => {
   const { userModel } = res.locals.connection.databaseObject;
@@ -641,7 +771,7 @@ const resetPassword = async (req, res, next) => {
     user.otp = 0;
     user1.otp = 0;
     user.password = password;
-    user1.password = await bcrypt.hash(password,10);
+    user1.password = await bcrypt.hash(password, 10);
     await user.save();
     await user1.save();
     res.status(202).send({
@@ -677,4 +807,10 @@ module.exports = {
   deleteUser,
   forgotPassword,
   resetPassword,
+  createChecklist,
+  fetchCheckList,
+  // viewChecklists,
+  fetchNewestChecklistForUser,
+  updateChecklist,
+  // submitAnnouncementResponse,
 };

@@ -57,13 +57,13 @@ const viewAnnouncements = async (req, res, next) => {
       )
       query.push(
         { $unwind: '$AnnouncementReceivers' },
-        {
+        { 
           $match: {
             'AnnouncementReceivers.email': user.email,
           },
         }
       )
-    } else {
+    } else { 
       if (!page || page <= 1) page = 1
       totalAnnouncementCount = await AnnouncementModel.count()
       query.push({ $limit: 10 }, { $skip: page * 10 - 10 })
