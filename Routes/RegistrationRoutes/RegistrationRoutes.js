@@ -6,3 +6,4 @@ const Router = Express.Router()
 Router.post('/',registerUser)
 
 module.exports = Router
+

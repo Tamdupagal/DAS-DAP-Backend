@@ -110,15 +110,11 @@ const fetchTaskFlowForCheckList = async (req, res, next) => {
   try {
     const { taskFlowModel } = res.locals.connection.databaseObject;
 
-    const {
-      applicationTaskFlowUseCase,
-      applicationDomain,
-      companyEmail,
-    } = req.query;
+    const { applicationTaskFlowUseCase, applicationDomain, companyEmail } = req.query;
 
     let query = {},
-      projection = { taskList: 0 }
-    
+      projection = { taskList: 0 };
+
     if (applicationTaskFlowUseCase && applicationDomain) {
       query = {
         $and: [
@@ -131,12 +127,16 @@ const fetchTaskFlowForCheckList = async (req, res, next) => {
     } else if (applicationDomain) {
       query = { $and: [{ applicationDomain }, { companyEmail }] };
     }
-   const totalCount = await taskFlowModel.countDocuments(query);
+
+    const totalCount = await taskFlowModel.countDocuments(query);
+    
+    // Modify the query to sort by descending order of the _id field (assuming _id represents the creation timestamp)
     const result = await taskFlowModel
       .find(query, projection)
+      .sort({ _id: -1 });
+
     res.status(200).send({ status: 200, result, totalCount });
   } catch (e) {
-    totalCount;
     res.status(400).send({
       status: 400,
       message: e.message,

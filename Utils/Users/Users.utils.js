@@ -119,6 +119,7 @@ const fetchNewestChecklistForUser = async (req, res, next) => {
     // });
     const newestChecklist = await CheckList.find();
     const response = newestChecklist[newestChecklist.length - 1];
+    console.log(newestChecklist);
     res.status(200).json({
       status: "success",
       data: response || null,

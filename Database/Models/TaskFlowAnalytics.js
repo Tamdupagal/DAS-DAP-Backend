@@ -1,5 +1,5 @@
-const Schema = require('mongoose').Schema
-const dateDiffer = require('date-differ')
+const Schema = require("mongoose").Schema;
+
 const taskFlowAnalytics = new Schema({
   applicationDomain: {
     type: String,
@@ -7,11 +7,11 @@ const taskFlowAnalytics = new Schema({
   applicationTaskFlowUseCase: {
     type: String,
   },
-  userEmail:{
-    type:String,
+  userEmail: {
+    type: String,
   },
-  companyEmail:{
-    type:String
+  companyEmail: {
+    type: String,
   },
   timesCompletedByUsers: {
     type: Number,
@@ -21,16 +21,16 @@ const taskFlowAnalytics = new Schema({
     type: Number,
     default: 0,
   },
-  timeStampStartByUsers:{
-    type:String
+  timeStampStartByUsers: {
+    type: String,
   },
-  timeStampCompletedByUsers:{
-    type:String,
+  timeStampCompletedByUsers: {
+    type: String,
   },
-  timeTaken:{
-    type:String
-  }
-})
+  timeTaken: {
+    type: String,
+  },
+});
 
 taskFlowAnalytics.statics.updateAnalytics = async function (data) {
   try {
@@ -43,34 +43,44 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
       companyEmail,
       timeStampStartByUsers,
       timeStampCompletedByUsers,
-    } = data
-    let query
-    let result = "";
+    } = data;
+
+    let query;
+    let timeTaken;
+
     const date1 = new Date(timeStampStartByUsers);
     const date2 = new Date(timeStampCompletedByUsers);
-    let diffTime = Math.abs(date2 - date1) / 1000 / 60 / 60;
-    let diffMinute = Math.abs(date2 - date1) / 1000 / 60;
-    let diffSeconds = Math.abs(date2 - date1) / 1000 
-    if(diffSeconds <60){
-      result=diffSeconds+" seconds"
-    }else
-    if(diffTime<1){
-      result=diffMinute+" minutes"
-    }
-    else 
-    if (diffTime < 24) {
-      result = diffTime + " hours";
-    } else {
-      result = dateDiffer({
-        from: date1,
-        to: date2,
-      });
-    }    
-    let timeTaken = result;
 
-    console.log(timeTaken)
-    if (isCompleted) query = {timeStampCompletedByUsers,timeTaken, timeStampStartByUsers, $inc: { timesCompletedByUsers: 1 } }
-    if (isAborted) query = { $inc: { timesStoppedByUsers: 1 } }
+    const diffMilliseconds = Math.abs(date2 - date1);
+    const diffSeconds = Math.floor(diffMilliseconds / 1000);
+    const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
+    const diffHours = Math.floor(diffMilliseconds / (1000 * 60 * 60));
+
+    if (diffSeconds < 60) {
+      timeTaken = diffSeconds + " seconds";
+    } else if (diffMinutes < 1) {
+      timeTaken = diffMinutes + " minutes";
+    } else if (diffHours < 24) {
+      timeTaken = diffHours + " hours";
+    } else {
+      const diffDays = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
+      timeTaken = diffDays + " days";
+    }
+
+    console.log(timeTaken);
+
+    if (isCompleted) {
+      query = {
+        timeStampCompletedByUsers,
+        timeTaken,
+        timeStampStartByUsers,
+        $inc: { timesCompletedByUsers: 1 },
+      };
+    }
+    if (isAborted) {
+      query = { $inc: { timesStoppedByUsers: 1 } };
+    }
+
     const existingAnalytics = await this.findOneAndUpdate(
       {
         applicationTaskFlowUseCase,
@@ -78,16 +88,18 @@ taskFlowAnalytics.statics.updateAnalytics = async function (data) {
         userEmail,
         companyEmail,
       },
-     query,
-      { new: true,upsert:true }
-    )
-    if(!existingAnalytics){
-      return { isUpdated: false }
-    }
-    return { isUpdated: true }
-  } catch (e) {
-    console.log(e.message)
-  }
-}
+      query,
+      { new: true, upsert: true }
+    );
 
-module.exports = taskFlowAnalytics
+    if (!existingAnalytics) {
+      return { isUpdated: false };
+    }
+
+    return { isUpdated: true };
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+module.exports = taskFlowAnalytics;

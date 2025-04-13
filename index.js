@@ -17,7 +17,8 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
   maxHttpBufferSize: 1e8,
-});
+} );
+
 io.on("connection", (socket) => {
   // console.log('connection done')
   socket.on("join", (options, callback) => {

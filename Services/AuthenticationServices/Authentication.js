@@ -99,6 +99,7 @@ const Authorization = async (req, res) => {
 
 const DatabaseValidation = async (req, res, next) => {
   try {
+    console.log(req.params,"vikas")
     const { databaseID } = req.params;
     let record = await EnrolledCompanies.findOne({
       companyName: databaseID,
